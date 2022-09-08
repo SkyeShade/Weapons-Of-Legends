@@ -25,7 +25,13 @@ import java.util.logging.Level;
 public class TimeStopAbility {
 
     static int timer = 0;
+
     static List<Entity> entities;
+
+    static List<Entity> entitiesNew;
+    //static ArrayList<Entity> entitiesArray = new ArrayList<>(entities);
+
+    static int radius1;
 
     static Player player;
 
@@ -44,22 +50,35 @@ public class TimeStopAbility {
 
 
                 if (timer > 1) {
+
+                    entitiesNew = player.level.getEntities(player, AABB.ofSize(player.position(), radius1,radius1,radius1));
+
+                    for (Entity entity : entitiesNew) {
+
+                        if (!entities.contains(entity)) {
+
+                            entities.add(entity);
+                            positions.add(entities.indexOf(entity), entity.position());
+                            deltaMovement.add(entities.indexOf(entity), entity.getDeltaMovement());
+                            xRot.add(entities.indexOf(entity), entity.getXRot());
+                            yRot.add(entities.indexOf(entity), entity.getYRot());
+
+                            yHeadRot.add(entities.indexOf(entity), entity.getYHeadRot());
+
+
+                        }
+                    }
                     for (Entity entity : entities) {
-
-
                         entity.setPos(positions.get(entities.indexOf(entity)));
                         entity.setXRot(xRot.get(entities.indexOf(entity)));
                         entity.setYRot(yRot.get(entities.indexOf(entity)));
 
+                        entity.setDeltaMovement(0,0,0);
                         entity.setYHeadRot(yHeadRot.get(entities.indexOf(entity)));
 
                         entity.resetFallDistance();
 
-                        
-
-
-
-
+                        entity.setNoGravity(true);
                     }
                     System.out.println(timer);
                     timer--;
@@ -69,8 +88,7 @@ public class TimeStopAbility {
                         entity.setPos(positions.get(entities.indexOf(entity)));
                         entity.setDeltaMovement(deltaMovement.get(entities.indexOf(entity)));
 
-
-
+                        entity.setNoGravity(false);
 
                     }
 
@@ -78,56 +96,20 @@ public class TimeStopAbility {
                 }
             }
         }
-
-
     }
 
     public void stopTime (int radius, Player caster, int ticks) {
-
         player = caster;
         entities = caster.level.getEntities(caster, AABB.ofSize(caster.position(), radius,radius,radius));
-
+        radius1 = radius;
         for (Entity entity : entities) {
-
             positions.add(entities.indexOf(entity), entity.position());
             deltaMovement.add(entities.indexOf(entity), entity.getDeltaMovement());
             xRot.add(entities.indexOf(entity), entity.getXRot());
             yRot.add(entities.indexOf(entity), entity.getYRot());
 
             yHeadRot.add(entities.indexOf(entity), entity.getYHeadRot());
-
-
-
-
         }
-
-
         timer = ticks;
-        /*
-        for (Entity entity : entities) {
-
-
-            previousEntities = entities;
-
-            if (previousEntities != null && previousEntities.contains(entity))
-                entity.setPos(previousEntities.get(previousEntities.indexOf(entity)).position());
-            entity.setDeltaMovement(0d,0d,0d);
-
-
-
-            System.out.println(entity);
-        }
-        */
-
     }
-
-
-
-
-
-
-
-
-
-
 }

@@ -24,7 +24,7 @@ public class TimeStopSwordItem extends SwordItem {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
 
 
-        timeStopAbility.stopTime(64, pPlayer, 200);
+        timeStopAbility.stopTime(64, pPlayer, 1000);
 
         return super.use(pLevel, pPlayer, pUsedHand);
     }
