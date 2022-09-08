@@ -16,6 +16,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.skyeshade.wol.abilities.ShootSlashProjectileAbility;
 import net.skyeshade.wol.abilities.TimeStopAbility;
 import net.skyeshade.wol.item.ModItems;
 import org.slf4j.Logger;
@@ -43,6 +44,8 @@ public class WOL
         MinecraftForge.EVENT_BUS.register(this);
 
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, TimeStopAbility::onServerTick);
+
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, ShootSlashProjectileAbility::onServerTick);
     }
 
     private void setup(final FMLCommonSetupEvent event)

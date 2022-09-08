@@ -10,6 +10,7 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.skyeshade.wol.abilities.ShootSlashProjectileAbility;
 import net.skyeshade.wol.abilities.TimeStopAbility;
 
 public class TimeStopSwordItem extends SwordItem {
@@ -19,12 +20,13 @@ public class TimeStopSwordItem extends SwordItem {
 
 
     TimeStopAbility timeStopAbility = new TimeStopAbility();
+    ShootSlashProjectileAbility shootSlashProjectileAbility = new ShootSlashProjectileAbility();
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
 
-
-        timeStopAbility.stopTime(64, pPlayer, 1000);
+        shootSlashProjectileAbility.shootProjectile(pPlayer, 10, 200);
+        timeStopAbility.stopTime(64, pPlayer, 200);
 
         return super.use(pLevel, pPlayer, pUsedHand);
     }
