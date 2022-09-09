@@ -1,14 +1,19 @@
 package net.skyeshade.wol.abilities;
 
 import com.mojang.authlib.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
+import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerPlayerConnection;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -105,6 +110,16 @@ public class TimeStopAbility {
                     if (!entities.isEmpty()) {
                         try {
                             for (Entity entity : entities) {
+
+
+                                    for (Player player2 : level.players()){
+                                        if (entity == player2) {
+                                            ServerPlayer playerIn = (ServerPlayer) player2;
+                                            playerIn.connection.teleport(positions.get(entities.indexOf(entity)).x,positions.get(entities.indexOf(entity)).y,positions.get(entities.indexOf(entity)).z, yRot.get(entities.indexOf(entity)),xRot.get(entities.indexOf(entity)));
+
+
+                                        }
+                                    }
 
                                 entity.setPos(positions.get(entities.indexOf(entity)));
                                 entity.setXRot(xRot.get(entities.indexOf(entity)));
