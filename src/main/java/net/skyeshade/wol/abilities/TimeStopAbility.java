@@ -11,6 +11,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
@@ -27,7 +28,6 @@ import net.skyeshade.wol.entities.EntityInit;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.logging.Level;
 
 
 public class TimeStopAbility {
@@ -36,6 +36,8 @@ public class TimeStopAbility {
     static List<Entity> entitiesNew;
     static int radius1;
     static Player player;
+
+    static Level level;
     static ArrayList<Vec3> positions = new ArrayList<Vec3>();
     static ArrayList<Vec3> deltaMovement = new ArrayList<Vec3>();
     static ArrayList<Float> xRot = new ArrayList<Float>();
@@ -86,26 +88,24 @@ public class TimeStopAbility {
                             yHeadRot.add(entities.indexOf(entity), entity.getYHeadRot());
                         }
                     }
-                    for (Entity entity : entities) {
+                    if (!entities.isEmpty()) {
+                        for (Entity entity : entities) {
 
-                        entity.setPos(positions.get(entities.indexOf(entity)));
-                        entity.setXRot(xRot.get(entities.indexOf(entity)));
-                        entity.setYRot(yRot.get(entities.indexOf(entity)));
-
-
-                        entity.setDeltaMovement(deltaMovement.get(entities.indexOf(entity)).x/slowValue,deltaMovement.get(entities.indexOf(entity)).y/slowValue,deltaMovement.get(entities.indexOf(entity)).z/slowValue);
+                            entity.setPos(positions.get(entities.indexOf(entity)));
+                            entity.setXRot(xRot.get(entities.indexOf(entity)));
+                            entity.setYRot(yRot.get(entities.indexOf(entity)));
 
 
-                        entity.setYHeadRot(yHeadRot.get(entities.indexOf(entity)));
-                        entity.resetFallDistance();
-                        entity.setNoGravity(true);
+                            entity.setDeltaMovement(deltaMovement.get(entities.indexOf(entity)).x/slowValue,deltaMovement.get(entities.indexOf(entity)).y/slowValue,deltaMovement.get(entities.indexOf(entity)).z/slowValue);
 
 
+                            entity.setYHeadRot(yHeadRot.get(entities.indexOf(entity)));
+                            entity.resetFallDistance();
+                            entity.setNoGravity(true);
 
-
-
-
+                        }
                     }
+
                     System.out.println(timer);
                     timer--;
                 }else if (timer > 0) {
@@ -124,15 +124,21 @@ public class TimeStopAbility {
                     }
                     entities.clear();
                     entitiesNew.clear();
+                    positions.clear();
+                    deltaMovement.clear();
+                    xRot.clear();
+                    yRot.clear();
+                    yHeadRot.clear();
 
                 }
             }
         }
     }
 
-    public void stopTime (int radius, Player caster, int ticks) {
+    public void stopTime (int radius, Player caster, int ticks, net.minecraft.world.level.Level plevel) {
         player = caster;
 
+        level = plevel;
 
 
         entities = caster.level.getEntities(caster, AABB.ofSize(caster.position(), radius,radius,radius));

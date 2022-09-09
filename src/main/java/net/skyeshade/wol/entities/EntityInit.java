@@ -13,5 +13,5 @@ public class EntityInit {
 
 
     public static final RegistryObject<EntityType<BladeSlashProjectileEntity>> BLADE_SLASH = ENTITY_TYPES.register("blade_slash",
-            () -> EntityType.Builder.of((EntityType.EntityFactory<BladeSlashProjectileEntity>) BladeSlashProjectileEntity::new, MobCategory.MISC).sized(0.5F, 0.5F).build("blade_slash"));
+            () -> EntityType.Builder.of((EntityType.EntityFactory<BladeSlashProjectileEntity>) BladeSlashProjectileEntity::new, MobCategory.MISC).sized(2.5F, 2.5F).build("blade_slash"));
 }

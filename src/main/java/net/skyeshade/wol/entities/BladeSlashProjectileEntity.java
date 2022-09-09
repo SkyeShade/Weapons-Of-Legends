@@ -1,9 +1,8 @@
 package net.skyeshade.wol.entities;
 
+import com.mojang.math.Vector3f;
 import net.minecraft.client.particle.HeartParticle;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.*;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -17,13 +16,16 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.network.NetworkHooks;
 import net.skyeshade.wol.client.render.BladeSlashRenderer;
 import net.skyeshade.wol.particles.BladeSlashParticles;
+import org.apache.commons.compress.compressors.lz77support.LZ77Compressor;
 
 public class BladeSlashProjectileEntity extends AbstractArrow {
     LivingEntity attacker;
@@ -76,7 +78,8 @@ public class BladeSlashProjectileEntity extends AbstractArrow {
     protected void onHitBlock(BlockHitResult pResult) {
         super.onHitBlock(pResult);
         //this.level.explode(this, this.getX(), this.getY(), this.getZ(), 1.0f, false, Explosion.BlockInteraction.BREAK);
-        this.level.destroyBlock(pResult.getBlockPos(), true);
+        if (!this.level.getBlockState(pResult.getBlockPos()).is(Blocks.BEDROCK))
+            this.level.destroyBlock(pResult.getBlockPos(), true);
         this.discard();
 
     }
@@ -99,10 +102,10 @@ public class BladeSlashProjectileEntity extends AbstractArrow {
     BladeSlashParticles bladeSlashParticles = new BladeSlashParticles();
     @Override
     public void tick() {
-        super.tick();
 
 
-        if (!this.level.isClientSide()) {
+
+
 
             //System.out.println("ticking");
             //ParticleOptions particleOptions = ParticleTypes.HEART;
@@ -114,11 +117,21 @@ public class BladeSlashProjectileEntity extends AbstractArrow {
             double d6 = vec3.y;
             double d1 = vec3.z;
             for (int i = 0; i < 4; ++i){
-                this.level.addParticle(ParticleTypes.CRIT, this.getX() + d5 * (double) i / 4.0D, this.getY() + d6 * (double) i / 4.0D, this.getZ() + d1 * (double) i / 4.0D, -d5, -d6 + 0.2D, -d1);
+
+                for (int ii = 0; ii < 10; ++ii) {
+                    Vector3f vector3f = new Vector3f(0.6f,0f,0f);
+                    this.level.addParticle(new DustParticleOptions(vector3f,1.0f),
+                            this.getX() + d5 * (double) i / 4.0D - 1.25f + (2.5f /ii),
+                            this.getY() + d6 * (double) i / 4.0D + 1.25f,
+                            this.getZ() + d1 * (double) i / 4.0D,
+                            -d5, -d6 + 0.2D, -d1);
+                }
+
             }
             //bladeSlashParticles.bladeParticleEffect(this, 200);
 
-        }
+
+        super.tick();
     }
 
 

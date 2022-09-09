@@ -23,9 +23,10 @@ public class TimeStopSwordItem extends SwordItem {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
 
 
-        timeStopAbility.stopTime(64, pPlayer, 200);
+        timeStopAbility.stopTime(64, pPlayer, 200, pLevel);
 
         pPlayer.getCooldowns().addCooldown(this,200);
+
 
         return super.use(pLevel, pPlayer, pUsedHand);
     }
@@ -34,7 +35,7 @@ public class TimeStopSwordItem extends SwordItem {
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
 
 
-        timeStopAbility.shootProjectile(entity, 1000.0F);
+        timeStopAbility.shootProjectile(entity, 100.0F);
 
 
         return super.onEntitySwing(stack, entity);
