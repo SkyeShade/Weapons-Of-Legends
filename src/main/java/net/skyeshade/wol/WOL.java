@@ -11,7 +11,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.skyeshade.wol.abilities.TimeStopAbility;
 import net.skyeshade.wol.entities.EntityInit;
 import net.skyeshade.wol.item.ModItems;
-import net.skyeshade.wol.particles.BladeSlashParticles;
+import net.skyeshade.wol.sound.ModSounds;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -29,14 +29,18 @@ public class WOL
         // Register the setup method for modloading
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModItems.register(eventBus);
+
+        ModSounds.register(eventBus);
         EntityInit.ENTITY_TYPES.register(eventBus);
+
+
         eventBus.addListener(this::setup);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
 
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, TimeStopAbility::onServerTick);
 
-        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, BladeSlashParticles::onServerTick);
+
 
         //MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, ShootSlashProjectileAbility::onServerTick);
 

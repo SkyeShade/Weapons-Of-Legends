@@ -1,0 +1,14 @@
+{
+  "stop_time": {
+    "subtitle": "sounds.wol.stop_time",
+    "sounds": [
+      "wol:stop_time"
+    ]
+  },
+  "start_time": {
+    "subtitle": "sounds.wol.start_time",
+    "sounds": [
+      "wol:start_time"
+    ]
+  }
+}

@@ -1,5 +1,9 @@
 {
   "item.wol.kage_kokouy" : "Kage Kokouy",
 
-  "itemGroup.weapons_of_legends": "Weapons Of Legends"
+  "itemGroup.weapons_of_legends": "Weapons Of Legends",
+
+  "sounds.wol.stop_time": "Stop Time",
+
+  "sounds.wol.start_time": "Start Time"
 }

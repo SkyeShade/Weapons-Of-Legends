@@ -17,7 +17,7 @@ public class ModItems {
 
 
     public static final RegistryObject<Item> KAGE_KOKOUY = ITEMS.register("kage_kokouy",
-            () -> new TimeStopSwordItem(Tiers.NETHERITE, 4, 6f,
+            () -> new TimeStopSwordItem(Tiers.NETHERITE, 4, -2f,
                     new Item.Properties().tab(ModCreativeModeTab.WEAPONS_OF_LEGENDS).durability(-1)));
 
     public static void register(IEventBus eventBus) {
