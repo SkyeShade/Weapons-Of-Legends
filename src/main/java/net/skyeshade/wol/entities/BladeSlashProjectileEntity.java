@@ -23,8 +23,10 @@ import java.util.concurrent.ThreadLocalRandom;
 public class BladeSlashProjectileEntity extends AbstractArrow {
     LivingEntity attacker;
 
+    Vec3 currentDeltamovement;
 
-    Vec3 vec3;
+
+
 
     public BladeSlashProjectileEntity(EntityType<BladeSlashProjectileEntity> entityType, Level world) {
         super(entityType, world);
@@ -44,6 +46,8 @@ public class BladeSlashProjectileEntity extends AbstractArrow {
         //    this.discard();
         //}
         this.playSound(SoundEvents.TRIDENT_THROW, 1.0F, 0.1F);
+
+        //currentDeltamovement = this.getDeltaMovement();
     }
 
 
@@ -73,7 +77,7 @@ public class BladeSlashProjectileEntity extends AbstractArrow {
     protected void onHitBlock(BlockHitResult pResult) {
         super.onHitBlock(pResult);
         //this.level.explode(this, this.getX(), this.getY(), this.getZ(), 1.0f, false, Explosion.BlockInteraction.BREAK);
-        if (!this.level.getBlockState(pResult.getBlockPos()).is(Blocks.BEDROCK))
+        if (!this.level.getBlockState(pResult.getBlockPos()).is(Blocks.BEDROCK) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_PORTAL_FRAME) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_GATEWAY) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_PORTAL))
             this.level.destroyBlock(pResult.getBlockPos(), true);
         this.discard();
 
@@ -96,11 +100,19 @@ public class BladeSlashProjectileEntity extends AbstractArrow {
     }
 
 
+
     int randomNum = ThreadLocalRandom.current().nextInt(0, 360);
     @Override
     public void tick() {
 
 
+            if (this.isInWater()) {
+                if (currentDeltamovement == null) {
+                    currentDeltamovement = this.getDeltaMovement();
+                }else {
+                    this.setDeltaMovement(currentDeltamovement.x * 300.0F, currentDeltamovement.y * 300.0F, currentDeltamovement.z * 300.0F);
+                }
+            }
 
             this.setPierceLevel((byte) 10);
 
