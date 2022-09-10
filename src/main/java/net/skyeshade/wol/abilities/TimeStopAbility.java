@@ -6,6 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerPlayerConnection;
 import net.minecraft.sounds.SoundEvents;
@@ -115,11 +116,14 @@ public class TimeStopAbility {
                                     for (Player player2 : level.players()){
                                         if (entity == player2) {
                                             ServerPlayer playerIn = (ServerPlayer) player2;
+
+
                                             playerIn.connection.teleport(positions.get(entities.indexOf(entity)).x,positions.get(entities.indexOf(entity)).y,positions.get(entities.indexOf(entity)).z, yRot.get(entities.indexOf(entity)),xRot.get(entities.indexOf(entity)));
 
 
                                         }
                                     }
+
 
                                 entity.setPos(positions.get(entities.indexOf(entity)));
                                 entity.setXRot(xRot.get(entities.indexOf(entity)));
