@@ -18,23 +18,26 @@ public class TimeStopSwordItem extends SwordItem {
     }
 
 
-    TimeStopAbility timeStopAbility = new TimeStopAbility();
 
+    TimeStopAbility timeStopAbility = new TimeStopAbility();
     static Player player;
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+
 
 
         timeStopAbility.stopTime(128, pPlayer, 300, pLevel);
 
         pPlayer.playSound(ModSounds.STOP_TIME.get(), 10f, 1f);
 
+
+
         pPlayer.getCooldowns().addCooldown(this,700);
         player = pPlayer;
 
+
         return super.use(pLevel, pPlayer, pUsedHand);
     }
-
 
     @Override
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
@@ -46,4 +49,6 @@ public class TimeStopSwordItem extends SwordItem {
         return super.onEntitySwing(stack, entity);
 
     }
+
+
 }
