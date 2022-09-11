@@ -105,6 +105,7 @@ public class TimeStopAbility {
     public static void onServerTick (TickEvent.ServerTickEvent event) {
         if (player != null) {
             if (!player.level.isClientSide()) {
+                //adds new entities around the caster position
                 if (timer > 1) {
                     entitiesNew = player.level.getEntities(player, AABB.ofSize(player.position(), radius1,radius1,radius1));
                     for (Entity entity : entitiesNew) {
@@ -127,10 +128,13 @@ public class TimeStopAbility {
                         System.out.println("Potential Warming: Could Not Add [All] Entity Attributes From List To Temporary Storage");
                         }
                     }
+                    //sets entity stats every tick if the list of entities isnt empty (this is what freezes the entities)
                     if (!entities.isEmpty()) {
                         try {
                             for (Entity entity : entities) {
+                                //checks if the entities is not one of the ones that stopped time
                                 if (!timeStoppingPlayer.contains(entity)) {
+                                    //checks if the entity is a player, if so then sets their positions using a network packet, this is needed to sync the clients with server
                                     for (Player player2 : level.players()) {
                                         if (entity == player2) {
                                             ServerPlayer playerIn = (ServerPlayer) player2;
@@ -138,7 +142,7 @@ public class TimeStopAbility {
 
                                         }
                                     }
-
+                                    //sets all entities positions on server side
                                     entity.setPos(positions.get(entities.indexOf(entity)));
                                     entity.setXRot(xRot.get(entities.indexOf(entity)));
                                     entity.setYRot(yRot.get(entities.indexOf(entity)));
@@ -153,18 +157,22 @@ public class TimeStopAbility {
                         }
 
                     }
-
-                    //System.out.println(timer);
                     timer--;
+
+                //on second to last tick, sets all entities original position and velocity (deltaMovement as of 1.18.2) on time freeze
                 }else if (timer > 0) {
+
                     for (Entity entity : entities) {
+                        //checks if the entities is not one of the ones that stopped time
                         if (!timeStoppingPlayer.contains(entity)) {
                             entity.setPos(positions.get(entities.indexOf(entity)));
                             entity.setDeltaMovement(deltaMovement.get(entities.indexOf(entity)));
 
+                            //makes sure the blade entities dont have gravity
                             if (!bladeEntities.contains(entity)) {
                                 entity.setNoGravity(false);
                             }
+                            //removes uuids of players who have their gravity turned on again
                             if (timeStartMissedPlayers.contains(entity.getUUID())) {
                                 if (entity.isNoGravity()) {
                                     timeStartMissedPlayers.remove(entity.getUUID());
@@ -173,17 +181,12 @@ public class TimeStopAbility {
                         }
 
                     }
+                    //clears list of all players who have stopped time
                     timeStoppingPlayer.clear();
-
-
-
-
-
 
                     timer--;
 
-
-
+                //on last tick clears all lists of data to get ready for next use
                 }else if(timer == 0){
                     bladeEntities.clear();
                     entities.clear();
@@ -194,16 +197,16 @@ public class TimeStopAbility {
                     yRot.clear();
                     yHeadRot.clear();
                     timeStoppingPlayer.clear();
-
-
-
                 }
+                //plays time resume on the last 2 seconds (and makes sure its only played once)
                 if (timer < 40 && stopTimer == 1) {
+
                     level.playSound(null, player.blockPosition(), ModSounds.START_TIME.get(),SoundSource.PLAYERS, 10f,1f);
 
                     stopTimer = 0;
                 }
 
+                //makes sure players dont somehow miss getting unfrozen in time by whatever means they have to break my shitty code
                 if (!timeStartMissedPlayers.isEmpty()) {
                     for (Player eplayer : level.players()) {
                         if (eplayer.isNoGravity()) {
@@ -212,18 +215,13 @@ public class TimeStopAbility {
                                 timeStartMissedPlayers.remove(eplayer.getUUID());
                             }
                         }
-
                     }
-
-
-
                 }
             }
-
         }
     }
 
-
+    //makes sure players get their gravity back if they logged in and out during time frozen
     @SubscribeEvent
     public static void onPlayerLoggedIn (PlayerEvent.PlayerLoggedInEvent event) {
         if (stopTimer == 0){
@@ -242,11 +240,10 @@ public class TimeStopAbility {
         }
     }
 
-
+    //start function for stopping time
     public void stopTime (int radius, Player caster, int ticks, net.minecraft.world.level.Level plevel) {
 
         caster.setNoGravity(false);
-
 
         timeStoppingPlayer.add(caster);
 
@@ -254,27 +251,6 @@ public class TimeStopAbility {
 
         level = plevel;
         radius1 = radius;
-        List<Entity> startEntities = caster.level.getEntities(caster, AABB.ofSize(caster.position(), radius,radius,radius));
-
-
-
-        /*try {
-            for (Entity entity : startEntities) {
-                if (true) {
-                    entities.add(entity);
-                    positions.add(entities.indexOf(entity), entity.position());
-                    deltaMovement.add(entities.indexOf(entity), entity.getDeltaMovement());
-                    xRot.add(entities.indexOf(entity), entity.getXRot());
-                    yRot.add(entities.indexOf(entity), entity.getYRot());
-                    yHeadRot.add(entities.indexOf(entity), entity.getYHeadRot());
-                }
-            }
-        }catch (Exception e) {
-            System.out.println("Potential Warming: Could Not Add [All] Entity Attributes From List To Temporary Storage");
-        }*/
-
-
-
 
         stopTimer = 1;
         timer = ticks;
