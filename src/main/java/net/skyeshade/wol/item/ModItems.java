@@ -16,7 +16,7 @@ public class ModItems {
             DeferredRegister.create(ForgeRegistries.ITEMS, WOL.MOD_ID);
 
 
-    public static final RegistryObject<Item> KAGE_KOKOUY = ITEMS.register("kage_kokouy",
+    public static final RegistryObject<Item> KAGE_KOKOUY = ITEMS.register("kage_no_kokyu",
             () -> new TimeStopSwordItem(Tiers.NETHERITE, 4, -2f,
                     new Item.Properties().tab(ModCreativeModeTab.WEAPONS_OF_LEGENDS).durability(-1)));
 

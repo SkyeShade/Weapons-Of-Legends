@@ -13,14 +13,17 @@ import net.skyeshade.wol.abilities.TimeStopAbility;
 import net.skyeshade.wol.sound.ModSounds;
 
 public class TimeStopSwordItem extends SwordItem {
+
     public TimeStopSwordItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
     }
 
 
 
+
     TimeStopAbility timeStopAbility = new TimeStopAbility();
     static Player player;
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
 

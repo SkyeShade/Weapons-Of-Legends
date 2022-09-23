@@ -44,8 +44,6 @@ public class WOL
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, TimeStopAbility::onPlayerLoggedOut);
 
 
-
-
         //MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, ShootSlashProjectileAbility::onServerTick);
 
 

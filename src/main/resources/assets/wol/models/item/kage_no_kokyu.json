@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "item/handheld",
 	"textures": {
-		"particle": "wol:item/kage_kokouy",
-		"layer0": "wol:item/kage_kokouy"
+		"particle": "wol:item/kage_no_kokyu",
+		"layer0": "wol:item/kage_no_kokyu"
 	},
 	"display": {
 		"thirdperson_righthand": {
@@ -18,14 +18,18 @@
 		},
 		"firstperson_righthand": {
 			"rotation": [50, 90, 0],
-			"translation": [0, 3.75, 0]
+			"translation": [0, 3.75, 0.25],
+			"scale": [1, 1, 0.66]
 		},
 		"firstperson_lefthand": {
 			"rotation": [50, -90, 0],
-			"translation": [0, 3.75, 0]
+			"translation": [0, 3.75, 0.25],
+			"scale": [1, 1, 0.66]
 		},
 		"ground": {
-			"rotation": [0, -180, 0]
+			"rotation": [0, -180, 0],
+			"translation": [0, 3.25, 0],
+			"scale": [1, 1, 0.66]
 		},
 		"fixed": {
 			"rotation": [0, -180, 0],
