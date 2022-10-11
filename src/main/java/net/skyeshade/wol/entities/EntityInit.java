@@ -9,7 +9,7 @@ import net.skyeshade.wol.WOL;
 
 public class EntityInit {
 
-    public static DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, WOL.MOD_ID);
+    public static DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, WOL.MOD_ID);
 
 
     public static final RegistryObject<EntityType<BladeSlashProjectileEntity>> BLADE_SLASH = ENTITY_TYPES.register("blade_slash",

@@ -4,6 +4,7 @@ import com.mojang.authlib.minecraft.client.MinecraftClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
 import net.minecraft.server.level.ServerEntity;
@@ -24,10 +25,10 @@ import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.client.event.sound.SoundEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
+
+
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.NoteBlockEvent;
+
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -377,12 +378,12 @@ public class TimeStopAbility {
     @SubscribeEvent
     public static void onPlayerLoggedIn (PlayerEvent.PlayerLoggedInEvent event) {
         try {
-            if (playerList.contains(event.getPlayer())) {
-                int valuesIndex = playerList.indexOf(event.getPlayer());
+            if (playerList.contains(event.getEntity())) {
+                int valuesIndex = playerList.indexOf(event.getEntity());
                 if (stopTimer.get(valuesIndex) == 0) {
-                    if (timeStartMissedPlayers.get(valuesIndex).contains(event.getPlayer().getUUID())) {
-                        event.getPlayer().setNoGravity(false);
-                        timeStartMissedPlayers.get(valuesIndex).remove(event.getPlayer().getUUID());
+                    if (timeStartMissedPlayers.get(valuesIndex).contains(event.getEntity().getUUID())) {
+                        event.getEntity().setNoGravity(false);
+                        timeStartMissedPlayers.get(valuesIndex).remove(event.getEntity().getUUID());
                     }
                 }
             }
@@ -391,14 +392,15 @@ public class TimeStopAbility {
         }
     }
 
+
     @SubscribeEvent
     public static void onPlayerLoggedOut (PlayerEvent.PlayerLoggedOutEvent event) {
         try {
-            if (playerList.contains(event.getPlayer())) {
-                int valuesIndex = playerList.indexOf(event.getPlayer());
+            if (playerList.contains(event.getEntity())) {
+                int valuesIndex = playerList.indexOf(event.getEntity());
                 if (stopTimer.get(valuesIndex) != 0) {
-                    if (!timeStartMissedPlayers.get(valuesIndex).contains(event.getPlayer().getUUID()))
-                        timeStartMissedPlayers.get(valuesIndex).add(event.getPlayer().getUUID());
+                    if (!timeStartMissedPlayers.get(valuesIndex).contains(event.getEntity().getUUID()))
+                        timeStartMissedPlayers.get(valuesIndex).add(event.getEntity().getUUID());
                 }
             }
         }catch (Exception e) {

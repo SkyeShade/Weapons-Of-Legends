@@ -5,5 +5,11 @@
 
   "sounds.wol.stop_time": "Stop Time",
 
-  "sounds.wol.start_time": "Start Time"
+  "sounds.wol.start_time": "Start Time",
+
+  "key.category.wol.tutorial": "Weapons Of Legends",
+  "key.wol.drink_water": "Drink Water",
+
+  "message.wol.drink_water": "Drinking Water",
+  "message.wol.no_water": "No water nearby!"
 }
