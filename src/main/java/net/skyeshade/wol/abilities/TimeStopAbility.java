@@ -1,45 +1,24 @@
 package net.skyeshade.wol.abilities;
 
-import com.mojang.authlib.minecraft.client.MinecraftClient;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
-import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
-import net.minecraft.server.level.ServerEntity;
+
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerPlayerConnection;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.WorldlyContainer;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.sound.PlaySoundEvent;
-import net.minecraftforge.client.event.sound.SoundEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
-
-
 import net.minecraftforge.event.entity.player.PlayerEvent;
-
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ISystemReportExtender;
 import net.skyeshade.wol.entities.BladeSlashProjectileEntity;
 import net.skyeshade.wol.entities.EntityInit;
-import net.skyeshade.wol.item.custom.TimeStopSwordItem;
 import net.skyeshade.wol.sound.ModSounds;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 
 public class TimeStopAbility {
@@ -409,7 +388,7 @@ public class TimeStopAbility {
     }
 
     //start function for stopping time
-    public void stopTime (int radius, Player caster, int ticks, net.minecraft.world.level.Level plevel) {
+    public void stopTime (int radius, Player caster, int ticks, Level plevel) {
         if (!caster.level.isClientSide()) {
             caster.setNoGravity(false);
             if (!playerList.isEmpty()) {
