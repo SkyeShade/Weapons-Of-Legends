@@ -1,9 +1,7 @@
 package net.skyeshade.wol.thirst;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
-@AutoRegisterCapability
 public class PlayerThirst {
     private int thirst;
     private final int MIN_THIRST = 0;

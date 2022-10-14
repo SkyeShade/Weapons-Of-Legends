@@ -1,7 +1,6 @@
-package net.skyeshade.wol.events;
+package net.skyeshade.wol.thirst.event;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
@@ -31,6 +30,7 @@ public class ClientEvents {
         public static void onKeyRegister(RegisterKeyMappingsEvent event) {
             event.register(KeyBinding.DRINKING_KEY);
         }
+
         @SubscribeEvent
         public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
             event.registerAboveAll("thirst", ThirstHudOverlay.HUD_THIRST);

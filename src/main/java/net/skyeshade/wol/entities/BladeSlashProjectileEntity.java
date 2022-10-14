@@ -1,7 +1,7 @@
 package net.skyeshade.wol.entities;
 
 import com.mojang.math.Vector3f;
-import net.minecraft.core.particles.*;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
