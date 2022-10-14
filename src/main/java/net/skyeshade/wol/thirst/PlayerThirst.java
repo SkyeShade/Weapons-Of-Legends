@@ -5,7 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 public class PlayerThirst {
     private int thirst;
     private final int MIN_THIRST = 0;
-    private final int MAX_THIRST = 10;
+    private final int MAX_THIRST = 79;
 
     public int getThirst() {
         return thirst;
