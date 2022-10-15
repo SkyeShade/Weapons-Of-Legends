@@ -34,13 +34,17 @@ public class ModEvents {
     @SubscribeEvent
     public static void onPlayerCloned(PlayerEvent.Clone event) {
         if(event.isWasDeath()) {
+            event.getOriginal().reviveCaps();
             event.getOriginal().getCapability(PlayerThirstProvider.PLAYER_THIRST).ifPresent(oldStore -> {
-                event.getOriginal().getCapability(PlayerThirstProvider.PLAYER_THIRST).ifPresent(newStore -> {
+                event.getEntity().getCapability(PlayerThirstProvider.PLAYER_THIRST).ifPresent(newStore -> {
                     newStore.copyFrom(oldStore);
                 });
             });
+            event.getOriginal().invalidateCaps();
+
         }
     }
+
 
     @SubscribeEvent
     public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
@@ -56,7 +60,7 @@ public class ModEvents {
                 event.player.getCapability(PlayerThirstProvider.PLAYER_THIRST).ifPresent(thirst -> {
                     if (ticks == 1) {
                         thirst.addThirst(1);
-                        System.out.println("EEE");
+
                     }
 
                     if (ticks == 2)
@@ -64,11 +68,7 @@ public class ModEvents {
 
 
                     ModMessages.sendToPlayer(new ThirstDataSyncS2CPacket(thirst.getThirst()), ((ServerPlayer) event.player));
-                    /*
-                    if(thirst.getThirst() > 0 && event.player.getRandom().nextFloat() < 0.085f) { // Once Every 10 Seconds on Avg
-                        thirst.addThirst(1);
-                        ModMessages.sendToPlayer(new ThirstDataSyncS2CPacket(thirst.getThirst()), ((ServerPlayer) event.player));
-                    }*/
+
                 });
             }
 
@@ -85,4 +85,6 @@ public class ModEvents {
             }
         }
     }
+
+
 }

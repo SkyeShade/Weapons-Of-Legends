@@ -43,10 +43,10 @@ public class ThirstHudOverlay {
             }
         }
 
-        Minecraft.getInstance().font.draw(poseStack, String.valueOf(ClientThirstData.getPlayerThirst()), x - 63 - (String.valueOf(ClientThirstData.getPlayerThirst()).length()*6), y - 59, 43690);
+        Minecraft.getInstance().font.draw(poseStack, String.valueOf(ClientThirstData.getPlayerThirst()), x - 55 - (String.valueOf(ClientThirstData.getPlayerThirst()).length()*6), y - 59, 43690);
 
         Minecraft.getInstance().font.draw(poseStack, "/", x - 53, y - 59, 43690);
 
-        Minecraft.getInstance().font.draw(poseStack, "79", x - 43, y - 59, 43690);
+        Minecraft.getInstance().font.draw(poseStack, "79", x - 45, y - 59, 43690);
     });
 }

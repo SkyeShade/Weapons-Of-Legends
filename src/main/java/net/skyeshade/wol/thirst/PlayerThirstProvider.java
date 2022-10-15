@@ -30,7 +30,6 @@ public class PlayerThirstProvider implements ICapabilityProvider, INBTSerializab
         if(cap == PLAYER_THIRST) {
             return optional.cast();
         }
-
         return LazyOptional.empty();
     }
 
@@ -43,6 +42,7 @@ public class PlayerThirstProvider implements ICapabilityProvider, INBTSerializab
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
+
         createPlayerThirst().loadNBTData(nbt);
     }
 }
