@@ -1,0 +1,90 @@
+package net.skyeshade.wol.stats;
+
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
+    public static Capability<PlayerStats> PLAYER_MANA = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
+    public static Capability<PlayerStats> PLAYER_MAXMANA = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
+    //mancore
+    public static Capability<PlayerStats> PLAYER_MANACORE = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
+    public static Capability<PlayerStats> PLAYER_MAXMANACORE = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
+    public static Capability<PlayerStats> PLAYER_MANACORE_EXHAUSTION = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
+
+    private PlayerStats mana = null;
+    private PlayerStats max_mana = null;
+    //manacore
+    private PlayerStats manacore = null;
+    private PlayerStats max_manacore = null;
+    private PlayerStats manacore_exhaustion = null;
+    private final LazyOptional<PlayerStats> manaOptional = LazyOptional.of(this::createPlayerMana);
+    private final LazyOptional<PlayerStats> maxManaOptional = LazyOptional.of(this::createPlayerMaxMana);
+    //manacore
+    private final LazyOptional<PlayerStats> manaCoreOptional = LazyOptional.of(this::createPlayerManaCore);
+    private final LazyOptional<PlayerStats> maxManaCoreOptional = LazyOptional.of(this::createPlayerMaxManaCore);
+    private final LazyOptional<PlayerStats> manaCoreExhaustionOptional = LazyOptional.of(this::createPlayerManaCoreExhaustion);
+
+    private PlayerStats createPlayerMana() {
+        if(this.mana == null) {
+            this.mana = new PlayerStats();
+        }
+        return this.mana;
+    }
+    private PlayerStats createPlayerMaxMana() {if(this.max_mana == null) {this.max_mana = new PlayerStats();}return this.max_mana;}
+
+
+    //manacore
+
+    private PlayerStats createPlayerManaCore() {if(this.manacore == null) {this.manacore = new PlayerStats();}return this.manacore;}
+    private PlayerStats createPlayerMaxManaCore() {if(this.max_manacore == null) {this.max_manacore = new PlayerStats();}return this.max_manacore;}
+    private PlayerStats createPlayerManaCoreExhaustion() {if(this.manacore_exhaustion == null) {this.manacore_exhaustion = new PlayerStats();}return this.manacore_exhaustion;}
+
+    @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        if(cap == PLAYER_MANA) {
+            return manaOptional.cast();
+        }
+        if(cap == PLAYER_MAXMANA) {
+            return maxManaOptional.cast();
+        }
+        /*if(cap == PLAYER_MANACORE) {
+            return manaCoreOptional.cast();
+        }
+        if(cap == PLAYER_MAXMANACORE) {
+            return maxManaCoreOptional.cast();
+        }
+        if(cap == PLAYER_MANACORE_EXHAUSTION) {
+            return manaCoreExhaustionOptional.cast();
+        }*/
+        return LazyOptional.empty();
+    }
+
+    @Override
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
+        createPlayerMana().saveNBTData(nbt);
+        createPlayerMaxMana().saveNBTData(nbt);
+        /*createPlayerManaCore().saveNBTData(nbt);
+        createPlayerMaxManaCore().saveNBTData(nbt);
+        createPlayerManaCoreExhaustion().saveNBTData(nbt);*/
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+        createPlayerMaxMana().loadNBTData(nbt);
+        createPlayerMana().loadNBTData(nbt);
+        /*createPlayerManaCore().loadNBTData(nbt);
+        createPlayerMaxManaCore().loadNBTData(nbt);
+        createPlayerManaCoreExhaustion().loadNBTData(nbt);*/
+    }
+}

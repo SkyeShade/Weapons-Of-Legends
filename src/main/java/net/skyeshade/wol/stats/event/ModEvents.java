@@ -1,0 +1,164 @@
+package net.skyeshade.wol.stats.event;
+
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.common.Mod;
+import net.skyeshade.wol.WOL;
+import net.skyeshade.wol.networking.ModMessages;
+import net.skyeshade.wol.networking.packet.mana.ManaDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.mana.MaxManaDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.manacore.ManaCoreDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.manacore.ManaCoreExhaustionDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.manacore.MaxManaCoreDataSyncS2CPacket;
+import net.skyeshade.wol.stats.PlayerStats;
+import net.skyeshade.wol.stats.PlayerStatsProvider;
+
+@Mod.EventBusSubscriber(modid = WOL.MOD_ID)
+public class ModEvents {
+
+    @SubscribeEvent
+    public static void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {
+        if(event.getObject() instanceof Player) {
+            if(!event.getObject().getCapability(PlayerStatsProvider.PLAYER_MANA).isPresent()) {
+                event.addCapability(new ResourceLocation(WOL.MOD_ID, "properties"), new PlayerStatsProvider());
+            }
+
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerCloned(PlayerEvent.Clone event) {
+        if(event.isWasDeath()) {
+            event.getOriginal().reviveCaps();
+            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(oldStore -> {
+                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(newStore -> {
+                    newStore.copyFrom(oldStore);
+                });
+            });
+            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MAXMANA).ifPresent(oldStore -> {
+                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MAXMANA).ifPresent(newStore -> {
+                    newStore.copyFrom(oldStore);
+                });
+            });
+            //manacore stuff
+            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MANACORE).ifPresent(oldStore -> {
+                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MANACORE).ifPresent(newStore -> {
+                    newStore.copyFrom(oldStore);
+                });
+            });
+            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MAXMANACORE).ifPresent(oldStore -> {
+                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MAXMANACORE).ifPresent(newStore -> {
+                    newStore.copyFrom(oldStore);
+                });
+            });
+            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MANACORE_EXHAUSTION).ifPresent(oldStore -> {
+                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MANACORE_EXHAUSTION).ifPresent(newStore -> {
+                    newStore.copyFrom(oldStore);
+                });
+            });
+
+
+            event.getOriginal().invalidateCaps();
+
+        }
+    }
+
+
+    @SubscribeEvent
+    public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+
+        event.register(PlayerStats.class);
+
+    }
+    static int tickcount;
+    @SubscribeEvent
+    public static void onServerTick(TickEvent.ServerTickEvent event) {
+        if(event.side == LogicalSide.SERVER) {
+            tickcount++;
+
+            for (Player player : event.getServer().getPlayerList().getPlayers()) {
+                if (tickcount % 200 == 0) {
+                    player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_EXHAUSTION).ifPresent(manacore_exhaustion -> {
+                        manacore_exhaustion.subManaCoreExhaustion(1);
+                        ModMessages.sendToPlayer(new ManaCoreExhaustionDataSyncS2CPacket(manacore_exhaustion.getManaCoreExhaustion()), ((ServerPlayer) player));
+
+                    });
+                }
+                if (tickcount % 1 == 0) {
+
+                    player.getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(mana -> {
+                        mana.addMana(1);
+                        ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), ((ServerPlayer) player));
+
+                    });
+
+
+
+                    player.getCapability(PlayerStatsProvider.PLAYER_MANACORE).ifPresent(manacore -> {
+                        manacore.subManaCore(1);
+                        ModMessages.sendToPlayer(new ManaCoreDataSyncS2CPacket(manacore.getManaCore()), ((ServerPlayer) player));
+
+                    });
+                }
+
+            }
+
+
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerJoinWorld(EntityJoinLevelEvent event) {
+        if(!event.getLevel().isClientSide()) {
+            if(event.getEntity() instanceof ServerPlayer player) {
+                player.getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(mana -> {
+                    ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), player);
+                });
+                player.getCapability(PlayerStatsProvider.PLAYER_MAXMANA).ifPresent(max_mana -> {
+                    ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(max_mana.getMaxMana()), player);
+                });
+
+
+                player.getCapability(PlayerStatsProvider.PLAYER_MAXMANA).ifPresent(max_mana -> {
+                    if (max_mana.getMaxMana() <= 100) {
+                        max_mana.setMaxMana(100);
+                        ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(max_mana.getMaxMana()), ((ServerPlayer) player));
+                    }
+                });
+                //manacore stuff
+
+                player.getCapability(PlayerStatsProvider.PLAYER_MANACORE).ifPresent(manacore -> {
+                    ModMessages.sendToPlayer(new ManaCoreDataSyncS2CPacket(manacore.getManaCore()), player);
+                });
+                player.getCapability(PlayerStatsProvider.PLAYER_MAXMANACORE).ifPresent(max_manacore -> {
+                    ModMessages.sendToPlayer(new MaxManaCoreDataSyncS2CPacket(max_manacore.getMaxManaCore()), player);
+                });
+                player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_EXHAUSTION).ifPresent(manacore_exhaustion -> {
+                    ModMessages.sendToPlayer(new ManaCoreExhaustionDataSyncS2CPacket(manacore_exhaustion.getManaCoreExhaustion()), player);
+                });
+
+                player.getCapability(PlayerStatsProvider.PLAYER_MAXMANACORE).ifPresent(max_manacore -> {
+                    if (max_manacore.getMaxManaCore() <= 1000) {
+                        max_manacore.setMaxManaCore(1000);
+                        ModMessages.sendToPlayer(new MaxManaCoreDataSyncS2CPacket(max_manacore.getMaxManaCore()), ((ServerPlayer) player));
+                    }
+                });
+
+
+
+            }
+        }
+    }
+
+
+}

@@ -1,32 +1,32 @@
-package net.skyeshade.wol.networking.packet;
+package net.skyeshade.wol.networking.packet.mana;
 
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
-import net.skyeshade.wol.client.ClientThirstData;
+import net.skyeshade.wol.client.ClientStatsData;
 
 import java.util.function.Supplier;
 
-public class ThirstDataSyncS2CPacket {
-    private final int thirst;
+public class ManaDataSyncS2CPacket {
+    private final int mana;
 
-    public ThirstDataSyncS2CPacket(int thirst) {
-        this.thirst = thirst;
+    public ManaDataSyncS2CPacket(int mana) {
+        this.mana = mana;
     }
 
-    public ThirstDataSyncS2CPacket(FriendlyByteBuf buf) {
-        this.thirst = buf.readInt();
+    public ManaDataSyncS2CPacket(FriendlyByteBuf buf) {
+        this.mana = buf.readInt();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeInt(thirst);
+        buf.writeInt(mana);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
             // HERE WE ARE ON THE CLIENT!
-            ClientThirstData.set(thirst);
+            ClientStatsData.setMana(mana);
         });
         return true;
     }
