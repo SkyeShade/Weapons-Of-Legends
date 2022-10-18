@@ -90,19 +90,21 @@ public class PlayerStats {
         this.manacore_exhaustion = source.manacore_exhaustion;
     }
     public void saveNBTData(CompoundTag nbt) {
+        System.out.println("Saving NBT"+"\n"+mana+"\n"+max_mana);
         nbt.putInt("mana", mana);
         nbt.putInt("max_mana", max_mana);
-        /*
+
         nbt.putInt("manacore", manacore);
         nbt.putInt("max_manacore", max_manacore);
-        nbt.putInt("manacore_exhaustion", manacore_exhaustion);*/
+        nbt.putInt("manacore_exhaustion", manacore_exhaustion);
 
     }
     public void loadNBTData(CompoundTag nbt) {
+        System.out.println("Loading NBT"+"\n"+mana+"\n"+max_mana);
         mana = nbt.getInt("mana");
         max_mana = nbt.getInt("max_mana");
-        /*manacore = nbt.getInt("manacore");
+        manacore = nbt.getInt("manacore");
         max_manacore = nbt.getInt("max_manacore");
-        manacore_exhaustion = nbt.getInt("manacore_exhaustion");*/
+        manacore_exhaustion = nbt.getInt("manacore_exhaustion");
     }
 }

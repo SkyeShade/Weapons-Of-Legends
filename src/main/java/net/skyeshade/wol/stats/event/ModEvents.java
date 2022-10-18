@@ -99,7 +99,7 @@ public class ModEvents {
                     player.getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(mana -> {
                         mana.addMana(1);
                         ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), ((ServerPlayer) player));
-
+                        System.out.println(mana.getMana());
                     });
 
 

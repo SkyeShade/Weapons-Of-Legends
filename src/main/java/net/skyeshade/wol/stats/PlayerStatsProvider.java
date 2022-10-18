@@ -12,6 +12,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
     public static Capability<PlayerStats> PLAYER_MANA = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
     public static Capability<PlayerStats> PLAYER_MAXMANA = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
@@ -56,7 +59,7 @@ public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializabl
         if(cap == PLAYER_MAXMANA) {
             return maxManaOptional.cast();
         }
-        /*if(cap == PLAYER_MANACORE) {
+        if(cap == PLAYER_MANACORE) {
             return manaCoreOptional.cast();
         }
         if(cap == PLAYER_MAXMANACORE) {
@@ -64,27 +67,46 @@ public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializabl
         }
         if(cap == PLAYER_MANACORE_EXHAUSTION) {
             return manaCoreExhaustionOptional.cast();
-        }*/
+        }
         return LazyOptional.empty();
     }
 
+    List<PlayerStats> saveNBTDataList = new ArrayList<PlayerStats>();
     @Override
     public CompoundTag serializeNBT() {
-        CompoundTag nbt = new CompoundTag();
-        createPlayerMana().saveNBTData(nbt);
-        createPlayerMaxMana().saveNBTData(nbt);
-        /*createPlayerManaCore().saveNBTData(nbt);
-        createPlayerMaxManaCore().saveNBTData(nbt);
-        createPlayerManaCoreExhaustion().saveNBTData(nbt);*/
-        return nbt;
+        saveNBTDataList.add(createPlayerMana());
+        saveNBTDataList.add(createPlayerMaxMana());
+        saveNBTDataList.add(createPlayerManaCore());
+        saveNBTDataList.add(createPlayerMaxManaCore());
+        saveNBTDataList.add(createPlayerManaCoreExhaustion());
+        for (PlayerStats e : saveNBTDataList) {
+            CompoundTag nbt = new CompoundTag();
+            e.saveNBTData(nbt);
+            return nbt;
+        }
+        return null;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        createPlayerMaxMana().loadNBTData(nbt);
-        createPlayerMana().loadNBTData(nbt);
-        /*createPlayerManaCore().loadNBTData(nbt);
-        createPlayerMaxManaCore().loadNBTData(nbt);
-        createPlayerManaCoreExhaustion().loadNBTData(nbt);*/
+
+
+
+                createPlayerMana().loadNBTData(nbt);
+
+
+                createPlayerMaxMana().loadNBTData(nbt);
+
+
+                createPlayerManaCore().loadNBTData(nbt);
+
+
+                createPlayerMaxManaCore().loadNBTData(nbt);
+
+
+                createPlayerManaCoreExhaustion().loadNBTData(nbt);
+
+
+
     }
 }
