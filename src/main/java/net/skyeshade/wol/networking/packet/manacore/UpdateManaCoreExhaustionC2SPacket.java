@@ -12,16 +12,17 @@ import net.skyeshade.wol.stats.PlayerStatsProvider;
 import java.util.function.Supplier;
 
 public class UpdateManaCoreExhaustionC2SPacket {
-    public UpdateManaCoreExhaustionC2SPacket() {
-
+    private final long manaExhaustionChange;
+    public UpdateManaCoreExhaustionC2SPacket(long manaExhaustionChange) {
+        this.manaExhaustionChange = manaExhaustionChange;
     }
 
     public UpdateManaCoreExhaustionC2SPacket(FriendlyByteBuf buf) {
-
+        this.manaExhaustionChange = buf.readLong();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-
+        buf.writeLong(manaExhaustionChange);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
@@ -36,7 +37,7 @@ public class UpdateManaCoreExhaustionC2SPacket {
                 // increase the water level / stats level of player
                 // Output the current stats level
             player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_EXHAUSTION).ifPresent(manacore_exhaustion -> {
-                manacore_exhaustion.addManaCoreExhaustion(1);
+                manacore_exhaustion.addManaCoreExhaustion(manaExhaustionChange);
                 ModMessages.sendToPlayer(new ManaCoreExhaustionDataSyncS2CPacket(manacore_exhaustion.getManaCoreExhaustion()), player);
             });
 

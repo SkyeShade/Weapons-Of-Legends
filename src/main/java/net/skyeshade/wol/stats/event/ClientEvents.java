@@ -22,11 +22,11 @@ public class ClientEvents {
         @SubscribeEvent
         public static void onKeyInput(InputEvent.Key event) {
             if(KeyBinding.MANASUB_KEY.consumeClick()) {
-                ModMessages.sendToServer(new UpdateManaC2SPacket());
+                ModMessages.sendToServer(new UpdateManaC2SPacket(1000));
 
-                ModMessages.sendToServer(new UpdateManaCoreC2SPacket());
+                ModMessages.sendToServer(new UpdateManaCoreC2SPacket(10));
 
-                ModMessages.sendToServer(new UpdateManaCoreExhaustionC2SPacket());
+                ModMessages.sendToServer(new UpdateManaCoreExhaustionC2SPacket(1));
             }
             if(KeyBinding.MAXMANAADD_KEY.consumeClick()) {
                 ModMessages.sendToServer(new UpdateMaxManaC2SPacket());

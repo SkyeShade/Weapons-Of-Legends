@@ -11,16 +11,17 @@ import net.skyeshade.wol.stats.PlayerStatsProvider;
 import java.util.function.Supplier;
 
 public class UpdateManaC2SPacket {
-    public UpdateManaC2SPacket() {
-
+    private final long manaChange;
+    public UpdateManaC2SPacket(long manaChange) {
+        this.manaChange = manaChange;
     }
 
     public UpdateManaC2SPacket(FriendlyByteBuf buf) {
-
+        this.manaChange = buf.readLong();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-
+        buf.writeLong(manaChange);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
@@ -35,7 +36,10 @@ public class UpdateManaC2SPacket {
                 // increase the water level / stats level of player
                 // Output the current stats level
             player.getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(mana -> {
-                mana.subMana(10);
+
+                    mana.addMana(manaChange);
+
+
                 ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), player);
             });
 

@@ -8,18 +8,18 @@ import net.skyeshade.wol.client.ClientStatsData;
 import java.util.function.Supplier;
 
 public class MaxManaCoreDataSyncS2CPacket {
-    private final int max_manacore;
+    private final long max_manacore;
 
-    public MaxManaCoreDataSyncS2CPacket(int max_manacore) {
+    public MaxManaCoreDataSyncS2CPacket(long max_manacore) {
         this.max_manacore = max_manacore;
     }
 
     public MaxManaCoreDataSyncS2CPacket(FriendlyByteBuf buf) {
-        this.max_manacore = buf.readInt();
+        this.max_manacore = buf.readLong();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeInt(max_manacore);
+        buf.writeLong(max_manacore);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {

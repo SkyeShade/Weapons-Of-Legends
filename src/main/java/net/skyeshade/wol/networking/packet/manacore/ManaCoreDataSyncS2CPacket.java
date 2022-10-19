@@ -8,18 +8,18 @@ import net.skyeshade.wol.client.ClientStatsData;
 import java.util.function.Supplier;
 
 public class ManaCoreDataSyncS2CPacket {
-    private final int manacore;
+    private final long manacore;
 
-    public ManaCoreDataSyncS2CPacket(int manacore) {
+    public ManaCoreDataSyncS2CPacket(long manacore) {
         this.manacore = manacore;
     }
 
     public ManaCoreDataSyncS2CPacket(FriendlyByteBuf buf) {
-        this.manacore = buf.readInt();
+        this.manacore = buf.readLong();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeInt(manacore);
+        buf.writeLong(manacore);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {

@@ -14,7 +14,13 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.skyeshade.wol.entities.BladeSlashProjectileEntity;
 import net.skyeshade.wol.entities.EntityInit;
+import net.skyeshade.wol.networking.ModMessages;
+import net.skyeshade.wol.networking.packet.mana.ManaDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.mana.MaxManaDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.manacore.ManaCoreDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.manacore.ManaCoreExhaustionDataSyncS2CPacket;
 import net.skyeshade.wol.sound.ModSounds;
+import net.skyeshade.wol.stats.PlayerStatsProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +28,7 @@ import java.util.UUID;
 
 
 public class TimeStopAbility {
-    static List<Integer> timer = new ArrayList<>();
+    public static List<Integer> timer = new ArrayList<>();
 
     static List<Integer> stopTimer = new ArrayList<>();
 
@@ -36,7 +42,7 @@ public class TimeStopAbility {
     static List<List<UUID>> timeStartMissedPlayers = new ArrayList<>();
     static List<List<Entity>> bladeEntities = new ArrayList<>();
     static int radius1;
-    static List<Player> playerList = new ArrayList<>();
+    public static List<Player> playerList = new ArrayList<>();
 
     static List<Level> levelList = new ArrayList<>();
     static ArrayList<ArrayList<Vec3>> positions = new ArrayList<>();
@@ -110,6 +116,32 @@ public class TimeStopAbility {
                         if (!player.level.isClientSide()) {
                             //adds new entities around the caster position
                             int valuesIndex = playerList.indexOf(player);
+                            player.getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(mana -> {
+                                if (timer.get(valuesIndex) > 40) {
+                                    if (mana.getMana() >= 100) {
+                                        mana.addMana(-100);
+                                        ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), ((ServerPlayer) player));
+
+                                        player.getCapability(PlayerStatsProvider.PLAYER_MANACORE).ifPresent(manacore -> {
+                                            manacore.addManaCore(10);
+                                            ModMessages.sendToPlayer(new ManaCoreDataSyncS2CPacket(manacore.getManaCore()), ((ServerPlayer) player));
+                                        });
+                                        player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_EXHAUSTION).ifPresent(manacore_exhaustion -> {
+                                            manacore_exhaustion.addManaCoreExhaustion(1);
+                                            ModMessages.sendToPlayer(new ManaCoreExhaustionDataSyncS2CPacket(manacore_exhaustion.getManaCoreExhaustion()), ((ServerPlayer) player));
+                                        });
+                                        timer.set(valuesIndex, 45);
+
+
+
+
+                                    }
+                                }
+                            });
+
+
+
+
                             if (timer.get(valuesIndex) > 1) {
                                 if (entitiesNew.isEmpty()) {
                                     entitiesNew.add(player.level.getEntities(player, AABB.ofSize(player.position(), radius1, radius1, radius1)));

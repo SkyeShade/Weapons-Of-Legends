@@ -87,7 +87,7 @@ public class ModEvents {
             tickcount++;
 
             for (Player player : event.getServer().getPlayerList().getPlayers()) {
-                if (tickcount % 200 == 0) {
+                if (tickcount % 20 == 0) {
                     player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_EXHAUSTION).ifPresent(manacore_exhaustion -> {
                         manacore_exhaustion.subManaCoreExhaustion(1);
                         ModMessages.sendToPlayer(new ManaCoreExhaustionDataSyncS2CPacket(manacore_exhaustion.getManaCoreExhaustion()), ((ServerPlayer) player));
@@ -99,7 +99,7 @@ public class ModEvents {
                     player.getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(mana -> {
                         mana.addMana(1);
                         ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), ((ServerPlayer) player));
-                        System.out.println(mana.getMana());
+                        //System.out.println(mana.getMana());
                     });
 
 

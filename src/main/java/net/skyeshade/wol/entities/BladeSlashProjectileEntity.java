@@ -64,7 +64,7 @@ public class BladeSlashProjectileEntity extends AbstractArrow {
 
 
 
-        pResult.getEntity().hurt(DamageSource.MAGIC, 10);
+        pResult.getEntity().hurt(DamageSource.MAGIC, 20);
         this.playSound(SoundEvents.TRIDENT_HIT, 10.0F, 0.1F);
 
 

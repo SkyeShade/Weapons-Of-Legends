@@ -35,7 +35,7 @@ public class UpdateMaxManaC2SPacket {
                 // increase the water level / stats level of player
                 // Output the current stats level
             player.getCapability(PlayerStatsProvider.PLAYER_MAXMANA).ifPresent(max_mana -> {
-                max_mana.addMaxMana(100);
+                max_mana.addMaxMana(10000L);
                 ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(max_mana.getMaxMana()), player);
             });
 

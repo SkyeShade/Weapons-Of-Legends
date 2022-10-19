@@ -8,18 +8,18 @@ import net.skyeshade.wol.client.ClientStatsData;
 import java.util.function.Supplier;
 
 public class ManaCoreExhaustionDataSyncS2CPacket {
-    private final int manacore_exhaustion;
+    private final long manacore_exhaustion;
 
-    public ManaCoreExhaustionDataSyncS2CPacket(int manacore_exhaustion) {
+    public ManaCoreExhaustionDataSyncS2CPacket(long manacore_exhaustion) {
         this.manacore_exhaustion = manacore_exhaustion;
     }
 
     public ManaCoreExhaustionDataSyncS2CPacket(FriendlyByteBuf buf) {
-        this.manacore_exhaustion = buf.readInt();
+        this.manacore_exhaustion = buf.readLong();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeInt(manacore_exhaustion);
+        buf.writeLong(manacore_exhaustion);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
