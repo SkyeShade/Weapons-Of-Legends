@@ -14,6 +14,7 @@ import net.skyeshade.wol.networking.packet.mana.UpdateManaC2SPacket;
 import net.skyeshade.wol.networking.packet.mana.UpdateMaxManaC2SPacket;
 import net.skyeshade.wol.networking.packet.manacore.UpdateManaCoreC2SPacket;
 import net.skyeshade.wol.networking.packet.manacore.UpdateManaCoreExhaustionC2SPacket;
+import net.skyeshade.wol.networking.packet.manacore.UpdateMaxManaCoreC2SPacket;
 import net.skyeshade.wol.util.KeyBinding;
 
 public class ClientEvents {
@@ -30,6 +31,7 @@ public class ClientEvents {
             }
             if(KeyBinding.MAXMANAADD_KEY.consumeClick()) {
                 ModMessages.sendToServer(new UpdateMaxManaC2SPacket());
+                ModMessages.sendToServer(new UpdateMaxManaCoreC2SPacket());
             }
         }
     }

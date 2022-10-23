@@ -16,11 +16,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
+import net.skyeshade.wol.SpellProjectile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class BladeSlashProjectileEntity extends AbstractArrow {
+public class BladeSlashProjectileEntity extends SpellProjectile {
     LivingEntity attacker;
 
     Vec3 currentDeltamovement;
@@ -52,7 +53,6 @@ public class BladeSlashProjectileEntity extends AbstractArrow {
 
 
 
-    @Override
     protected ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
@@ -62,7 +62,7 @@ public class BladeSlashProjectileEntity extends AbstractArrow {
 
         super.onHitEntity(pResult);
 
-
+        this.setSoundEvent(SoundEvents.TRIDENT_HIT);
 
         pResult.getEntity().hurt(DamageSource.MAGIC, 20);
         this.playSound(SoundEvents.TRIDENT_HIT, 10.0F, 0.1F);
@@ -76,6 +76,7 @@ public class BladeSlashProjectileEntity extends AbstractArrow {
     @Override
     protected void onHitBlock(BlockHitResult pResult) {
         super.onHitBlock(pResult);
+        this.setSoundEvent(SoundEvents.TRIDENT_HIT);
         //this.level.explode(this, this.getX(), this.getY(), this.getZ(), 1.0f, false, Explosion.BlockInteraction.BREAK);
         if (!this.level.getBlockState(pResult.getBlockPos()).is(Blocks.BEDROCK) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_PORTAL_FRAME) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_GATEWAY) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_PORTAL))
             this.level.destroyBlock(pResult.getBlockPos(), true);
