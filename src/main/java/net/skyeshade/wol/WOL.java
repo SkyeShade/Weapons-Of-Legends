@@ -11,6 +11,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.skyeshade.wol.abilities.TimeStopAbility;
+import net.skyeshade.wol.block.Destruction;
+import net.skyeshade.wol.block.ModBlocks;
 import net.skyeshade.wol.entities.EntityInit;
 import net.skyeshade.wol.item.ModItems;
 import net.skyeshade.wol.networking.ModMessages;
@@ -34,7 +36,7 @@ public class WOL {
         ModSounds.register(modEventBus);
         EntityInit.ENTITY_TYPES.register(modEventBus);
 
-
+        ModBlocks.register(modEventBus);
 
 
 
