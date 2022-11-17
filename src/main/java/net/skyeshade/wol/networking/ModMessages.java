@@ -9,6 +9,8 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.skyeshade.wol.WOL;
 
+import net.skyeshade.wol.networking.packet.destruction.DestructionActiveDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.destruction.UpdateDestructionActiveC2SPacket;
 import net.skyeshade.wol.networking.packet.mana.ManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.mana.MaxManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.mana.UpdateManaC2SPacket;
@@ -92,6 +94,19 @@ public class ModMessages {
                 .decoder(ManaCoreExhaustionDataSyncS2CPacket::new)
                 .encoder(ManaCoreExhaustionDataSyncS2CPacket::toBytes)
                 .consumerMainThread(ManaCoreExhaustionDataSyncS2CPacket::handle)
+                .add();
+
+        //
+        net.messageBuilder(UpdateDestructionActiveC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateDestructionActiveC2SPacket::new)
+                .encoder(UpdateDestructionActiveC2SPacket::toBytes)
+                .consumerMainThread(UpdateDestructionActiveC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(DestructionActiveDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(DestructionActiveDataSyncS2CPacket::new)
+                .encoder(DestructionActiveDataSyncS2CPacket::toBytes)
+                .consumerMainThread(DestructionActiveDataSyncS2CPacket::handle)
                 .add();
     }
 

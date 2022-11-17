@@ -21,7 +21,8 @@ public class PlayerStats {
     private final long MIN_MANACORE_EXHAUSTION = 0;
     //private final long MAX_MANA = 79;
 
-
+    //destruction
+    private boolean destructionActive;
 
 
     public long getMana() {
@@ -80,6 +81,14 @@ public class PlayerStats {
         this.manacore_exhaustion = Math.max(set, MIN_MANACORE_EXHAUSTION);
     }
 
+
+    //destruction
+    public void setDestructionActive(boolean set) {this.destructionActive = set;}
+
+    public boolean getDestructionActive() {
+        return destructionActive;
+    }
+
     public void copyFrom(PlayerStats source) {
         this.mana = source.mana;
         this.max_mana = source.max_mana;
@@ -97,6 +106,8 @@ public class PlayerStats {
         nbt.putLong("max_manacore", max_manacore);
         nbt.putLong("manacore_exhaustion", manacore_exhaustion);
 
+        nbt.putBoolean("destruction_active", destructionActive);
+
     }
     public void loadNBTData(CompoundTag nbt) {
         //System.out.prlongln("Loading NBT"+"\n"+mana+"\n"+max_mana);
@@ -105,5 +116,7 @@ public class PlayerStats {
         manacore = nbt.getLong("manacore");
         max_manacore = nbt.getLong("max_manacore");
         manacore_exhaustion = nbt.getLong("manacore_exhaustion");
+
+        destructionActive = nbt.getBoolean("destruction_active");
     }
 }

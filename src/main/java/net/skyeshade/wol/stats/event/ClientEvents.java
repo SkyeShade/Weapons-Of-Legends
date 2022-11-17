@@ -8,8 +8,10 @@ import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.skyeshade.wol.WOL;
+import net.skyeshade.wol.client.ClientStatsData;
 import net.skyeshade.wol.client.HudOverlay;
 import net.skyeshade.wol.networking.ModMessages;
+import net.skyeshade.wol.networking.packet.destruction.UpdateDestructionActiveC2SPacket;
 import net.skyeshade.wol.networking.packet.mana.UpdateManaC2SPacket;
 import net.skyeshade.wol.networking.packet.mana.UpdateMaxManaC2SPacket;
 import net.skyeshade.wol.networking.packet.manacore.UpdateManaCoreC2SPacket;
@@ -28,6 +30,12 @@ public class ClientEvents {
                 ModMessages.sendToServer(new UpdateManaCoreC2SPacket(10));
 
                 ModMessages.sendToServer(new UpdateManaCoreExhaustionC2SPacket(1));
+
+                if (ClientStatsData.getPlayerDestructionActive()) {
+                    ModMessages.sendToServer(new UpdateDestructionActiveC2SPacket(false));
+                }else {
+                    ModMessages.sendToServer(new UpdateDestructionActiveC2SPacket(true));
+                }
             }
             if(KeyBinding.MAXMANAADD_KEY.consumeClick()) {
                 ModMessages.sendToServer(new UpdateMaxManaC2SPacket());

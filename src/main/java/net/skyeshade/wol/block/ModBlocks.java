@@ -1,10 +1,14 @@
 package net.skyeshade.wol.block;
 
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
@@ -25,8 +29,8 @@ public class ModBlocks {
 
 
     public static final RegistryObject<Block> DESTRUCTION = BLOCKS.register("destruction",
-            () -> new Destruction(BlockBehaviour.Properties.of(Material.FIRE, MaterialColor.COLOR_PURPLE)
-                    .instabreak().noOcclusion().randomTicks().lightLevel((state) -> 15), 10));
+            () -> new Destruction(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.FIRE)
+                    .instabreak().noOcclusion().lightLevel((state) -> 15).sound(new SoundType(-100.0F,1.0F, SoundEvents.FIRE_AMBIENT,SoundEvents.FIRE_AMBIENT,SoundEvents.FIRE_AMBIENT,SoundEvents.FIRE_AMBIENT,SoundEvents.FIRE_AMBIENT))));
 
 
 
