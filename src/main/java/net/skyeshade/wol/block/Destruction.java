@@ -146,22 +146,37 @@ public class Destruction extends BaseDestruction {
         return pLevel.getBlockState(blockpos).isFaceSturdy(pLevel, blockpos, Direction.UP) || this.isValidFireLocation(pLevel, pPos);
     }
     ArrayList<Boolean> activeBooleanList = new ArrayList<>();
+    ArrayList<Player> activeBooleanPlayersList = new ArrayList<>();
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
+        for (Player player : pLevel.players()) {
+            player.getCapability(PlayerStatsProvider.PLAYER_DESTRUCTION_ACTIVE).ifPresent(destructionActive -> {
+                activeBooleanList.add(destructionActive.getDestructionActive());
+                if (destructionActive.getDestructionActive()) {
+                    activeBooleanPlayersList.add(player);
+                }
+            });
+        }
+        for (Player player : activeBooleanPlayersList) {
+            if (Math.abs(pPos.getX()-player.getX()) < 3 && Math.abs(pPos.getY()-player.getY()) < 12 && Math.abs(pPos.getZ()-player.getZ()) < 3) {
+                pLevel.removeBlock(pPos, false);
+                return;
+            }
+        }
+        if (!activeBooleanList.contains(true)) {
+            pLevel.removeBlock(pPos, false);
+            activeBooleanList.clear();
+            return;
+        }
+        activeBooleanList.clear();
+        activeBooleanPlayersList.clear();
+
+
         pLevel.scheduleTick(pPos, this, getFireTickDelay(pLevel.random));
         if (pLevel.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
             if (!pState.canSurvive(pLevel, pPos)) {
                 pLevel.removeBlock(pPos, false);
             }
-            for (Player player : pLevel.players()) {
-                player.getCapability(PlayerStatsProvider.PLAYER_DESTRUCTION_ACTIVE).ifPresent(destructionActive -> {
-                    activeBooleanList.add(destructionActive.getDestructionActive());
-                });
-            }
-            if (!activeBooleanList.contains(true)) {
-                pLevel.removeBlock(pPos, false);
-                return;
-            }
-            activeBooleanList.clear();
+
 
 
             BlockState blockstate = pLevel.getBlockState(pPos.below());
@@ -335,6 +350,17 @@ public class Destruction extends BaseDestruction {
      * @return True if the face can catch fire.
      */
     public boolean canCatchFire(BlockGetter world, BlockPos pos, Direction face) {
+
+        if (!activeBooleanPlayersList.isEmpty()) {
+            for (Player player : activeBooleanPlayersList) {
+                if (Math.abs(pos.getX()-player.getX()) < 3 && Math.abs(pos.getY()-player.getY()) < 12 && Math.abs(pos.getZ()-player.getZ()) < 3) {
+
+                    return false;
+                }else {
+                    return !world.getBlockState(pos).isAir() && !world.getBlockState(pos).is(this);
+                }
+            }
+        }
 
         return !world.getBlockState(pos).isAir() && !world.getBlockState(pos).is(this);
     }
