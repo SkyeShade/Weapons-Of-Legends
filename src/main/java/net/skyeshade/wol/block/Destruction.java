@@ -157,7 +157,7 @@ public class Destruction extends BaseDestruction {
             });
         }
         for (Player player : activeBooleanPlayersList) {
-            if (Math.abs(pPos.getX()-player.getX()) < 3 && Math.abs(pPos.getY()-player.getY()) < 12 && Math.abs(pPos.getZ()-player.getZ()) < 3) {
+            if (Math.abs(pPos.getX()-player.getX()) < 5 && (pPos.getY()+64)-(player.getY()+64) < 5 && Math.abs(pPos.getZ()-player.getZ()) < 5) {
                 pLevel.removeBlock(pPos, false);
                 return;
             }
@@ -306,7 +306,7 @@ public class Destruction extends BaseDestruction {
             int i = 0;
 
             for(Direction direction : Direction.values()) {
-                BlockState blockstate = pLevel.getBlockState(pPos.relative(direction));
+                //BlockState blockstate = pLevel.getBlockState(pPos.relative(direction));
                 i = 1000;
             }
 
@@ -328,7 +328,7 @@ public class Destruction extends BaseDestruction {
      * Gets the delay before this block ticks again (without counting random ticks)
      */
     private static int getFireTickDelay(RandomSource pRandom) {
-        return 0 + pRandom.nextInt(10);
+        return 20 + pRandom.nextInt(10);
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
@@ -353,7 +353,7 @@ public class Destruction extends BaseDestruction {
 
         if (!activeBooleanPlayersList.isEmpty()) {
             for (Player player : activeBooleanPlayersList) {
-                if (Math.abs(pos.getX()-player.getX()) < 3 && Math.abs(pos.getY()-player.getY()) < 12 && Math.abs(pos.getZ()-player.getZ()) < 3) {
+                if (Math.abs(pos.getX()-player.getX()) < 5 && (pos.getY()+64)-(player.getY()+64) < 5 && Math.abs(pos.getZ()-player.getZ()) < 5) {
 
                     return false;
                 }else {

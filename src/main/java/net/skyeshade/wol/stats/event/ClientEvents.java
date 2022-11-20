@@ -1,6 +1,9 @@
 package net.skyeshade.wol.stats.event;
 
 
+import net.minecraft.advancements.DisplayInfo;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.advancements.AdvancementsScreen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
@@ -10,6 +13,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.skyeshade.wol.WOL;
 import net.skyeshade.wol.client.ClientStatsData;
 import net.skyeshade.wol.client.HudOverlay;
+import net.skyeshade.wol.client.gui.screens.stats.StatsScreen;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.networking.packet.destruction.UpdateDestructionActiveC2SPacket;
 import net.skyeshade.wol.networking.packet.mana.UpdateManaC2SPacket;
@@ -38,6 +42,8 @@ public class ClientEvents {
                 }
             }
             if(KeyBinding.MAXMANAADD_KEY.consumeClick()) {
+                Minecraft.getInstance().setScreen(new StatsScreen());
+
                 ModMessages.sendToServer(new UpdateMaxManaC2SPacket());
                 ModMessages.sendToServer(new UpdateMaxManaCoreC2SPacket());
             }
