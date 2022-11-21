@@ -12,6 +12,8 @@ public class ClientStatsData {
 
     private static boolean playerDestructionActive;
 
+    private static boolean playerMenuStatTabToggle;
+
     public static void setMana(long mana) {
         ClientStatsData.playerMana = mana;
     }
@@ -38,6 +40,8 @@ public class ClientStatsData {
 
     public static void setDestructionActive(boolean destructionActive) {ClientStatsData.playerDestructionActive = destructionActive;}
 
+    public static void setMenuStatTabToggle(boolean menuStatTabToggle) {ClientStatsData.playerMenuStatTabToggle = menuStatTabToggle;}
+
     public static void setManaCoreLevel(long manacore_level) {
         ClientStatsData.playerManaCoreLevel = manacore_level;
     }
@@ -58,6 +62,8 @@ public class ClientStatsData {
     public static boolean getPlayerDestructionActive() {
         return playerDestructionActive;
     }
+
+    public static boolean getPlayerMenuStatTabToggle() {return playerMenuStatTabToggle;}
 
     public static long getPlayerManaCoreLevel() {
         return playerManaCoreLevel;

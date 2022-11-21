@@ -16,6 +16,8 @@ import net.skyeshade.wol.networking.packet.mana.MaxManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.mana.UpdateManaC2SPacket;
 import net.skyeshade.wol.networking.packet.mana.UpdateMaxManaC2SPacket;
 import net.skyeshade.wol.networking.packet.manacore.*;
+import net.skyeshade.wol.networking.packet.menutoggle.MenuStatTabToggleDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.menutoggle.UpdateMenuStatTabToggleC2SPacket;
 
 public class ModMessages {
     private static SimpleChannel INSTANCE;
@@ -131,6 +133,18 @@ public class ModMessages {
                 .decoder(ManaCoreXpDataSyncS2CPacket::new)
                 .encoder(ManaCoreXpDataSyncS2CPacket::toBytes)
                 .consumerMainThread(ManaCoreXpDataSyncS2CPacket::handle)
+                .add();
+
+        net.messageBuilder(UpdateMenuStatTabToggleC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateMenuStatTabToggleC2SPacket::new)
+                .encoder(UpdateMenuStatTabToggleC2SPacket::toBytes)
+                .consumerMainThread(UpdateMenuStatTabToggleC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(MenuStatTabToggleDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(MenuStatTabToggleDataSyncS2CPacket::new)
+                .encoder(MenuStatTabToggleDataSyncS2CPacket::toBytes)
+                .consumerMainThread(MenuStatTabToggleDataSyncS2CPacket::handle)
                 .add();
     }
 

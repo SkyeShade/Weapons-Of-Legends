@@ -24,6 +24,9 @@ import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.skyeshade.wol.client.ClientStatsData;
+import net.skyeshade.wol.networking.ModMessages;
+import net.skyeshade.wol.networking.packet.destruction.UpdateDestructionActiveC2SPacket;
+import net.skyeshade.wol.networking.packet.menutoggle.UpdateMenuStatTabToggleC2SPacket;
 import org.stringtemplate.v4.ST;
 
 import javax.annotation.Nullable;
@@ -33,6 +36,7 @@ import java.util.Map;
 @OnlyIn(Dist.CLIENT)
 public class StatsScreen extends Screen {
    private static final ResourceLocation WINDOW_LOCATION = new ResourceLocation("wol:textures/gui/window.png");
+   private static final ResourceLocation STATWINDOW_LOCATION = new ResourceLocation("wol:textures/gui/statwindow.png");
    private static final ResourceLocation WINDOW_BACKGROUND = new ResourceLocation("wol:textures/gui/dark.png");
    private static final ResourceLocation FIRE_ICON = new ResourceLocation("wol:textures/gui/fire_icon.png");
    private static final ResourceLocation FIRE_ICON_HIGH = new ResourceLocation("wol:textures/gui/fire_icon_high.png");
@@ -45,22 +49,11 @@ public class StatsScreen extends Screen {
 
    private static final ResourceLocation BARS_LOCATION = new ResourceLocation("wol:textures/gui/bars.png");
 
-   private static final ResourceLocation CORE1 = new ResourceLocation("wol:textures/gui/cores/core1.png");
-   private static final ResourceLocation CORE2 = new ResourceLocation("wol:textures/gui/cores/core2.png");
-   private static final ResourceLocation CORE3 = new ResourceLocation("wol:textures/gui/cores/core3.png");
-   private static final ResourceLocation CORE4 = new ResourceLocation("wol:textures/gui/cores/core4.png");
-   private static final ResourceLocation CORE5 = new ResourceLocation("wol:textures/gui/cores/core5.png");
-   private static final ResourceLocation CORE6 = new ResourceLocation("wol:textures/gui/cores/core6.png");
-   private static final ResourceLocation CORE7 = new ResourceLocation("wol:textures/gui/cores/core7.png");
-   private static final ResourceLocation CORE8 = new ResourceLocation("wol:textures/gui/cores/core8.png");
-   private static final ResourceLocation CORE9 = new ResourceLocation("wol:textures/gui/cores/core9.png");
-   private static final ResourceLocation CORE10 = new ResourceLocation("wol:textures/gui/cores/core10.png");
-   private static final ResourceLocation CORE11 = new ResourceLocation("wol:textures/gui/cores/core11.png");
-   private static final ResourceLocation CORE12 = new ResourceLocation("wol:textures/gui/cores/core12.png");
-   private static final ResourceLocation CORE13 = new ResourceLocation("wol:textures/gui/cores/core13.png");
-   private static final ResourceLocation CORE14 = new ResourceLocation("wol:textures/gui/cores/core14.png");
+   private static final ResourceLocation STATMENU_ICON = new ResourceLocation("wol:textures/gui/stats_tab_icon.png");
+   private static final ResourceLocation STATMENU_ICON_HIGH = new ResourceLocation("wol:textures/gui/stats_tab_icon_high.png");
 
-   ArrayList<ResourceLocation> cores = new ArrayList<>();
+
+
 
 
 
@@ -88,6 +81,8 @@ public class StatsScreen extends Screen {
 
    public boolean hoverXp = false;
 
+   public boolean hoverStatsTab = false;
+
    StatsIcons statsIcons = new StatsIcons();
    private double scrollX;
    private double scrollY;
@@ -95,7 +90,7 @@ public class StatsScreen extends Screen {
    //private final StatsWidget root;
    private boolean centered;
 
-   private final Map<Advancement, StatsTab> tabs = Maps.newLinkedHashMap();
+
    @Nullable
    //private StatsTab selectedTab;
    private boolean isScrolling;
@@ -133,6 +128,14 @@ public class StatsScreen extends Screen {
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             Minecraft.getInstance().setScreen(new WindElementScreen());
          }
+         if (hoverStatsTab) {
+            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            if (ClientStatsData.getPlayerMenuStatTabToggle()) {
+               ModMessages.sendToServer(new UpdateMenuStatTabToggleC2SPacket(false));
+            }else {
+               ModMessages.sendToServer(new UpdateMenuStatTabToggleC2SPacket(true));
+            }
+         }
       }
 
       return super.mouseClicked(pMouseX, pMouseY, pButton);
@@ -155,9 +158,14 @@ public class StatsScreen extends Screen {
    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
       int i = (this.width - WINDOW_WIDTH) / 2;
       int j = (this.height - WINDOW_HEIGHT) / 2;
-      this.renderBackground(pPoseStack);
-      this.renderInside(pPoseStack, pMouseX, pMouseY, i, j);
+      if (ClientStatsData.getPlayerMenuStatTabToggle()) {
+         i = (this.width - WINDOW_WIDTH) / 2+95/2;
 
+      }
+
+      this.renderBackground(pPoseStack);
+
+      this.renderInside(pPoseStack, pMouseX, pMouseY, i, j);
 
       this.renderWindow(pPoseStack,pMouseX, pMouseY, i, j);
 
@@ -281,8 +289,29 @@ public class StatsScreen extends Screen {
       RenderSystem.setShaderTexture(0, WINDOW_LOCATION);
       this.blit(pPoseStack, pOffsetX, pOffsetY, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-      int xpAmount = 40000;
-      int xpRequired =(1000*(int)Math.pow(4, 3));
+      if (ClientStatsData.getPlayerMenuStatTabToggle()) {
+         RenderSystem.setShaderTexture(0, STATWINDOW_LOCATION);
+         this.blit(pPoseStack, pOffsetX-95, pOffsetY, 0, 0, 99, WINDOW_HEIGHT);
+      }
+
+      if (statsIcons.isMouseOver(pOffsetX+9,pOffsetY+18,pMouseX-12,pMouseY-11,25,25)) {
+         RenderSystem.setShaderTexture(0, STATMENU_ICON_HIGH);
+         blit(pPoseStack, pOffsetX+9,pOffsetY+18,0,0,24,24,24,24);
+         hoverStatsTab = true;
+      }else {
+         RenderSystem.setShaderTexture(0, STATMENU_ICON);
+         blit(pPoseStack, pOffsetX+9,pOffsetY+18,0,0,24,24,24,24);
+         hoverStatsTab = false;
+      }
+
+
+
+
+
+
+      long xpAmount = ClientStatsData.getPlayerManaCoreXp();
+      //int xpRequired =(1000*(int)Math.pow(4, 3));
+      long xpRequired =(1000*ClientStatsData.getPlayerManaCoreLevel());
       float xpProcentage = (float)xpAmount/xpRequired;
 
 

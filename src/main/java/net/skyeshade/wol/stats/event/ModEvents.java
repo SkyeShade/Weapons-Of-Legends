@@ -19,6 +19,7 @@ import net.skyeshade.wol.networking.packet.destruction.DestructionActiveDataSync
 import net.skyeshade.wol.networking.packet.mana.ManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.mana.MaxManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.manacore.*;
+import net.skyeshade.wol.networking.packet.menutoggle.MenuStatTabToggleDataSyncS2CPacket;
 import net.skyeshade.wol.stats.PlayerStats;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
 
@@ -75,6 +76,16 @@ public class ModEvents {
                     newStore.copyFrom(oldStore);
                 });
             });
+            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MANACORE_XP).ifPresent(oldStore -> {
+                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MANACORE_XP).ifPresent(newStore -> {
+                    newStore.copyFrom(oldStore);
+                });
+            });
+            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MENUSTATTABTOGGLE).ifPresent(oldStore -> {
+                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MENUSTATTABTOGGLE).ifPresent(newStore -> {
+                    newStore.copyFrom(oldStore);
+                });
+            });
 
 
             event.getOriginal().invalidateCaps();
@@ -116,6 +127,13 @@ public class ModEvents {
                     player.getCapability(PlayerStatsProvider.PLAYER_MANACORE).ifPresent(manacore -> {
                         manacore.subManaCore(1);
                         ModMessages.sendToPlayer(new ManaCoreDataSyncS2CPacket(manacore.getManaCore()), ((ServerPlayer) player));
+
+                    });
+
+
+                    player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_XP).ifPresent(manacore_xp -> {
+                        manacore_xp.addManaCoreXp(20);
+                        ModMessages.sendToPlayer(new ManaCoreXpDataSyncS2CPacket(manacore_xp.getManaCoreXp()), ((ServerPlayer) player));
 
                     });
                 }
@@ -164,6 +182,9 @@ public class ModEvents {
                 });
                 player.getCapability(PlayerStatsProvider.PLAYER_DESTRUCTION_ACTIVE).ifPresent(destruction_active -> {
                     ModMessages.sendToPlayer(new DestructionActiveDataSyncS2CPacket(destruction_active.getDestructionActive()), player);
+                });
+                player.getCapability(PlayerStatsProvider.PLAYER_MENUSTATTABTOGGLE).ifPresent(menuStatTabToggle -> {
+                    ModMessages.sendToPlayer(new MenuStatTabToggleDataSyncS2CPacket(menuStatTabToggle.getMenuStatTabToggle()), player);
                 });
                 player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_LEVEL).ifPresent(manacore_level -> {
                     ModMessages.sendToPlayer(new ManaCoreLevelDataSyncS2CPacket(manacore_level.getManaCoreLevel()), player);

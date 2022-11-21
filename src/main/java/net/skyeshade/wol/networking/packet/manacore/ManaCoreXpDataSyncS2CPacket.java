@@ -10,6 +10,8 @@ import java.util.function.Supplier;
 public class ManaCoreXpDataSyncS2CPacket {
     private final long manacore_xp;
 
+
+
     public ManaCoreXpDataSyncS2CPacket(long manacore_xp) {
         this.manacore_xp = manacore_xp;
     }
@@ -26,6 +28,8 @@ public class ManaCoreXpDataSyncS2CPacket {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
             // HERE WE ARE ON THE CLIENT!
+
+
             ClientStatsData.setManaCoreXp(manacore_xp);
         });
         return true;

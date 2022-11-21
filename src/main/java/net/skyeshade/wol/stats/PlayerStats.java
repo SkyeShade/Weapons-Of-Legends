@@ -28,6 +28,8 @@ public class PlayerStats {
     //destruction
     private boolean destructionActive;
 
+    private boolean menuStatTabToggle;
+
 
     public long getMana() {
         return mana;
@@ -108,6 +110,11 @@ public class PlayerStats {
         return destructionActive;
     }
 
+    public void setMenuStatTabToggle(boolean set) {this.menuStatTabToggle = set;}
+    public boolean getMenuStatTabToggle() {
+        return menuStatTabToggle;
+    }
+
     //core level
 
 
@@ -117,6 +124,8 @@ public class PlayerStats {
         this.manacore = source.manacore;
         this.max_manacore = source.max_manacore;
         this.manacore_exhaustion = source.manacore_exhaustion;
+        this.destructionActive = source.destructionActive;
+        this.menuStatTabToggle = source.menuStatTabToggle;
         this.manacore_level = source.manacore_level;
         this.manacore_xp = source.manacore_xp;
     }
@@ -128,6 +137,7 @@ public class PlayerStats {
         nbt.putLong("max_manacore", max_manacore);
         nbt.putLong("manacore_exhaustion", manacore_exhaustion);
         nbt.putBoolean("destruction_active", destructionActive);
+        nbt.putBoolean("menuStatTabToggle", menuStatTabToggle);
         nbt.putLong("manacore_level", manacore_level);
         nbt.putLong("manacore_xp", manacore_xp);
 
@@ -141,6 +151,7 @@ public class PlayerStats {
         max_manacore = nbt.getLong("max_manacore");
         manacore_exhaustion = nbt.getLong("manacore_exhaustion");
         destructionActive = nbt.getBoolean("destruction_active");
+        menuStatTabToggle = nbt.getBoolean("menuStatTabToggle");
         manacore_level = nbt.getLong("manacore_level");
         manacore_xp = nbt.getLong("manacore_xp");
     }
