@@ -123,12 +123,12 @@ public class ModMessages {
                 .consumerMainThread(ManaCoreLevelDataSyncS2CPacket::handle)
                 .add();
 
-        net.messageBuilder(UpdateManaCoreXpC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+        /*net.messageBuilder(UpdateManaCoreXpC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(UpdateManaCoreXpC2SPacket::new)
                 .encoder(UpdateManaCoreXpC2SPacket::toBytes)
                 .consumerMainThread(UpdateManaCoreXpC2SPacket::handle)
                 .add();
-
+         */
         net.messageBuilder(ManaCoreXpDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(ManaCoreXpDataSyncS2CPacket::new)
                 .encoder(ManaCoreXpDataSyncS2CPacket::toBytes)
