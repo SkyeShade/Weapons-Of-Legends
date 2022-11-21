@@ -108,6 +108,30 @@ public class ModMessages {
                 .encoder(DestructionActiveDataSyncS2CPacket::toBytes)
                 .consumerMainThread(DestructionActiveDataSyncS2CPacket::handle)
                 .add();
+
+        net.messageBuilder(UpdateManaCoreLevelC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateManaCoreLevelC2SPacket::new)
+                .encoder(UpdateManaCoreLevelC2SPacket::toBytes)
+                .consumerMainThread(UpdateManaCoreLevelC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(ManaCoreLevelDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ManaCoreLevelDataSyncS2CPacket::new)
+                .encoder(ManaCoreLevelDataSyncS2CPacket::toBytes)
+                .consumerMainThread(ManaCoreLevelDataSyncS2CPacket::handle)
+                .add();
+
+        net.messageBuilder(UpdateManaCoreXpC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateManaCoreXpC2SPacket::new)
+                .encoder(UpdateManaCoreXpC2SPacket::toBytes)
+                .consumerMainThread(UpdateManaCoreXpC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(ManaCoreXpDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ManaCoreXpDataSyncS2CPacket::new)
+                .encoder(ManaCoreXpDataSyncS2CPacket::toBytes)
+                .consumerMainThread(ManaCoreXpDataSyncS2CPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

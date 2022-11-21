@@ -15,11 +15,10 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import net.skyeshade.wol.WOL;
 import net.skyeshade.wol.networking.ModMessages;
+import net.skyeshade.wol.networking.packet.destruction.DestructionActiveDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.mana.ManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.mana.MaxManaDataSyncS2CPacket;
-import net.skyeshade.wol.networking.packet.manacore.ManaCoreDataSyncS2CPacket;
-import net.skyeshade.wol.networking.packet.manacore.ManaCoreExhaustionDataSyncS2CPacket;
-import net.skyeshade.wol.networking.packet.manacore.MaxManaCoreDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.manacore.*;
 import net.skyeshade.wol.stats.PlayerStats;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
 
@@ -63,6 +62,16 @@ public class ModEvents {
             });
             event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MANACORE_EXHAUSTION).ifPresent(oldStore -> {
                 event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MANACORE_EXHAUSTION).ifPresent(newStore -> {
+                    newStore.copyFrom(oldStore);
+                });
+            });
+            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_DESTRUCTION_ACTIVE).ifPresent(oldStore -> {
+                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_DESTRUCTION_ACTIVE).ifPresent(newStore -> {
+                    newStore.copyFrom(oldStore);
+                });
+            });
+            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MANACORE_LEVEL).ifPresent(oldStore -> {
+                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MANACORE_LEVEL).ifPresent(newStore -> {
                     newStore.copyFrom(oldStore);
                 });
             });
@@ -153,8 +162,22 @@ public class ModEvents {
                         ModMessages.sendToPlayer(new MaxManaCoreDataSyncS2CPacket(max_manacore.getMaxManaCore()), ((ServerPlayer) player));
                     }
                 });
+                player.getCapability(PlayerStatsProvider.PLAYER_DESTRUCTION_ACTIVE).ifPresent(destruction_active -> {
+                    ModMessages.sendToPlayer(new DestructionActiveDataSyncS2CPacket(destruction_active.getDestructionActive()), player);
+                });
+                player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_LEVEL).ifPresent(manacore_level -> {
+                    ModMessages.sendToPlayer(new ManaCoreLevelDataSyncS2CPacket(manacore_level.getManaCoreLevel()), player);
+                });
+                player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_XP).ifPresent(manacore_xp -> {
+                    ModMessages.sendToPlayer(new ManaCoreXpDataSyncS2CPacket(manacore_xp.getManaCoreXp()), player);
+                });
 
-
+                player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_LEVEL).ifPresent(manacore_level -> {
+                    if (manacore_level.getManaCoreLevel() < 1) {
+                        manacore_level.setManaCoreLevel(1);
+                        ModMessages.sendToPlayer(new ManaCoreLevelDataSyncS2CPacket(manacore_level.getManaCoreLevel()), ((ServerPlayer) player));
+                    }
+                });
 
             }
         }

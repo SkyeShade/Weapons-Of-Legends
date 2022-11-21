@@ -20,6 +20,7 @@ import net.skyeshade.wol.networking.packet.mana.UpdateManaC2SPacket;
 import net.skyeshade.wol.networking.packet.mana.UpdateMaxManaC2SPacket;
 import net.skyeshade.wol.networking.packet.manacore.UpdateManaCoreC2SPacket;
 import net.skyeshade.wol.networking.packet.manacore.UpdateManaCoreExhaustionC2SPacket;
+import net.skyeshade.wol.networking.packet.manacore.UpdateManaCoreLevelC2SPacket;
 import net.skyeshade.wol.networking.packet.manacore.UpdateMaxManaCoreC2SPacket;
 import net.skyeshade.wol.util.KeyBinding;
 
@@ -40,6 +41,7 @@ public class ClientEvents {
                 }else {
                     ModMessages.sendToServer(new UpdateDestructionActiveC2SPacket(true));
                 }
+                ModMessages.sendToServer(new UpdateManaCoreLevelC2SPacket(1));
             }
             if(KeyBinding.MAXMANAADD_KEY.consumeClick()) {
                 Minecraft.getInstance().setScreen(new StatsScreen());

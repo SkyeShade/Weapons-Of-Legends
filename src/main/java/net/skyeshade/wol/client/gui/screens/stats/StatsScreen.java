@@ -23,15 +23,17 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.skyeshade.wol.client.ClientStatsData;
 import org.stringtemplate.v4.ST;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
 public class StatsScreen extends Screen {
    private static final ResourceLocation WINDOW_LOCATION = new ResourceLocation("wol:textures/gui/window.png");
-   private static final ResourceLocation WINDOW_BACKGROUND = new ResourceLocation("wol:textures/gui/stone.png");
+   private static final ResourceLocation WINDOW_BACKGROUND = new ResourceLocation("wol:textures/gui/dark.png");
    private static final ResourceLocation FIRE_ICON = new ResourceLocation("wol:textures/gui/fire_icon.png");
    private static final ResourceLocation FIRE_ICON_HIGH = new ResourceLocation("wol:textures/gui/fire_icon_high.png");
    private static final ResourceLocation WATER_ICON = new ResourceLocation("wol:textures/gui/water_icon.png");
@@ -41,7 +43,31 @@ public class StatsScreen extends Screen {
    private static final ResourceLocation WIND_ICON = new ResourceLocation("wol:textures/gui/wind_icon.png");
    private static final ResourceLocation WIND_ICON_HIGH = new ResourceLocation("wol:textures/gui/wind_icon_high.png");
 
-   private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/advancements/widgets.png");
+   private static final ResourceLocation BARS_LOCATION = new ResourceLocation("wol:textures/gui/bars.png");
+
+   private static final ResourceLocation CORE1 = new ResourceLocation("wol:textures/gui/cores/core1.png");
+   private static final ResourceLocation CORE2 = new ResourceLocation("wol:textures/gui/cores/core2.png");
+   private static final ResourceLocation CORE3 = new ResourceLocation("wol:textures/gui/cores/core3.png");
+   private static final ResourceLocation CORE4 = new ResourceLocation("wol:textures/gui/cores/core4.png");
+   private static final ResourceLocation CORE5 = new ResourceLocation("wol:textures/gui/cores/core5.png");
+   private static final ResourceLocation CORE6 = new ResourceLocation("wol:textures/gui/cores/core6.png");
+   private static final ResourceLocation CORE7 = new ResourceLocation("wol:textures/gui/cores/core7.png");
+   private static final ResourceLocation CORE8 = new ResourceLocation("wol:textures/gui/cores/core8.png");
+   private static final ResourceLocation CORE9 = new ResourceLocation("wol:textures/gui/cores/core9.png");
+   private static final ResourceLocation CORE10 = new ResourceLocation("wol:textures/gui/cores/core10.png");
+   private static final ResourceLocation CORE11 = new ResourceLocation("wol:textures/gui/cores/core11.png");
+   private static final ResourceLocation CORE12 = new ResourceLocation("wol:textures/gui/cores/core12.png");
+   private static final ResourceLocation CORE13 = new ResourceLocation("wol:textures/gui/cores/core13.png");
+   private static final ResourceLocation CORE14 = new ResourceLocation("wol:textures/gui/cores/core14.png");
+
+   ArrayList<ResourceLocation> cores = new ArrayList<>();
+
+
+
+
+
+
+
    public static final int WINDOW_WIDTH = 252;
    public static final int WINDOW_HEIGHT = 234;
    private static final int WINDOW_INSIDE_X = 9;
@@ -59,6 +85,8 @@ public class StatsScreen extends Screen {
    public boolean hoverElementWater = false;
    public boolean hoverElementEarth = false;
    public boolean hoverElementWind = false;
+
+   public boolean hoverXp = false;
 
    StatsIcons statsIcons = new StatsIcons();
    private double scrollX;
@@ -131,7 +159,7 @@ public class StatsScreen extends Screen {
       this.renderInside(pPoseStack, pMouseX, pMouseY, i, j);
 
 
-      this.renderWindow(pPoseStack, i, j);
+      this.renderWindow(pPoseStack,pMouseX, pMouseY, i, j);
 
 
    }
@@ -245,15 +273,40 @@ public class StatsScreen extends Screen {
 
    }
 
-   public void renderWindow(PoseStack pPoseStack, int pOffsetX, int pOffsetY) {
+   public void renderWindow(PoseStack pPoseStack, int pMouseX, int pMouseY, int pOffsetX, int pOffsetY) {
 
       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
       RenderSystem.enableBlend();
       RenderSystem.setShader(GameRenderer::getPositionTexShader);
       RenderSystem.setShaderTexture(0, WINDOW_LOCATION);
       this.blit(pPoseStack, pOffsetX, pOffsetY, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-      this.font.draw(pPoseStack, "Main Mod Menu UWU", (float)(pOffsetX + 8), (float)(pOffsetY + 6), 16753920);
 
+      int xpAmount = 40000;
+      int xpRequired =(1000*(int)Math.pow(4, 3));
+      float xpProcentage = (float)xpAmount/xpRequired;
+
+
+
+
+      RenderSystem.setShaderTexture(0, BARS_LOCATION);
+      blit(pPoseStack, pOffsetX+WINDOW_WIDTH/2-196/2,pOffsetY+222-5/2,0, statsIcons.getBarPVOffset(ClientStatsData.getPlayerManaCoreLevel()), 196,5);
+      int uwidthProcentage = (int)(196*xpProcentage);
+      RenderSystem.setShaderTexture(0, BARS_LOCATION);
+      blit(pPoseStack, pOffsetX+WINDOW_WIDTH/2-196/2,pOffsetY+222-5/2,0,statsIcons.getBarPVOffset(ClientStatsData.getPlayerManaCoreLevel())+5,uwidthProcentage,5);
+
+      long rightcore = ClientStatsData.getPlayerManaCoreLevel()+1;
+      ResourceLocation CORE_LEFT = new ResourceLocation("wol:textures/gui/cores/core"+ClientStatsData.getPlayerManaCoreLevel()+".png");
+      ResourceLocation CORE_RIGHT = new ResourceLocation("wol:textures/gui/cores/core"+rightcore +".png");
+      RenderSystem.setShaderTexture(0, CORE_LEFT);
+      blit(pPoseStack, pOffsetX+WINDOW_WIDTH/2-26/2-196/2-8,pOffsetY+214-26/2,0,0,26,26,26,26);
+      RenderSystem.setShaderTexture(0, CORE_RIGHT);
+      blit(pPoseStack, pOffsetX+WINDOW_WIDTH/2-26/2+196/2+8,pOffsetY+214-26/2,0,0,26,26,26,26);
+
+      if (statsIcons.isMouseOver(pOffsetX+WINDOW_WIDTH/2,pOffsetY+224-5/2,pMouseX,pMouseY,196,10)) {
+
+         this.font.draw(pPoseStack, xpAmount+"/"+xpRequired, (float)(pMouseX-(String.valueOf(xpAmount).length())*6-2), (float)(pMouseY-10), 16753920);
+      }
+      this.font.draw(pPoseStack, "Main Mod Menu UWU", (float)(pOffsetX + 8), (float)(pOffsetY + 6), 16753920);
    }
 
    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {

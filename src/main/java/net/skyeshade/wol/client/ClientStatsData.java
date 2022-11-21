@@ -7,6 +7,9 @@ public class ClientStatsData {
     private static long playerManaCoreExhaustion;
     private static long playerMaxManaCore;
 
+    private static long playerManaCoreLevel;
+    private static long playerManaCoreXp;
+
     private static boolean playerDestructionActive;
 
     public static void setMana(long mana) {
@@ -32,7 +35,16 @@ public class ClientStatsData {
         ClientStatsData.playerManaCoreExhaustion = manacore_exhaustion;
     }
 
+
     public static void setDestructionActive(boolean destructionActive) {ClientStatsData.playerDestructionActive = destructionActive;}
+
+    public static void setManaCoreLevel(long manacore_level) {
+        ClientStatsData.playerManaCoreLevel = manacore_level;
+    }
+
+    public static void setManaCoreXp(long manacore_xp) {
+        ClientStatsData.playerManaCoreXp = manacore_xp;
+    }
     public static long getPlayerManaCore() {
         return playerManaCore;
     }
@@ -45,5 +57,13 @@ public class ClientStatsData {
 
     public static boolean getPlayerDestructionActive() {
         return playerDestructionActive;
+    }
+
+    public static long getPlayerManaCoreLevel() {
+        return playerManaCoreLevel;
+    }
+
+    public static long getPlayerManaCoreXp() {
+        return playerManaCoreXp;
     }
 }

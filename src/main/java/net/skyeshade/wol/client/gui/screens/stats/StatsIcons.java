@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.Mth;
+import net.skyeshade.wol.client.ClientStatsData;
 
 import static net.minecraft.client.gui.GuiComponent.blit;
 
@@ -15,5 +16,23 @@ public class StatsIcons {
             }
             return false;
     }
+    public int getBarPVOffset(long corelevel) {
+
+        if(corelevel == 1){
+            return 10;
+        }else if (corelevel <= 4 && corelevel >=2){
+            return 20;
+        }else if (corelevel <= 7 && corelevel >=5){
+            return 30;
+        }else if (corelevel <= 10 && corelevel >=8){
+            return 40;
+        } else if (corelevel <= 13 && corelevel >=11){
+            return 50;
+        } else {
+            return 60;
+        }
+    }
+
+
 
 }
