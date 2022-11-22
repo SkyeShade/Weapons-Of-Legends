@@ -11,16 +11,18 @@ import net.skyeshade.wol.stats.PlayerStatsProvider;
 import java.util.function.Supplier;
 
 public class UpdateMaxManaC2SPacket {
-    public UpdateMaxManaC2SPacket() {
 
+    private final long maxManaChange;
+    public UpdateMaxManaC2SPacket(long maxManaChange) {
+        this.maxManaChange = maxManaChange;
     }
 
     public UpdateMaxManaC2SPacket(FriendlyByteBuf buf) {
-
+        this.maxManaChange = buf.readLong();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-
+        buf.writeLong(maxManaChange);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
@@ -35,7 +37,7 @@ public class UpdateMaxManaC2SPacket {
                 // increase the water level / stats level of player
                 // Output the current stats level
             player.getCapability(PlayerStatsProvider.PLAYER_MAXMANA).ifPresent(max_mana -> {
-                max_mana.addMaxMana(10000L);
+                max_mana.addMaxMana(maxManaChange);
                 ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(max_mana.getMaxMana()), player);
             });
 

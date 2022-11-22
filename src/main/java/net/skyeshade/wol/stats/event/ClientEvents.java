@@ -41,12 +41,12 @@ public class ClientEvents {
                 }else {
                     ModMessages.sendToServer(new UpdateDestructionActiveC2SPacket(true));
                 }
-                ModMessages.sendToServer(new UpdateManaCoreLevelC2SPacket(1));
+                //ModMessages.sendToServer(new UpdateManaCoreLevelC2SPacket(1));
             }
             if(KeyBinding.MAXMANAADD_KEY.consumeClick()) {
                 Minecraft.getInstance().setScreen(new StatsScreen());
 
-                ModMessages.sendToServer(new UpdateMaxManaC2SPacket());
+                //ModMessages.sendToServer(new UpdateMaxManaC2SPacket(1000));
                 ModMessages.sendToServer(new UpdateMaxManaCoreC2SPacket());
             }
         }

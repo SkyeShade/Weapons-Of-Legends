@@ -22,6 +22,7 @@ import net.skyeshade.wol.networking.packet.manacore.*;
 import net.skyeshade.wol.networking.packet.menutoggle.MenuStatTabToggleDataSyncS2CPacket;
 import net.skyeshade.wol.stats.PlayerStats;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
+import net.skyeshade.wol.util.StatSystems;
 
 @Mod.EventBusSubscriber(modid = WOL.MOD_ID)
 public class ModEvents {
@@ -136,11 +137,7 @@ public class ModEvents {
                     });
 
 
-                    player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_XP).ifPresent(manacore_xp -> {
-                        manacore_xp.addManaCoreXp(20);
-                        ModMessages.sendToPlayer(new ManaCoreXpDataSyncS2CPacket(manacore_xp.getManaCoreXp()), ((ServerPlayer) player));
 
-                    });
                 }
 
             }
@@ -152,6 +149,7 @@ public class ModEvents {
     @SubscribeEvent
     public static void onPlayerJoinWorld(EntityJoinLevelEvent event) {
         if(!event.getLevel().isClientSide()) {
+            StatSystems statSystems = new StatSystems();
             if(event.getEntity() instanceof ServerPlayer player) {
                 player.getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(mana -> {
                     ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), player);
@@ -162,8 +160,8 @@ public class ModEvents {
 
 
                 player.getCapability(PlayerStatsProvider.PLAYER_MAXMANA).ifPresent(max_mana -> {
-                    if (max_mana.getMaxMana() <= 100) {
-                        max_mana.setMaxMana(100);
+                    if (max_mana.getMaxMana() <= statSystems.maxManaRewardPerLevel[0]) {
+                        max_mana.setMaxMana(statSystems.maxManaRewardPerLevel[0]);
                         ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(max_mana.getMaxMana()), ((ServerPlayer) player));
                     }
                 });

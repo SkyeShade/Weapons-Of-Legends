@@ -16,11 +16,11 @@ import net.skyeshade.wol.entities.BladeSlashProjectileEntity;
 import net.skyeshade.wol.entities.EntityInit;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.networking.packet.mana.ManaDataSyncS2CPacket;
-import net.skyeshade.wol.networking.packet.mana.MaxManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.manacore.ManaCoreDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.manacore.ManaCoreExhaustionDataSyncS2CPacket;
 import net.skyeshade.wol.sound.ModSounds;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
+import net.skyeshade.wol.util.StatSystems;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class TimeStopAbility {
     static ArrayList<ArrayList<Float>> yRot = new ArrayList<>();
     static ArrayList<ArrayList<Float>> yHeadRot = new ArrayList<>();
 
-
+    static StatSystems statSystems = new StatSystems();
 
 
     static double slowValue = 1000;
@@ -120,6 +120,7 @@ public class TimeStopAbility {
                                 if (timer.get(valuesIndex) > 40) {
                                     if (mana.getMana() >= 100) {
                                         mana.addMana(-100);
+                                        statSystems.xpSystem(-100, (ServerPlayer) player);
                                         ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), ((ServerPlayer) player));
 
                                         player.getCapability(PlayerStatsProvider.PLAYER_MANACORE).ifPresent(manacore -> {

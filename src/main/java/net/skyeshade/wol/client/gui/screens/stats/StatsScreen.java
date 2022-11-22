@@ -1,23 +1,12 @@
 package net.skyeshade.wol.client.gui.screens.stats;
 
-import com.google.common.collect.Maps;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.advancements.AdvancementWidget;
-import net.minecraft.client.multiplayer.ClientAdvancements;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundSeenAdvancementsPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -25,13 +14,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.skyeshade.wol.client.ClientStatsData;
 import net.skyeshade.wol.networking.ModMessages;
-import net.skyeshade.wol.networking.packet.destruction.UpdateDestructionActiveC2SPacket;
 import net.skyeshade.wol.networking.packet.menutoggle.UpdateMenuStatTabToggleC2SPacket;
-import org.stringtemplate.v4.ST;
+import net.skyeshade.wol.util.StatSystems;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
 public class StatsScreen extends Screen {
@@ -56,7 +42,7 @@ public class StatsScreen extends Screen {
 
 
 
-
+   StatSystems statSystems = new StatSystems();
 
 
 
@@ -159,7 +145,7 @@ public class StatsScreen extends Screen {
       int i = (this.width - WINDOW_WIDTH) / 2;
       int j = (this.height - WINDOW_HEIGHT) / 2;
       if (ClientStatsData.getPlayerMenuStatTabToggle()) {
-         i = (this.width - WINDOW_WIDTH) / 2+95/2;
+         i = (this.width - WINDOW_WIDTH) / 2+145/2;
 
       }
 
@@ -291,7 +277,7 @@ public class StatsScreen extends Screen {
 
       if (ClientStatsData.getPlayerMenuStatTabToggle()) {
          RenderSystem.setShaderTexture(0, STATWINDOW_LOCATION);
-         this.blit(pPoseStack, pOffsetX-95, pOffsetY, 0, 0, 99, WINDOW_HEIGHT);
+         this.blit(pPoseStack, pOffsetX-145, pOffsetY, 0, 0, 149, WINDOW_HEIGHT);
       }
 
       if (statsIcons.isMouseOver(pOffsetX+9,pOffsetY+18,pMouseX-12,pMouseY-11,25,25)) {
@@ -311,7 +297,7 @@ public class StatsScreen extends Screen {
 
       long xpAmount = ClientStatsData.getPlayerManaCoreXp();
       //int xpRequired =(1000*(int)Math.pow(4, 3));
-      long xpRequired =(1000*ClientStatsData.getPlayerManaCoreLevel());
+      long xpRequired = statSystems.requiredCoreLevelXp[(int)ClientStatsData.getPlayerManaCoreLevel()-1];
       float xpProcentage = (float)xpAmount/xpRequired;
 
 
@@ -334,6 +320,18 @@ public class StatsScreen extends Screen {
       if (statsIcons.isMouseOver(pOffsetX+WINDOW_WIDTH/2,pOffsetY+224-5/2,pMouseX,pMouseY,196,10)) {
 
          this.font.draw(pPoseStack, xpAmount+"/"+xpRequired, (float)(pMouseX-(String.valueOf(xpAmount).length())*6-2), (float)(pMouseY-10), 16753920);
+      }
+
+
+      if (ClientStatsData.getPlayerMenuStatTabToggle()) {
+
+         if (statsIcons.isMouseOver(pOffsetX+WINDOW_WIDTH/2+196/2+8,pOffsetY+214,pMouseX,pMouseY,26,26)  && ClientStatsData.getPlayerManaCoreLevel() < 14) {
+            this.font.draw(pPoseStack, "Max Mana: " + ClientStatsData.getPlayerMaxMana() + " + " + statSystems.maxManaRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()], (float)(pOffsetX -134), (float)(pOffsetY + 10), 16753920);
+
+         }else {
+            this.font.draw(pPoseStack, "Max Mana: " + ClientStatsData.getPlayerMaxMana(), (float)(pOffsetX -134), (float)(pOffsetY + 10), 16753920);
+         }
+
       }
       this.font.draw(pPoseStack, "Main Mod Menu UWU", (float)(pOffsetX + 8), (float)(pOffsetY + 6), 16753920);
    }

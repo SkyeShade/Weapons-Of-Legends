@@ -83,7 +83,7 @@ public class PlayerStats {
 
 
     public void addMana(long add) {this.mana = Math.min(mana + add, max_mana);}
-    public void addManaToXP(long add) {this.manatoxp = (manatoxp + add);}
+    public void addManaToXp(long add) {this.manatoxp = (manatoxp + add);}
     public void addMaxMana(long add) {
         this.max_mana = max_mana + add;
     }
@@ -110,10 +110,7 @@ public class PlayerStats {
     public void subMaxManaCore(long sub) {
         this.max_manacore = Math.max(max_manacore - sub, MIN_MAXMANACORE);
     }
-    public void subManaCoreExhaustion(long sub) {
-        this.manacore_exhaustion = Math.max(manacore_exhaustion - sub, MIN_MANACORE_EXHAUSTION);}
-
-
+    public void subManaCoreExhaustion(long sub) {this.manacore_exhaustion = Math.max(manacore_exhaustion - sub, MIN_MANACORE_EXHAUSTION);}
 
     public void copyFrom(PlayerStats source) {
         this.mana = source.mana;
