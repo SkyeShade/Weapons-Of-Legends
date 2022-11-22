@@ -17,18 +17,18 @@ import java.util.List;
 
 public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
     public static Capability<PlayerStats> PLAYER_MANA = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
+    public static Capability<PlayerStats> PLAYER_MANATOXP = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
     public static Capability<PlayerStats> PLAYER_MAXMANA = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
-    //mancore
     public static Capability<PlayerStats> PLAYER_MANACORE = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
     public static Capability<PlayerStats> PLAYER_MAXMANACORE = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
     public static Capability<PlayerStats> PLAYER_MANACORE_EXHAUSTION = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
     public static Capability<PlayerStats> PLAYER_DESTRUCTION_ACTIVE = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
-
     public static Capability<PlayerStats> PLAYER_MENUSTATTABTOGGLE = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
     public static Capability<PlayerStats> PLAYER_MANACORE_LEVEL = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
     public static Capability<PlayerStats> PLAYER_MANACORE_XP = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
 
     private PlayerStats mana = null;
+    private PlayerStats manatoxp = null;
     private PlayerStats max_mana = null;
     //manacore
     private PlayerStats manacore = null;
@@ -42,6 +42,7 @@ public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializabl
 
     private PlayerStats manacore_xp = null;
     private final LazyOptional<PlayerStats> manaOptional = LazyOptional.of(this::createPlayerMana);
+    private final LazyOptional<PlayerStats> manaToXpOptional = LazyOptional.of(this::createPlayerMana);
     private final LazyOptional<PlayerStats> maxManaOptional = LazyOptional.of(this::createPlayerMaxMana);
     //manacore
     private final LazyOptional<PlayerStats> manaCoreOptional = LazyOptional.of(this::createPlayerManaCore);
@@ -55,6 +56,7 @@ public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializabl
     private final LazyOptional<PlayerStats> manaCoreXpOptional = LazyOptional.of(this::createPlayerManaCoreLevel);
 
     private PlayerStats createPlayerMana() {if(this.mana == null) {this.mana = new PlayerStats();}return this.mana;}
+    private PlayerStats createPlayerManaToXp() {if(this.manatoxp == null) {this.manatoxp = new PlayerStats();}return this.manatoxp;}
     private PlayerStats createPlayerMaxMana() {if(this.max_mana == null) {this.max_mana = new PlayerStats();}return this.max_mana;}
 
     //manacore
@@ -71,6 +73,9 @@ public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializabl
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if(cap == PLAYER_MANA) {
             return manaOptional.cast();
+        }
+        if(cap == PLAYER_MANATOXP) {
+            return manaToXpOptional.cast();
         }
         if(cap == PLAYER_MAXMANA) {
             return maxManaOptional.cast();
@@ -103,6 +108,7 @@ public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializabl
     @Override
     public CompoundTag serializeNBT() {
         saveNBTDataList.add(createPlayerMana());
+        saveNBTDataList.add(createPlayerManaToXp());
         saveNBTDataList.add(createPlayerMaxMana());
         saveNBTDataList.add(createPlayerManaCore());
         saveNBTDataList.add(createPlayerMaxManaCore());
@@ -123,6 +129,7 @@ public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializabl
     public void deserializeNBT(CompoundTag nbt) {
 
         createPlayerMana().loadNBTData(nbt);
+        createPlayerManaToXp().loadNBTData(nbt);
 
         createPlayerMaxMana().loadNBTData(nbt);
 

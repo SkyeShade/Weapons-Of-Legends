@@ -81,6 +81,11 @@ public class ModEvents {
                     newStore.copyFrom(oldStore);
                 });
             });
+            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MANATOXP).ifPresent(oldStore -> {
+                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MANATOXP).ifPresent(newStore -> {
+                    newStore.copyFrom(oldStore);
+                });
+            });
             event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MENUSTATTABTOGGLE).ifPresent(oldStore -> {
                 event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MENUSTATTABTOGGLE).ifPresent(newStore -> {
                     newStore.copyFrom(oldStore);

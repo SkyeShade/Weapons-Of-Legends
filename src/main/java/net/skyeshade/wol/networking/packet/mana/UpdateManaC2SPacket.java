@@ -6,6 +6,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import net.skyeshade.wol.networking.ModMessages;
+import net.skyeshade.wol.networking.packet.manacore.ManaCoreLevelDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.manacore.ManaCoreXpDataSyncS2CPacket;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
 
 import java.util.function.Supplier;
@@ -38,9 +40,30 @@ public class UpdateManaC2SPacket {
             player.getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(mana -> {
 
                     mana.addMana(manaChange);
+                    if (manaChange < 0) {
+                        //if mana change is over 100, it calculates how much xp and possibly level you should get and how much should remain in the xp buffer
+                        player.getCapability(PlayerStatsProvider.PLAYER_MANATOXP).ifPresent(manatoxp -> {
 
+
+                                player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_XP).ifPresent(manacorexp -> {
+
+                                    manacorexp.addManaCoreXp((int)(Math.abs(manaChange)+manatoxp.getManaToXp() / 100));
+
+                                    manatoxp.setManaToXp((manatoxp.getManaToXp()+Math.abs(manaChange))-(int)(((Math.abs(manaChange)+manatoxp.getManaToXp()) / 100)*100));
+
+                                });
+
+
+
+
+                        });
+
+
+                    }
 
                 ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), player);
+                ModMessages.sendToPlayer(new ManaCoreXpDataSyncS2CPacket(mana.getManaCoreXp()), player);
+                ModMessages.sendToPlayer(new ManaCoreLevelDataSyncS2CPacket(mana.getManaCoreLevel()), player);
             });
 
 
