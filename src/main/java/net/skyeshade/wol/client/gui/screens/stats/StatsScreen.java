@@ -328,9 +328,15 @@ public class StatsScreen extends Screen {
          if (statsIcons.isMouseOver(pOffsetX+WINDOW_WIDTH/2+196/2+8,pOffsetY+214,pMouseX,pMouseY,26,26)  && ClientStatsData.getPlayerManaCoreLevel() < 14) {
             this.font.draw(pPoseStack, "Max Mana: " + ClientStatsData.getPlayerMaxMana() + " + " + statSystems.maxManaRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()], (float)(pOffsetX -134), (float)(pOffsetY + 10), 16753920);
             this.font.draw(pPoseStack, "Mana Regen: " + ClientStatsData.getPlayerMaxMana()/statSystems.secondsForBaseManaRegen  + "/s" + " + " + statSystems.maxManaRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()]/statSystems.secondsForBaseManaRegen, (float)(pOffsetX -134), (float)(pOffsetY + 20), 16753920);
+            this.font.draw(pPoseStack, "Mana Barrier: " + ClientStatsData.getPlayerMaxManaBarrier() + " + " + statSystems.maxManaBarrierRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()], (float)(pOffsetX -134), (float)(pOffsetY + 30), 16753920);
+            this.font.draw(pPoseStack, "Barrier Regen: " + ClientStatsData.getPlayerMaxManaBarrier()/statSystems.secondsForBaseManaBarrierRegen  + "/s" + " + " + statSystems.maxManaBarrierRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()]/statSystems.secondsForBaseManaBarrierRegen, (float)(pOffsetX -134), (float)(pOffsetY + 40), 16753920);
          }else {
+
             this.font.draw(pPoseStack, "Max Mana: " + ClientStatsData.getPlayerMaxMana(), (float)(pOffsetX -134), (float)(pOffsetY + 10), 16753920);
             this.font.draw(pPoseStack, "Mana Regen: " + ClientStatsData.getPlayerMaxMana()/statSystems.secondsForBaseManaRegen + "/s", (float)(pOffsetX -134), (float)(pOffsetY + 20), 16753920);
+
+            this.font.draw(pPoseStack, "Mana Barrier: " + ClientStatsData.getPlayerMaxManaBarrier(), (float)(pOffsetX -134), (float)(pOffsetY + 30), 16753920);
+            this.font.draw(pPoseStack, "Barrier Regen: " + ClientStatsData.getPlayerMaxManaBarrier()/statSystems.secondsForBaseManaBarrierRegen + "/s", (float)(pOffsetX -134), (float)(pOffsetY + 40), 16753920);
          }
 
       }

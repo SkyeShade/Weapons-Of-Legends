@@ -3,14 +3,16 @@ package net.skyeshade.wol.client;
 public class ClientStatsData {
     private static long playerMana;
     private static long playerMaxMana;
-    private static long playerManaCore;
-    private static long playerManaCoreExhaustion;
-    private static long playerMaxManaCore;
+    private static long playerManaBarrier;
+    private static long playerManaBarrierRevive;
+    private static long playerMaxManaBarrier;
 
     private static long playerManaCoreLevel;
     private static long playerManaCoreXp;
 
     private static boolean playerDestructionActive;
+
+    private static boolean playerManaBarrierAlive;
 
     private static boolean playerMenuStatTabToggle;
 
@@ -27,18 +29,16 @@ public class ClientStatsData {
         return playerMaxMana;
     }
 
-    public static void setManaCore(long manacore) {
-        ClientStatsData.playerManaCore = manacore;
+    public static void setManaBarrier(long manabarrier) {
+        ClientStatsData.playerManaBarrier = manabarrier;
     }
-    public static void setMaxManaCore(long max_manacore) {
-        ClientStatsData.playerMaxManaCore = max_manacore;
-    }
-    public static void setManaCoreExhaustion(long manacore_exhaustion) {
-        ClientStatsData.playerManaCoreExhaustion = manacore_exhaustion;
-    }
+    public static void setMaxManaBarrier(long max_manabarrier) {ClientStatsData.playerMaxManaBarrier = max_manabarrier;}
+    public static void setManaBarrierRevive(long manabarrierrevive) {ClientStatsData.playerManaBarrierRevive = manabarrierrevive;}
 
 
     public static void setDestructionActive(boolean destructionActive) {ClientStatsData.playerDestructionActive = destructionActive;}
+
+    public static void setManaBarrierAlive(boolean manaBarrierAlive) {ClientStatsData.playerManaBarrierAlive = manaBarrierAlive;}
 
     public static void setMenuStatTabToggle(boolean menuStatTabToggle) {ClientStatsData.playerMenuStatTabToggle = menuStatTabToggle;}
 
@@ -49,18 +49,22 @@ public class ClientStatsData {
     public static void setManaCoreXp(long manacore_xp) {
         ClientStatsData.playerManaCoreXp = manacore_xp;
     }
-    public static long getPlayerManaCore() {
-        return playerManaCore;
+    public static long getPlayerManaBarrier() {
+        return playerManaBarrier;
     }
-    public static long getPlayerMaxManaCore() {
-        return playerMaxManaCore;
+    public static long getPlayerMaxManaBarrier() {
+        return playerMaxManaBarrier;
     }
-    public static long getPlayerManaCoreExhaustion() {
-        return playerManaCoreExhaustion;
+    public static long getPlayerManaBarrierRevive() {
+        return playerManaBarrierRevive;
     }
 
     public static boolean getPlayerDestructionActive() {
         return playerDestructionActive;
+    }
+
+    public static boolean getPlayerManaBarrierAlive() {
+        return playerManaBarrierAlive;
     }
 
     public static boolean getPlayerMenuStatTabToggle() {return playerMenuStatTabToggle;}

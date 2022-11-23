@@ -5,25 +5,26 @@ import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.networking.packet.mana.MaxManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.manacore.ManaCoreLevelDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.manacore.ManaCoreXpDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.manacore.MaxManaBarrierDataSyncS2CPacket;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
 
 public class StatSystems {
     int requiredManaUsageForXp = 100;
     public long[] requiredCoreLevelXp = {
             100L,
-            200L,
-            400L,
-            800L,
-            1600L,
-            3200L,
-            6400L,
-            12800L,
-            51200L,
-            102400L,
-            204800L,
-            819200L,
-            1638400L,
-            3276800L
+            1000L,
+            10000L,
+            100000L,
+            1000000L,
+            10000000L,
+            100000000L,
+            1000000000L,
+            10000000000L,
+            100000000000L,
+            1000000000000L,
+            10000000000000L,
+            100000000000000L,
+            1000000000000000L
     };
 
     public long[] maxManaRewardPerLevel = {
@@ -42,7 +43,30 @@ public class StatSystems {
             410062L,
             2050312L
     };
+
+    public long[] maxManaBarrierRewardPerLevel = {
+            100L,
+            200L,
+            300L,
+            450L,
+            900L,
+            1350L,
+            2025L,
+            4050L,
+            6075L,
+            9112L,
+            18225L,
+            27337L,
+            41006L,
+            205031L
+    };
     public long secondsForBaseManaRegen = 600;
+
+    public long secondsForBaseManaBarrierRegen = 60;
+
+    public long manaBarrierRegenCost = 1;
+
+    public long secondsForBaseManaBarrierRevive = 60;
 
     long absoluteManaChange;
     public void xpSystem (long manaChange, ServerPlayer player){
@@ -64,20 +88,15 @@ public class StatSystems {
                                     manacorexp.setManaCoreXp(0);
                                     manacore_level.addManaCoreLevel(1);
                                     player.getCapability(PlayerStatsProvider.PLAYER_MAXMANA).ifPresent(maxmana -> {
-
                                         maxmana.addMaxMana(maxManaRewardPerLevel[(int)manacore_level.getManaCoreLevel()-1]);
+                                        maxmana.addMaxManaBarrier(maxManaBarrierRewardPerLevel[(int)manacore_level.getManaCoreLevel()-1]);
+                                        ModMessages.sendToPlayer(new MaxManaBarrierDataSyncS2CPacket(maxmana.getMaxManaBarrier()), player);
                                         ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(maxmana.getMaxMana()), player);
                                     });
-
-
-
-
-
                                     ModMessages.sendToPlayer(new ManaCoreLevelDataSyncS2CPacket(manacore_level.getManaCoreLevel()), player);
                                 }else {
                                     manacorexp.setManaCoreXp(requiredCoreLevelXp[requiredCoreLevelXp.length-1]);
                                 }
-
 
                             } else {
                                 manacorexp.addManaCoreXp(1);

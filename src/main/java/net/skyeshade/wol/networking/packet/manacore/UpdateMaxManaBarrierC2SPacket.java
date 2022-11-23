@@ -11,17 +11,18 @@ import net.skyeshade.wol.stats.PlayerStatsProvider;
 
 import java.util.function.Supplier;
 
-public class UpdateMaxManaCoreC2SPacket {
-    public UpdateMaxManaCoreC2SPacket() {
-
+public class UpdateMaxManaBarrierC2SPacket {
+    long maxManaBarrierChange;
+    public UpdateMaxManaBarrierC2SPacket(long maxManaBarrierChange) {
+        this.maxManaBarrierChange = maxManaBarrierChange;
     }
 
-    public UpdateMaxManaCoreC2SPacket(FriendlyByteBuf buf) {
-
+    public UpdateMaxManaBarrierC2SPacket(FriendlyByteBuf buf) {
+        this.maxManaBarrierChange = buf.readLong();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-
+        buf.writeLong(maxManaBarrierChange);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
@@ -35,9 +36,9 @@ public class UpdateMaxManaCoreC2SPacket {
 
                 // increase the water level / stats level of player
                 // Output the current stats level
-            player.getCapability(PlayerStatsProvider.PLAYER_MAXMANACORE).ifPresent(max_manacore -> {
-                max_manacore.addMaxManaCore(100);
-                ModMessages.sendToPlayer(new MaxManaCoreDataSyncS2CPacket(max_manacore.getMaxManaCore()), player);
+            player.getCapability(PlayerStatsProvider.PLAYER_MAXMANABARRIER).ifPresent(max_manabarrier -> {
+                max_manabarrier.addMaxManaBarrier(maxManaBarrierChange);
+                ModMessages.sendToPlayer(new MaxManaBarrierDataSyncS2CPacket(max_manabarrier.getMaxManaBarrier()), player);
             });
 
 

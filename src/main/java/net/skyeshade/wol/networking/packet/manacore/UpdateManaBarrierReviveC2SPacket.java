@@ -11,20 +11,18 @@ import net.skyeshade.wol.stats.PlayerStatsProvider;
 
 import java.util.function.Supplier;
 
-public class UpdateManaCoreC2SPacket {
-
-    private final long manaCoreChange;
-    public UpdateManaCoreC2SPacket(long manaCoreChange) {
-        this.manaCoreChange = manaCoreChange;
+public class UpdateManaBarrierReviveC2SPacket {
+    private final long manaBarrierReviveChange;
+    public UpdateManaBarrierReviveC2SPacket(long manaBarrierReviveChange) {
+        this.manaBarrierReviveChange = manaBarrierReviveChange;
     }
 
-    public UpdateManaCoreC2SPacket(FriendlyByteBuf buf) {
-        this.manaCoreChange = buf.readLong();
+    public UpdateManaBarrierReviveC2SPacket(FriendlyByteBuf buf) {
+        this.manaBarrierReviveChange = buf.readLong();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeLong(manaCoreChange);
-
+        buf.writeLong(manaBarrierReviveChange);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
@@ -38,9 +36,9 @@ public class UpdateManaCoreC2SPacket {
 
                 // increase the water level / stats level of player
                 // Output the current stats level
-            player.getCapability(PlayerStatsProvider.PLAYER_MANACORE).ifPresent(manacore -> {
-                manacore.addManaCore(manaCoreChange);
-                ModMessages.sendToPlayer(new ManaCoreDataSyncS2CPacket(manacore.getManaCore()), player);
+            player.getCapability(PlayerStatsProvider.PLAYER_MANABARRIERREVIVE).ifPresent(manabarrierrevive -> {
+                manabarrierrevive.addManaBarrierRevive(manaBarrierReviveChange);
+                ModMessages.sendToPlayer(new ManaBarrierReviveDataSyncS2CPacket(manabarrierrevive.getManaBarrierRevive()), player);
             });
 
 

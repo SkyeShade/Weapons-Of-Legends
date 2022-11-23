@@ -5,9 +5,9 @@ import net.minecraft.nbt.CompoundTag;
 
 public class PlayerStats {
 
-    private final long MIN_MANACORE = 0;
-    private final long MIN_MAXMANACORE = 0;
-    private final long MIN_MANACORE_EXHAUSTION = 0;
+    private final long MIN_MANABARRIER = 0;
+    private final long MIN_MAXMANABARRIER = 0;
+    private final long MIN_MANABARRIERREVIVE = 0;
     private final long MIN_MANA = 0;
     private final long MIN_MAXMANA = 0;
     private final long MIN_MANACORE_LEVEL = 0;
@@ -17,9 +17,10 @@ public class PlayerStats {
 
     private long mana;
     private long max_mana;
-    private long manacore;
-    private long max_manacore;
-    private long manacore_exhaustion;
+    private long manabarrier;
+    private long max_manabarrier;
+    private long manabarrierrevive;
+    private boolean manabarrieralive;
     private long manacore_level;
     private long manacore_xp;
     private long manatoxp;
@@ -46,13 +47,13 @@ public class PlayerStats {
     public long getMaxMana() {
         return max_mana;
     }
-    public long getManaCore() {
-        return manacore;
+    public long getManaBarrier() {
+        return manabarrier;
     }
-    public long getMaxManaCore() {
-        return max_manacore;
+    public long getMaxManaBarrier() {
+        return max_manabarrier;
     }
-    public long getManaCoreExhaustion() {return manacore_exhaustion;}
+    public long getManaBarrierRevive() {return manabarrierrevive;}
     public long getManaCoreLevel() {
         return manacore_level;
     }
@@ -67,17 +68,22 @@ public class PlayerStats {
         return menuStatTabToggle;
     }
 
+    public boolean getManaBarrierAlive() {return manabarrieralive;}
+
     //set functions
     public void setMaxMana(long set) {
         this.max_mana = Math.max(set, MIN_MAXMANA);
     }
     public void setManaRegenBuffer(float set) {this.manaregenbuffer = set;}
     public void setManaBarrierRegenBuffer(float set) {this.manabarrierregenbuffer = set;}
-    public void setMaxManaCore(long set) {
-        this.max_manacore = Math.max(set, MIN_MAXMANACORE);
+    public void setMaxManaBarrier(long set) {
+        this.max_manabarrier = Math.max(set, MIN_MAXMANABARRIER);
     }
-    public void setManaCoreExhaustion(long set) {
-        this.manacore_exhaustion = Math.max(set, MIN_MANACORE_EXHAUSTION);
+    public void setManaBarrierRevive(long set) {
+        this.manabarrierrevive = Math.max(set, MIN_MANABARRIERREVIVE);
+    }
+    public void setManaBarrier(long set) {
+        this.manabarrier = Math.max(set, MIN_MANABARRIER);
     }
     public void setManaCoreLevel(long set) {
         this.manacore_level = Math.max(set, MIN_MANACORE_LEVEL);
@@ -90,6 +96,7 @@ public class PlayerStats {
     }
     public void setDestructionActive(boolean set) {this.destructionActive = set;}
     public void setMenuStatTabToggle(boolean set) {this.menuStatTabToggle = set;}
+    public void setManaBarrierAlive(boolean set) {this.manabarrieralive = set;}
 
 
     //add functions
@@ -100,13 +107,13 @@ public class PlayerStats {
     public void addManaBarrierRegenBuffer(float add) {this.manabarrierregenbuffer = manabarrierregenbuffer + add;}
     public void addManaToXp(long add) {this.manatoxp = (manatoxp + add);}
     public void addMaxMana(long add) {this.max_mana = max_mana + add;}
-    public void addManaCore(long add) {
-        this.manacore = Math.min(manacore + add, max_manacore);
+    public void addManaBarrier(long add) {
+        this.manabarrier = Math.min(manabarrier + add, max_manabarrier);
     }
-    public void addMaxManaCore(long add) {
-        this.max_manacore = max_manacore + add;
+    public void addMaxManaBarrier(long add) {
+        this.max_manabarrier = max_manabarrier + add;
     }
-    public void addManaCoreExhaustion(long add) {this.manacore_exhaustion = Math.min(manacore_exhaustion + add, max_manacore);}
+    public void addManaBarrierRevive(long add) {this.manabarrierrevive = manabarrierrevive + add;}
     public void addManaCoreLevel(long add) {this.manacore_level = manacore_level + add;}
     public void addManaCoreXp(long add) {this.manacore_xp = manacore_xp + add;}
 
@@ -117,22 +124,18 @@ public class PlayerStats {
     public void subMaxMana(long sub) {
         this.max_mana = Math.max(max_mana - sub, MIN_MAXMANA);
     }
-    public void subManaCore(long sub) {
-        this.manacore = Math.max(manacore - sub, manacore_exhaustion);
-    }
-    public void subMaxManaCore(long sub) {
-        this.max_manacore = Math.max(max_manacore - sub, MIN_MAXMANACORE);
-    }
-    public void subManaCoreExhaustion(long sub) {this.manacore_exhaustion = Math.max(manacore_exhaustion - sub, MIN_MANACORE_EXHAUSTION);}
+    public void subManaBarrier(long sub) {this.manabarrier = Math.max(manabarrier - sub, MIN_MANABARRIER);}
+    public void subMaxManaBarrier(long sub) {this.max_manabarrier = Math.max(max_manabarrier - sub, MIN_MAXMANABARRIER);}
+    public void subManaBarrierRevive(long sub) {this.manabarrierrevive = Math.max(manabarrierrevive - sub, MIN_MANABARRIERREVIVE);}
 
     public void copyFrom(PlayerStats source) {
         this.mana = source.mana;
         this.manaregenbuffer = source.manaregenbuffer;
         this.manabarrierregenbuffer = source.manabarrierregenbuffer;
         this.max_mana = source.max_mana;
-        this.manacore = source.manacore;
-        this.max_manacore = source.max_manacore;
-        this.manacore_exhaustion = source.manacore_exhaustion;
+        this.manabarrier = source.manabarrier;
+        this.max_manabarrier = source.max_manabarrier;
+        this.manabarrierrevive = source.manabarrierrevive;
         this.destructionActive = source.destructionActive;
         this.menuStatTabToggle = source.menuStatTabToggle;
         this.manacore_level = source.manacore_level;
@@ -145,11 +148,12 @@ public class PlayerStats {
         nbt.putFloat("manaregenbuffer", manaregenbuffer);
         nbt.putFloat("manabarrierregenbuffer", manabarrierregenbuffer);
         nbt.putLong("max_mana", max_mana);
-        nbt.putLong("manacore", manacore);
-        nbt.putLong("max_manacore", max_manacore);
-        nbt.putLong("manacore_exhaustion", manacore_exhaustion);
+        nbt.putLong("manabarrier", manabarrier);
+        nbt.putLong("max_manabarrier", max_manabarrier);
+        nbt.putLong("manabarrierrevive", manabarrierrevive);
         nbt.putBoolean("destruction_active", destructionActive);
         nbt.putBoolean("menuStatTabToggle", menuStatTabToggle);
+        nbt.putBoolean("manabarrieralive", manabarrieralive);
         nbt.putLong("manacore_level", manacore_level);
         nbt.putLong("manacore_xp", manacore_xp);
         nbt.putLong("manatoxp", manatoxp);
@@ -162,11 +166,12 @@ public class PlayerStats {
         manaregenbuffer = nbt.getFloat("manaregenbuffer");
         manabarrierregenbuffer = nbt.getFloat("manabarrierregenbuffer");
         max_mana = nbt.getLong("max_mana");
-        manacore = nbt.getLong("manacore");
-        max_manacore = nbt.getLong("max_manacore");
-        manacore_exhaustion = nbt.getLong("manacore_exhaustion");
+        manabarrier = nbt.getLong("manabarrier");
+        max_manabarrier = nbt.getLong("max_manabarrier");
+        manabarrierrevive = nbt.getLong("manabarrierrevive");
         destructionActive = nbt.getBoolean("destruction_active");
         menuStatTabToggle = nbt.getBoolean("menuStatTabToggle");
+        manabarrieralive = nbt.getBoolean("manabarrieralive");
         manacore_level = nbt.getLong("manacore_level");
         manacore_xp = nbt.getLong("manacore_xp");
         manatoxp = nbt.getLong("manatoxp");

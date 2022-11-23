@@ -9,15 +9,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.skyeshade.wol.entities.BladeSlashProjectileEntity;
 import net.skyeshade.wol.entities.EntityInit;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.networking.packet.mana.ManaDataSyncS2CPacket;
-import net.skyeshade.wol.networking.packet.manacore.ManaCoreDataSyncS2CPacket;
-import net.skyeshade.wol.networking.packet.manacore.ManaCoreExhaustionDataSyncS2CPacket;
 import net.skyeshade.wol.sound.ModSounds;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
 import net.skyeshade.wol.util.StatSystems;
@@ -123,14 +120,8 @@ public class TimeStopAbility {
                                         statSystems.xpSystem(-100, (ServerPlayer) player);
                                         ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), ((ServerPlayer) player));
 
-                                        player.getCapability(PlayerStatsProvider.PLAYER_MANACORE).ifPresent(manacore -> {
-                                            manacore.addManaCore(10);
-                                            ModMessages.sendToPlayer(new ManaCoreDataSyncS2CPacket(manacore.getManaCore()), ((ServerPlayer) player));
-                                        });
-                                        player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_EXHAUSTION).ifPresent(manacore_exhaustion -> {
-                                            manacore_exhaustion.addManaCoreExhaustion(1);
-                                            ModMessages.sendToPlayer(new ManaCoreExhaustionDataSyncS2CPacket(manacore_exhaustion.getManaCoreExhaustion()), ((ServerPlayer) player));
-                                        });
+
+
                                         timer.set(valuesIndex, 45);
 
 

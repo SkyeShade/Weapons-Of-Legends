@@ -10,23 +10,25 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.skyeshade.wol.WOL;
 import net.skyeshade.wol.util.LongHudFormatter;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class HudOverlay {
     private static final ResourceLocation FILLED_MANA = new ResourceLocation(WOL.MOD_ID, "textures/stats/filled_mana.png");
-    private static final ResourceLocation FILLED_MANACORE = new ResourceLocation(WOL.MOD_ID, "textures/stats/filled_manacore.png");
-    private static final ResourceLocation FILLED_MANACORE_EXHAUSTION = new ResourceLocation(WOL.MOD_ID, "textures/stats/filled_manacore_exhaustion.png");
+    private static final ResourceLocation FILLED_MANABARRIER = new ResourceLocation(WOL.MOD_ID, "textures/stats/filled_manabarrier.png");
+
     private static final ResourceLocation EMPTY_MANA_START = new ResourceLocation(WOL.MOD_ID, "textures/stats/empty_mana_start2.png");
     private static final ResourceLocation EMPTY_MANA_SEGMENT = new ResourceLocation(WOL.MOD_ID, "textures/stats/empty_mana_segment2.png");
     private static final ResourceLocation EMPTY_MANA_END = new ResourceLocation(WOL.MOD_ID, "textures/stats/empty_mana_end2.png");
     public static final IGuiOverlay HUD_STATS = ((gui, poseStack, partialTick, width, height) -> {
         //long x = width / 2;
         int xManaBar = 5;
-        int xManaCoreBar = 5;
+        int xManaBarrierBar = 5;
         //long y = height;
         int yManaBar = height - 14;
-        int yManaCoreBar = height - 24;
+        int yManaBarrierBar = height - 24;
 
         int xScaleManaBar = (int)(width/4);
-        int xScaleManaCoreBar = (int)(width/4);
+        int xScaleManaBarrierBar = (int)(width/4);
         int endStartCapPixelWidth = 4;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -42,30 +44,50 @@ public class HudOverlay {
             }
         }
         //manacore progress1
-        RenderSystem.setShaderTexture(0, FILLED_MANACORE);
-        for(int i = 0; i < xScaleManaCoreBar+1; i++) {
+        RenderSystem.setShaderTexture(0, FILLED_MANABARRIER);
+        for(int i = 0; i < xScaleManaBarrierBar+1; i++) {
 
-            if(((float)ClientStatsData.getPlayerManaCore()/(float)ClientStatsData.getPlayerMaxManaCore())*100 > (i/(float)(xScaleManaCoreBar+1))*100) {
-                GuiComponent.blit(poseStack,xManaCoreBar +1 + (i),yManaCoreBar ,0,0,1,9,
+            if(((float)ClientStatsData.getPlayerManaBarrier()/(float)ClientStatsData.getPlayerMaxManaBarrier())*100 > (i/(float)(xScaleManaBarrierBar+1))*100) {
+                GuiComponent.blit(poseStack,xManaBarrierBar +1 + (i),yManaBarrierBar ,0,0,1,9,
                         1,9);
 
             } else {
                 break;
             }
-
         }
+        if (!ClientStatsData.getPlayerManaBarrierAlive()) {
+
+            for (int i = 0; i < xScaleManaBarrierBar+5; i++) {
+
+
+                int randomNum = ThreadLocalRandom.current().nextInt(-1, 2);
+
+                //if (((float) ClientStatsData.getPlayerManaBarrier() / (float) ClientStatsData.getPlayerMaxManaBarrier()) * 100 > (i / (float) (xScaleManaBarrierBar + 1)) * 100) {
+                RenderSystem.setShaderTexture(0, EMPTY_MANA_SEGMENT);
+                    GuiComponent.blit(poseStack, xManaBarrierBar -1  + (i), yManaBarrierBar-randomNum, 0, 0, 1, 9,
+                            1, 2);
+
+
+                //} else {
+                //    break;
+                //}
+            }
+        }
+
+
         //manacore progress2
 
-        RenderSystem.setShaderTexture(0, FILLED_MANACORE_EXHAUSTION);
-        for(int i = 0; i < xScaleManaCoreBar+1; i++) {
-            if(((float)ClientStatsData.getPlayerManaCoreExhaustion()/(float)ClientStatsData.getPlayerMaxManaCore())*100 > (i/(float)(xScaleManaCoreBar+1))*100) {
-                GuiComponent.blit(poseStack,xManaCoreBar +1 + (i),yManaCoreBar ,0,0,1,9,
+        /*RenderSystem.setShaderTexture(0, FILLED_MANABARRIER_EXHAUSTION);
+        for(int i = 0; i < xScaleManaBarrierBar+1; i++) {
+            if(((float)ClientStatsData.getPlayerManaCoreExhaustion()/(float)ClientStatsData.getPlayerMaxManaCore())*100 > (i/(float)(xScaleManaBarrierBar+1))*100) {
+                GuiComponent.blit(poseStack,xManaBarrierBar +1 + (i),yManaBarrierBar ,0,0,1,9,
                         1,9);
 
             } else {
                 break;
             }
-        }
+        }*/
+
         RenderSystem.setShaderTexture(0, EMPTY_MANA_START);
         GuiComponent.blit(poseStack,xManaBar, yManaBar,0,0,endStartCapPixelWidth,9, endStartCapPixelWidth,9);
         RenderSystem.setShaderTexture(0, EMPTY_MANA_SEGMENT);
@@ -73,14 +95,15 @@ public class HudOverlay {
         RenderSystem.setShaderTexture(0, EMPTY_MANA_END);
         GuiComponent.blit(poseStack,xManaBar+3+xScaleManaBar-endStartCapPixelWidth, yManaBar ,0,0,endStartCapPixelWidth,9, endStartCapPixelWidth,9);
 
-        //manacore bar
-        RenderSystem.setShaderTexture(0, EMPTY_MANA_START);
-        GuiComponent.blit(poseStack,xManaCoreBar, yManaCoreBar,0,0,endStartCapPixelWidth,9, endStartCapPixelWidth,9);
-        RenderSystem.setShaderTexture(0, EMPTY_MANA_SEGMENT);
-        GuiComponent.blit(poseStack,xManaCoreBar+endStartCapPixelWidth, yManaCoreBar,0,0,xScaleManaCoreBar-endStartCapPixelWidth,9, xScaleManaCoreBar-endStartCapPixelWidth,9);
-        RenderSystem.setShaderTexture(0, EMPTY_MANA_END);
-        GuiComponent.blit(poseStack,xManaCoreBar+3+xScaleManaCoreBar-endStartCapPixelWidth, yManaCoreBar,0,0,endStartCapPixelWidth,9, endStartCapPixelWidth,9);
-
+        //manabarrier bar
+        if (ClientStatsData.getPlayerManaBarrierAlive()) {
+            RenderSystem.setShaderTexture(0, EMPTY_MANA_START);
+            GuiComponent.blit(poseStack, xManaBarrierBar, yManaBarrierBar, 0, 0, endStartCapPixelWidth, 9, endStartCapPixelWidth, 9);
+            RenderSystem.setShaderTexture(0, EMPTY_MANA_SEGMENT);
+            GuiComponent.blit(poseStack, xManaBarrierBar + endStartCapPixelWidth, yManaBarrierBar, 0, 0, xScaleManaBarrierBar - endStartCapPixelWidth, 9, xScaleManaBarrierBar - endStartCapPixelWidth, 9);
+            RenderSystem.setShaderTexture(0, EMPTY_MANA_END);
+            GuiComponent.blit(poseStack, xManaBarrierBar + 3 + xScaleManaBarrierBar - endStartCapPixelWidth, yManaBarrierBar, 0, 0, endStartCapPixelWidth, 9, endStartCapPixelWidth, 9);
+        }
         int uiManaTextLength;
         uiManaTextLength = (LongHudFormatter.format(ClientStatsData.getPlayerMana()).length()*6);
         if (LongHudFormatter.format(ClientStatsData.getPlayerMana()).contains("."))
@@ -93,16 +116,17 @@ public class HudOverlay {
         Minecraft.getInstance().font.draw(poseStack, "/", xManaBar + manaTextCentre, yManaBar+1 , 43690);
         Minecraft.getInstance().font.draw(poseStack, LongHudFormatter.format(ClientStatsData.getPlayerMaxMana()), xManaBar + manaTextCentre+8, yManaBar+1 , 43690);
         //Minecraft.getInstance().font.draw(poseStack, String.valueOf(ClientStatsData.getPlayerMaxMana()), xManaBar + manaTextCentre+8, yManaBar+1 , 43690);
-
-        int uiManaCoreTextLength;
-        uiManaCoreTextLength = (LongHudFormatter.format(ClientStatsData.getPlayerManaCore()).length()*6);
-        if (LongHudFormatter.format(ClientStatsData.getPlayerManaCore()).contains("."))
-            uiManaCoreTextLength = (LongHudFormatter.format(ClientStatsData.getPlayerManaCore()).length()*6)-4;
-        long manaCoreTextCentre = (xScaleManaCoreBar-3)/2;
-        //Minecraft.getInstance().font.draw(poseStack, String.valueOf(ClientStatsData.getPlayerManaCore()), xManaCoreBar + manaCoreTextCentre-2 - (String.valueOf(ClientStatsData.getPlayerManaCore()).length()*6), yManaCoreBar+1 , 12878902);
-        Minecraft.getInstance().font.draw(poseStack,LongHudFormatter.format(ClientStatsData.getPlayerManaCore()), xManaCoreBar + manaCoreTextCentre-2 - (uiManaCoreTextLength), yManaCoreBar+1 , 12878902);
-        Minecraft.getInstance().font.draw(poseStack, "/", xManaCoreBar + manaCoreTextCentre, yManaCoreBar+1 , 12878902);
-        Minecraft.getInstance().font.draw(poseStack, LongHudFormatter.format(ClientStatsData.getPlayerMaxManaCore()), xManaCoreBar + manaCoreTextCentre+8, yManaCoreBar+1 , 12878902);
-        //Minecraft.getInstance().font.draw(poseStack, String.valueOf(ClientStatsData.getPlayerMaxManaCore()), xManaCoreBar + manaCoreTextCentre+8, yManaCoreBar+1 , 12878902);
+        if (ClientStatsData.getPlayerManaBarrierAlive()) {
+            int uiManaCoreTextLength;
+            uiManaCoreTextLength = (LongHudFormatter.format(ClientStatsData.getPlayerManaBarrier()).length() * 6);
+            if (LongHudFormatter.format(ClientStatsData.getPlayerManaBarrier()).contains("."))
+                uiManaCoreTextLength = (LongHudFormatter.format(ClientStatsData.getPlayerManaBarrier()).length() * 6) - 4;
+            long manaCoreTextCentre = (xScaleManaBarrierBar - 3) / 2;
+            //Minecraft.getInstance().font.draw(poseStack, String.valueOf(ClientStatsData.getPlayerManaCore()), xManaBarrierBar + manaCoreTextCentre-2 - (String.valueOf(ClientStatsData.getPlayerManaCore()).length()*6), yManaBarrierBar+1 , 12878902);
+            Minecraft.getInstance().font.draw(poseStack, LongHudFormatter.format(ClientStatsData.getPlayerManaBarrier()), xManaBarrierBar + manaCoreTextCentre - 2 - (uiManaCoreTextLength), yManaBarrierBar + 1, 12878902);
+            Minecraft.getInstance().font.draw(poseStack, "/", xManaBarrierBar + manaCoreTextCentre, yManaBarrierBar + 1, 12878902);
+            Minecraft.getInstance().font.draw(poseStack, LongHudFormatter.format(ClientStatsData.getPlayerMaxManaBarrier()), xManaBarrierBar + manaCoreTextCentre + 8, yManaBarrierBar + 1, 12878902);
+            //Minecraft.getInstance().font.draw(poseStack, String.valueOf(ClientStatsData.getPlayerMaxManaCore()), xManaBarrierBar + manaCoreTextCentre+8, yManaBarrierBar+1 , 12878902);
+        }
     });
 }

@@ -1,18 +1,11 @@
 package net.skyeshade.wol.stats.event;
 
 
-import com.mojang.blaze3d.platform.InputConstants;
-import com.sun.jna.platform.KeyboardUtils;
-import net.minecraft.advancements.DisplayInfo;
-import net.minecraft.client.KeyMapping;
-import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.advancements.AdvancementsScreen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.skyeshade.wol.WOL;
@@ -22,15 +15,10 @@ import net.skyeshade.wol.client.gui.screens.stats.StatsScreen;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.networking.packet.destruction.UpdateDestructionActiveC2SPacket;
 import net.skyeshade.wol.networking.packet.mana.UpdateManaC2SPacket;
-import net.skyeshade.wol.networking.packet.mana.UpdateMaxManaC2SPacket;
-import net.skyeshade.wol.networking.packet.manacore.UpdateManaCoreC2SPacket;
-import net.skyeshade.wol.networking.packet.manacore.UpdateManaCoreExhaustionC2SPacket;
-import net.skyeshade.wol.networking.packet.manacore.UpdateManaCoreLevelC2SPacket;
-import net.skyeshade.wol.networking.packet.manacore.UpdateMaxManaCoreC2SPacket;
+import net.skyeshade.wol.networking.packet.manacore.UpdateManaBarrierC2SPacket;
+import net.skyeshade.wol.networking.packet.manacore.UpdateManaBarrierReviveC2SPacket;
+import net.skyeshade.wol.networking.packet.manacore.UpdateMaxManaBarrierC2SPacket;
 import net.skyeshade.wol.util.KeyBinding;
-import org.lwjgl.glfw.GLFW;
-
-import static net.skyeshade.wol.util.KeyBinding.KEY_CATEGORY_WOL;
 
 public class ClientEvents {
 
@@ -41,9 +29,9 @@ public class ClientEvents {
             if(KeyBinding.MANASUB_KEY.consumeClick()) {
                 ModMessages.sendToServer(new UpdateManaC2SPacket(1000));
 
-                ModMessages.sendToServer(new UpdateManaCoreC2SPacket(10));
+                //ModMessages.sendToServer(new UpdateManaBarrierC2SPacket(10));
 
-                ModMessages.sendToServer(new UpdateManaCoreExhaustionC2SPacket(1));
+                //ModMessages.sendToServer(new UpdateManaBarrierReviveC2SPacket(1));
 
                 if (ClientStatsData.getPlayerDestructionActive()) {
                     ModMessages.sendToServer(new UpdateDestructionActiveC2SPacket(false));
@@ -56,16 +44,59 @@ public class ClientEvents {
                 Minecraft.getInstance().setScreen(new StatsScreen());
 
                 //ModMessages.sendToServer(new UpdateMaxManaC2SPacket(1000));
-                ModMessages.sendToServer(new UpdateMaxManaCoreC2SPacket());
+                //ModMessages.sendToServer(new UpdateMaxManaBarrierC2SPacket(1000));
             }
 
 
             if (ClientStatsData.getPlayerDestructionActive()) {
                 if (Minecraft.getInstance().options.keyMappings[25].consumeClick()) {
 
-                    System.out.println("TEST");
+                    System.out.println("TEST1");
 
                 }
+                if (Minecraft.getInstance().options.keyMappings[26].consumeClick()) {
+
+                    System.out.println("TEST2");
+
+                }
+                if (Minecraft.getInstance().options.keyMappings[27].consumeClick()) {
+
+                    System.out.println("TEST3");
+
+                }
+                if (Minecraft.getInstance().options.keyMappings[28].consumeClick()) {
+
+                    System.out.println("TEST4");
+
+                }
+                if (Minecraft.getInstance().options.keyMappings[29].consumeClick()) {
+
+                    System.out.println("TEST5");
+
+                }
+                if (Minecraft.getInstance().options.keyMappings[30].consumeClick()) {
+
+                    System.out.println("TEST6");
+
+                }
+                if (Minecraft.getInstance().options.keyMappings[31].consumeClick()) {
+
+                    System.out.println("TEST7");
+
+                }
+                if (Minecraft.getInstance().options.keyMappings[32].consumeClick()) {
+
+                    System.out.println("TEST8");
+
+                }
+                if (Minecraft.getInstance().options.keyMappings[33].consumeClick()) {
+
+                    System.out.println("TEST9");
+
+                }
+
+
+
             }
 
         }

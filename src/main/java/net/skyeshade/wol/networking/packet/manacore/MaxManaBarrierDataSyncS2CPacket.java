@@ -7,26 +7,26 @@ import net.skyeshade.wol.client.ClientStatsData;
 
 import java.util.function.Supplier;
 
-public class MaxManaCoreDataSyncS2CPacket {
-    private final long max_manacore;
+public class MaxManaBarrierDataSyncS2CPacket {
+    private final long max_manabarrier;
 
-    public MaxManaCoreDataSyncS2CPacket(long max_manacore) {
-        this.max_manacore = max_manacore;
+    public MaxManaBarrierDataSyncS2CPacket(long max_manabarrier) {
+        this.max_manabarrier = max_manabarrier;
     }
 
-    public MaxManaCoreDataSyncS2CPacket(FriendlyByteBuf buf) {
-        this.max_manacore = buf.readLong();
+    public MaxManaBarrierDataSyncS2CPacket(FriendlyByteBuf buf) {
+        this.max_manabarrier = buf.readLong();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeLong(max_manacore);
+        buf.writeLong(max_manabarrier);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
             // HERE WE ARE ON THE CLIENT!
-            ClientStatsData.setMaxManaCore(max_manacore);
+            ClientStatsData.setMaxManaBarrier(max_manabarrier);
         });
         return true;
     }

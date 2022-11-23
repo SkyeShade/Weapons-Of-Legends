@@ -21,10 +21,11 @@ public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializabl
     public static Capability<PlayerStats> PLAYER_MANABARRIERREGENBUFFER = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
     public static Capability<PlayerStats> PLAYER_MANATOXP = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
     public static Capability<PlayerStats> PLAYER_MAXMANA = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
-    public static Capability<PlayerStats> PLAYER_MANACORE = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
-    public static Capability<PlayerStats> PLAYER_MAXMANACORE = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
-    public static Capability<PlayerStats> PLAYER_MANACORE_EXHAUSTION = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
+    public static Capability<PlayerStats> PLAYER_MANABARRIER = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
+    public static Capability<PlayerStats> PLAYER_MAXMANABARRIER = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
+    public static Capability<PlayerStats> PLAYER_MANABARRIERREVIVE = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
     public static Capability<PlayerStats> PLAYER_DESTRUCTION_ACTIVE = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
+    public static Capability<PlayerStats> PLAYER_MANABARRIERALIVE = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
     public static Capability<PlayerStats> PLAYER_MENUSTATTABTOGGLE = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
     public static Capability<PlayerStats> PLAYER_MANACORE_LEVEL = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
     public static Capability<PlayerStats> PLAYER_MANACORE_XP = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
@@ -35,12 +36,13 @@ public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializabl
     private PlayerStats manatoxp = null;
     private PlayerStats max_mana = null;
     //manacore
-    private PlayerStats manacore = null;
-    private PlayerStats max_manacore = null;
-    private PlayerStats manacore_exhaustion = null;
+    private PlayerStats manabarrier = null;
+    private PlayerStats max_manabarrier = null;
+    private PlayerStats manabarrierrevive = null;
 
     private PlayerStats destructionActive = null;
     private PlayerStats menuStatTabToggle = null;
+    private PlayerStats manabarrieralive = null;
 
     private PlayerStats manacore_level = null;
 
@@ -51,9 +53,10 @@ public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializabl
     private final LazyOptional<PlayerStats> manaToXpOptional = LazyOptional.of(this::createPlayerMana);
     private final LazyOptional<PlayerStats> maxManaOptional = LazyOptional.of(this::createPlayerMaxMana);
     //manacore
-    private final LazyOptional<PlayerStats> manaCoreOptional = LazyOptional.of(this::createPlayerManaCore);
-    private final LazyOptional<PlayerStats> maxManaCoreOptional = LazyOptional.of(this::createPlayerMaxManaCore);
-    private final LazyOptional<PlayerStats> manaCoreExhaustionOptional = LazyOptional.of(this::createPlayerManaCoreExhaustion);
+    private final LazyOptional<PlayerStats> manaBarrierOptional = LazyOptional.of(this::createPlayerManaBarrier);
+    private final LazyOptional<PlayerStats> maxManaBarrierOptional = LazyOptional.of(this::createPlayerMaxManaBarrier);
+    private final LazyOptional<PlayerStats> manaBarrierReviveOptional = LazyOptional.of(this::createPlayerManaBarrierRevive);
+    private final LazyOptional<PlayerStats> manaBarrierAliveOptional = LazyOptional.of(this::createPlayerManaBarrierAlive);
 
     private final LazyOptional<PlayerStats> destructionActiveOptional = LazyOptional.of(this::createPlayerDestructionActive);
     private final LazyOptional<PlayerStats> menuStatTabToggleOptional = LazyOptional.of(this::createPlayerMenuStatTabToggle);
@@ -69,9 +72,10 @@ public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializabl
 
     //manacore
 
-    private PlayerStats createPlayerManaCore() {if(this.manacore == null) {this.manacore = new PlayerStats();}return this.manacore;}
-    private PlayerStats createPlayerMaxManaCore() {if(this.max_manacore == null) {this.max_manacore = new PlayerStats();}return this.max_manacore;}
-    private PlayerStats createPlayerManaCoreExhaustion() {if(this.manacore_exhaustion == null) {this.manacore_exhaustion = new PlayerStats();}return this.manacore_exhaustion;}
+    private PlayerStats createPlayerManaBarrier() {if(this.manabarrier == null) {this.manabarrier = new PlayerStats();}return this.manabarrier;}
+    private PlayerStats createPlayerMaxManaBarrier() {if(this.max_manabarrier == null) {this.max_manabarrier = new PlayerStats();}return this.max_manabarrier;}
+    private PlayerStats createPlayerManaBarrierRevive() {if(this.manabarrierrevive == null) {this.manabarrierrevive = new PlayerStats();}return this.manabarrierrevive;}
+    private PlayerStats createPlayerManaBarrierAlive() {if(this.manabarrieralive == null) {this.manabarrieralive = new PlayerStats();}return this.manabarrieralive;}
     private PlayerStats createPlayerDestructionActive() {if(this.destructionActive == null) {this.destructionActive = new PlayerStats();}return this.destructionActive;}
 
     private PlayerStats createPlayerMenuStatTabToggle() {if(this.menuStatTabToggle == null) {this.menuStatTabToggle = new PlayerStats();}return this.menuStatTabToggle;}
@@ -94,14 +98,17 @@ public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializabl
         if(cap == PLAYER_MAXMANA) {
             return maxManaOptional.cast();
         }
-        if(cap == PLAYER_MANACORE) {
-            return manaCoreOptional.cast();
+        if(cap == PLAYER_MANABARRIER) {
+            return manaBarrierOptional.cast();
         }
-        if(cap == PLAYER_MAXMANACORE) {
-            return maxManaCoreOptional.cast();
+        if(cap == PLAYER_MAXMANABARRIER) {
+            return maxManaBarrierOptional.cast();
         }
-        if(cap == PLAYER_MANACORE_EXHAUSTION) {
-            return manaCoreExhaustionOptional.cast();
+        if(cap == PLAYER_MANABARRIERREVIVE) {
+            return manaBarrierReviveOptional.cast();
+        }
+        if(cap == PLAYER_MANABARRIERALIVE) {
+            return manaBarrierAliveOptional.cast();
         }
         if(cap == PLAYER_DESTRUCTION_ACTIVE) {
             return destructionActiveOptional.cast();
@@ -126,9 +133,10 @@ public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializabl
         saveNBTDataList.add(createPlayerManaBarrierRegenBuffer());
         saveNBTDataList.add(createPlayerManaToXp());
         saveNBTDataList.add(createPlayerMaxMana());
-        saveNBTDataList.add(createPlayerManaCore());
-        saveNBTDataList.add(createPlayerMaxManaCore());
-        saveNBTDataList.add(createPlayerManaCoreExhaustion());
+        saveNBTDataList.add(createPlayerManaBarrier());
+        saveNBTDataList.add(createPlayerMaxManaBarrier());
+        saveNBTDataList.add(createPlayerManaBarrierRevive());
+        saveNBTDataList.add(createPlayerManaBarrierAlive());
         saveNBTDataList.add(createPlayerDestructionActive());
         saveNBTDataList.add(createPlayerMenuStatTabToggle());
         saveNBTDataList.add(createPlayerManaCoreLevel());
@@ -151,11 +159,12 @@ public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializabl
 
         createPlayerMaxMana().loadNBTData(nbt);
 
-        createPlayerManaCore().loadNBTData(nbt);
+        createPlayerManaBarrier().loadNBTData(nbt);
 
-        createPlayerMaxManaCore().loadNBTData(nbt);
+        createPlayerMaxManaBarrier().loadNBTData(nbt);
 
-        createPlayerManaCoreExhaustion().loadNBTData(nbt);
+        createPlayerManaBarrierRevive().loadNBTData(nbt);
+        createPlayerManaBarrierAlive().loadNBTData(nbt);
 
         createPlayerDestructionActive().loadNBTData(nbt);
         createPlayerMenuStatTabToggle().loadNBTData(nbt);

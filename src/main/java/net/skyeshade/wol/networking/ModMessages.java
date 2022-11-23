@@ -62,40 +62,40 @@ public class ModMessages {
                 .consumerMainThread(MaxManaDataSyncS2CPacket::handle)
                 .add();
 
-        net.messageBuilder(UpdateManaCoreC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(UpdateManaCoreC2SPacket::new)
-                .encoder(UpdateManaCoreC2SPacket::toBytes)
-                .consumerMainThread(UpdateManaCoreC2SPacket::handle)
+        net.messageBuilder(UpdateManaBarrierC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateManaBarrierC2SPacket::new)
+                .encoder(UpdateManaBarrierC2SPacket::toBytes)
+                .consumerMainThread(UpdateManaBarrierC2SPacket::handle)
                 .add();
 
-        net.messageBuilder(ManaCoreDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(ManaCoreDataSyncS2CPacket::new)
-                .encoder(ManaCoreDataSyncS2CPacket::toBytes)
-                .consumerMainThread(ManaCoreDataSyncS2CPacket::handle)
+        net.messageBuilder(ManaBarrierDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ManaBarrierDataSyncS2CPacket::new)
+                .encoder(ManaBarrierDataSyncS2CPacket::toBytes)
+                .consumerMainThread(ManaBarrierDataSyncS2CPacket::handle)
                 .add();
 
-        net.messageBuilder(UpdateMaxManaCoreC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(UpdateMaxManaCoreC2SPacket::new)
-                .encoder(UpdateMaxManaCoreC2SPacket::toBytes)
-                .consumerMainThread(UpdateMaxManaCoreC2SPacket::handle)
+        net.messageBuilder(UpdateMaxManaBarrierC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateMaxManaBarrierC2SPacket::new)
+                .encoder(UpdateMaxManaBarrierC2SPacket::toBytes)
+                .consumerMainThread(UpdateMaxManaBarrierC2SPacket::handle)
                 .add();
 
-        net.messageBuilder(MaxManaCoreDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(MaxManaCoreDataSyncS2CPacket::new)
-                .encoder(MaxManaCoreDataSyncS2CPacket::toBytes)
-                .consumerMainThread(MaxManaCoreDataSyncS2CPacket::handle)
+        net.messageBuilder(MaxManaBarrierDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(MaxManaBarrierDataSyncS2CPacket::new)
+                .encoder(MaxManaBarrierDataSyncS2CPacket::toBytes)
+                .consumerMainThread(MaxManaBarrierDataSyncS2CPacket::handle)
                 .add();
 
-        net.messageBuilder(UpdateManaCoreExhaustionC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(UpdateManaCoreExhaustionC2SPacket::new)
-                .encoder(UpdateManaCoreExhaustionC2SPacket::toBytes)
-                .consumerMainThread(UpdateManaCoreExhaustionC2SPacket::handle)
+        net.messageBuilder(UpdateManaBarrierReviveC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateManaBarrierReviveC2SPacket::new)
+                .encoder(UpdateManaBarrierReviveC2SPacket::toBytes)
+                .consumerMainThread(UpdateManaBarrierReviveC2SPacket::handle)
                 .add();
 
-        net.messageBuilder(ManaCoreExhaustionDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(ManaCoreExhaustionDataSyncS2CPacket::new)
-                .encoder(ManaCoreExhaustionDataSyncS2CPacket::toBytes)
-                .consumerMainThread(ManaCoreExhaustionDataSyncS2CPacket::handle)
+        net.messageBuilder(ManaBarrierReviveDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ManaBarrierReviveDataSyncS2CPacket::new)
+                .encoder(ManaBarrierReviveDataSyncS2CPacket::toBytes)
+                .consumerMainThread(ManaBarrierReviveDataSyncS2CPacket::handle)
                 .add();
 
         //
@@ -145,6 +145,18 @@ public class ModMessages {
                 .decoder(MenuStatTabToggleDataSyncS2CPacket::new)
                 .encoder(MenuStatTabToggleDataSyncS2CPacket::toBytes)
                 .consumerMainThread(MenuStatTabToggleDataSyncS2CPacket::handle)
+                .add();
+
+        net.messageBuilder(UpdateManaBarrierAliveC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateManaBarrierAliveC2SPacket::new)
+                .encoder(UpdateManaBarrierAliveC2SPacket::toBytes)
+                .consumerMainThread(UpdateManaBarrierAliveC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(ManaBarrierAliveDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ManaBarrierAliveDataSyncS2CPacket::new)
+                .encoder(ManaBarrierAliveDataSyncS2CPacket::toBytes)
+                .consumerMainThread(ManaBarrierAliveDataSyncS2CPacket::handle)
                 .add();
     }
 

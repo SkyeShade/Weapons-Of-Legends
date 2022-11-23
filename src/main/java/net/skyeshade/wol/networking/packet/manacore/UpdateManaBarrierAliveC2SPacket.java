@@ -8,21 +8,18 @@ import net.minecraftforge.network.NetworkEvent;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
 
-
 import java.util.function.Supplier;
 
-public class UpdateManaCoreExhaustionC2SPacket {
-    private final long manaExhaustionChange;
-    public UpdateManaCoreExhaustionC2SPacket(long manaExhaustionChange) {
-        this.manaExhaustionChange = manaExhaustionChange;
-    }
+public class UpdateManaBarrierAliveC2SPacket {
+    private final boolean manaBarrierAliveChange;
+    public UpdateManaBarrierAliveC2SPacket(boolean manaBarrierAlive) {this.manaBarrierAliveChange = manaBarrierAlive;}
 
-    public UpdateManaCoreExhaustionC2SPacket(FriendlyByteBuf buf) {
-        this.manaExhaustionChange = buf.readLong();
+    public UpdateManaBarrierAliveC2SPacket(FriendlyByteBuf buf) {
+        this.manaBarrierAliveChange = buf.readBoolean();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeLong(manaExhaustionChange);
+        buf.writeBoolean(manaBarrierAliveChange);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
@@ -36,9 +33,12 @@ public class UpdateManaCoreExhaustionC2SPacket {
 
                 // increase the water level / stats level of player
                 // Output the current stats level
-            player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_EXHAUSTION).ifPresent(manacore_exhaustion -> {
-                manacore_exhaustion.addManaCoreExhaustion(manaExhaustionChange);
-                ModMessages.sendToPlayer(new ManaCoreExhaustionDataSyncS2CPacket(manacore_exhaustion.getManaCoreExhaustion()), player);
+            player.getCapability(PlayerStatsProvider.PLAYER_MANABARRIERALIVE).ifPresent(manaBarrierAlive -> {
+
+                manaBarrierAlive.setManaBarrierAlive(manaBarrierAliveChange);
+
+
+                ModMessages.sendToPlayer(new ManaBarrierAliveDataSyncS2CPacket(manaBarrierAlive.getManaBarrierAlive()), player);
             });
 
 
