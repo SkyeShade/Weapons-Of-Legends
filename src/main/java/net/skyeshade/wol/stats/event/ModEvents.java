@@ -1,6 +1,7 @@
 package net.skyeshade.wol.stats.event;
 
 
+import net.minecraft.client.HotbarManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -14,6 +15,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import net.skyeshade.wol.WOL;
+import net.skyeshade.wol.abilities.TimeStopAbility;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.networking.packet.destruction.DestructionActiveDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.mana.ManaDataSyncS2CPacket;
@@ -26,7 +28,7 @@ import net.skyeshade.wol.util.StatSystems;
 
 @Mod.EventBusSubscriber(modid = WOL.MOD_ID)
 public class ModEvents {
-
+    static StatSystems statSystems = new StatSystems();
     @SubscribeEvent
     public static void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {
         if(event.getObject() instanceof Player) {
@@ -107,12 +109,17 @@ public class ModEvents {
 
     }
     static int tickcount;
+
     @SubscribeEvent
     public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if(event.side == LogicalSide.SERVER) {
+        if(event.side.isServer() && event.phase == TickEvent.Phase.START) {
+            //long startTime = System.currentTimeMillis();
             tickcount++;
+            TimeStopAbility.timeStopTick();
+            //System.out.println("did ticking "+tickcount);
 
             for (Player player : event.getServer().getPlayerList().getPlayers()) {
+
                 if (tickcount % 20 == 0) {
                     player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_EXHAUSTION).ifPresent(manacore_exhaustion -> {
                         manacore_exhaustion.subManaCoreExhaustion(1);
@@ -120,29 +127,39 @@ public class ModEvents {
 
                     });
                 }
-                if (tickcount % 1 == 0) {
 
-                    player.getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(mana -> {
-                        mana.addMana(1);
-                        ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), ((ServerPlayer) player));
-                        //System.out.println(mana.getMana());
+
+                player.getCapability(PlayerStatsProvider.PLAYER_MAXMANA).ifPresent(maxmana -> {
+                    player.getCapability(PlayerStatsProvider.PLAYER_MANAREGENBUFFER).ifPresent(manaregenbuffer -> {
+
+                        manaregenbuffer.addManaRegenBuffer(((float) maxmana.getMaxMana() / (float) statSystems.secondsForBaseManaRegen) / 20.0F);
+                        //System.out.println("mana to add every tick "+((float) maxmana.getMaxMana() / (float) statSystems.secondsForBaseManaRegen) / 20.0F);
+                        if (manaregenbuffer.getManaRegenBuffer() >= 1.0f) {
+                            player.getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(mana -> {
+                                mana.addMana((int) manaregenbuffer.getManaRegenBuffer());
+                                manaregenbuffer.setManaRegenBuffer(manaregenbuffer.getManaRegenBuffer() - (int) manaregenbuffer.getManaRegenBuffer());
+                                ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), ((ServerPlayer) player));
+                                    //System.out.println(mana.getMana());
+                            });
+                        }
                     });
+                });
+
+
+                player.getCapability(PlayerStatsProvider.PLAYER_MANACORE).ifPresent(manacore -> {
+                    manacore.subManaCore(1);
+                    ModMessages.sendToPlayer(new ManaCoreDataSyncS2CPacket(manacore.getManaCore()), ((ServerPlayer) player));
+
+                });
 
 
 
-                    player.getCapability(PlayerStatsProvider.PLAYER_MANACORE).ifPresent(manacore -> {
-                        manacore.subManaCore(1);
-                        ModMessages.sendToPlayer(new ManaCoreDataSyncS2CPacket(manacore.getManaCore()), ((ServerPlayer) player));
 
-                    });
-
-
-
-                }
 
             }
 
-
+            //long stopTime = System.currentTimeMillis();
+            //System.out.println("xp calculation took: "+ (stopTime-startTime) + " ms");
         }
     }
 
@@ -206,6 +223,7 @@ public class ModEvents {
             }
         }
     }
+
 
 
 }

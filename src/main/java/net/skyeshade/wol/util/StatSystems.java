@@ -8,22 +8,22 @@ import net.skyeshade.wol.networking.packet.manacore.ManaCoreXpDataSyncS2CPacket;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
 
 public class StatSystems {
-    int requiredManaUsageForXp = 1;
+    int requiredManaUsageForXp = 100;
     public long[] requiredCoreLevelXp = {
-            1L,
-            2L,
-            4L,
-            8L,
-            16L,
-            32L,
-            64L,
-            128L,
-            512L,
-            1024L,
-            2048L,
-            8192L,
-            16384L,
-            32768L
+            100L,
+            200L,
+            400L,
+            800L,
+            1600L,
+            3200L,
+            6400L,
+            12800L,
+            51200L,
+            102400L,
+            204800L,
+            819200L,
+            1638400L,
+            3276800L
     };
 
     public long[] maxManaRewardPerLevel = {
@@ -42,7 +42,7 @@ public class StatSystems {
             410062L,
             2050312L
     };
-    public long minutesForBaseManaRegen = 1;
+    public long secondsForBaseManaRegen = 600;
 
     long absoluteManaChange;
     public void xpSystem (long manaChange, ServerPlayer player){

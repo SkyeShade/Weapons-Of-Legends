@@ -1,13 +1,18 @@
 package net.skyeshade.wol.stats.event;
 
 
+import com.mojang.blaze3d.platform.InputConstants;
+import com.sun.jna.platform.KeyboardUtils;
 import net.minecraft.advancements.DisplayInfo;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.advancements.AdvancementsScreen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.skyeshade.wol.WOL;
@@ -23,8 +28,12 @@ import net.skyeshade.wol.networking.packet.manacore.UpdateManaCoreExhaustionC2SP
 import net.skyeshade.wol.networking.packet.manacore.UpdateManaCoreLevelC2SPacket;
 import net.skyeshade.wol.networking.packet.manacore.UpdateMaxManaCoreC2SPacket;
 import net.skyeshade.wol.util.KeyBinding;
+import org.lwjgl.glfw.GLFW;
+
+import static net.skyeshade.wol.util.KeyBinding.KEY_CATEGORY_WOL;
 
 public class ClientEvents {
+    static KeyMapping E;
     @Mod.EventBusSubscriber(modid = WOL.MOD_ID, value = Dist.CLIENT)
     public static class ClientForgeEvents {
         @SubscribeEvent
@@ -49,6 +58,12 @@ public class ClientEvents {
                 //ModMessages.sendToServer(new UpdateMaxManaC2SPacket(1000));
                 ModMessages.sendToServer(new UpdateMaxManaCoreC2SPacket());
             }
+            if (Minecraft.getInstance().options.keyHotbarSlots[0].consumeClick()) {
+                E = new KeyMapping(Minecraft.getInstance().options.keyHotbarSlots[0].getName(), Minecraft.getInstance().options.keyHotbarSlots[0].getKey().getValue(), "key.categories.inventory");
+                System.out.println("TEST");
+
+            }
+
         }
     }
 

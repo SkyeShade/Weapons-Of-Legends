@@ -103,8 +103,8 @@ public class TimeStopAbility {
     }
 
 
-    @SubscribeEvent
-    public static void onServerTick (TickEvent.ServerTickEvent event) {
+
+    public static void timeStopTick () {
         if (!playerList.isEmpty()) {
             //System.out.println(playerList);
 

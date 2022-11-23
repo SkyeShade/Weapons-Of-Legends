@@ -40,7 +40,7 @@ public class WOL {
 
 
 
-        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, TimeStopAbility::onServerTick);
+        //MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, TimeStopAbility::onServerTick);
 
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, TimeStopAbility::onPlayerLoggedIn);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, TimeStopAbility::onPlayerLoggedOut);
