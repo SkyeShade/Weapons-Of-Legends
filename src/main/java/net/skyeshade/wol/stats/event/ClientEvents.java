@@ -33,7 +33,7 @@ import org.lwjgl.glfw.GLFW;
 import static net.skyeshade.wol.util.KeyBinding.KEY_CATEGORY_WOL;
 
 public class ClientEvents {
-    static KeyMapping E;
+
     @Mod.EventBusSubscriber(modid = WOL.MOD_ID, value = Dist.CLIENT)
     public static class ClientForgeEvents {
         @SubscribeEvent
@@ -58,10 +58,14 @@ public class ClientEvents {
                 //ModMessages.sendToServer(new UpdateMaxManaC2SPacket(1000));
                 ModMessages.sendToServer(new UpdateMaxManaCoreC2SPacket());
             }
-            if (Minecraft.getInstance().options.keyHotbarSlots[0].consumeClick()) {
-                E = new KeyMapping(Minecraft.getInstance().options.keyHotbarSlots[0].getName(), Minecraft.getInstance().options.keyHotbarSlots[0].getKey().getValue(), "key.categories.inventory");
-                System.out.println("TEST");
 
+
+            if (ClientStatsData.getPlayerDestructionActive()) {
+                if (Minecraft.getInstance().options.keyMappings[25].consumeClick()) {
+
+                    System.out.println("TEST");
+
+                }
             }
 
         }
