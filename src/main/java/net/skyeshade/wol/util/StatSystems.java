@@ -2,6 +2,7 @@ package net.skyeshade.wol.util;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.skyeshade.wol.networking.ModMessages;
+import net.skyeshade.wol.networking.packet.hp.MaxHpDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.mana.MaxManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.manacore.ManaCoreLevelDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.manacore.ManaCoreXpDataSyncS2CPacket;
@@ -60,6 +61,25 @@ public class StatSystems {
             41006L,
             205031L
     };
+
+    public long[] maxHpRewardPerLevel = {
+            100L,
+            2000L,
+            3000L,
+            4500L,
+            9000L,
+            13500L,
+            20250L,
+            40500L,
+            60750L,
+            91125L,
+            182250L,
+            273375L,
+            410062L,
+            2050312L
+    };
+
+    public long secondsForBaseHpRegen = 600;
     public long secondsForBaseManaRegen = 600;
 
     public long secondsForBaseManaBarrierRegen = 60;
@@ -84,6 +104,8 @@ public class StatSystems {
 
                             stats.addMaxMana(maxManaRewardPerLevel[(int)stats.getManaCoreLevel()-1]);
                             stats.addMaxManaBarrier(maxManaBarrierRewardPerLevel[(int)stats.getManaCoreLevel()-1]);
+                            stats.addMaxHp(maxHpRewardPerLevel[(int)stats.getManaCoreLevel()-1]);
+                            ModMessages.sendToPlayer(new MaxHpDataSyncS2CPacket(stats.getMaxHp()), player);
                             ModMessages.sendToPlayer(new MaxManaBarrierDataSyncS2CPacket(stats.getMaxManaBarrier()), player);
                             ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(stats.getMaxMana()), player);
 

@@ -9,6 +9,7 @@ import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,6 +18,8 @@ import net.skyeshade.wol.WOL;
 import net.skyeshade.wol.abilities.TimeStopAbility;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.networking.packet.destruction.DestructionActiveDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.hp.HpDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.hp.MaxHpDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.mana.ManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.mana.MaxManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.manacore.*;
@@ -82,6 +85,13 @@ public class ModEvents {
                         stats.setManaRegenBuffer(stats.getManaRegenBuffer() - (int) stats.getManaRegenBuffer());
                         ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(stats.getMana()), ((ServerPlayer) player));
                     }
+
+                    stats.addHpRegenBuffer(((float) stats.getMaxHp() / (float) statSystems.secondsForBaseHpRegen) / 20.0F);
+                    if (stats.getHpRegenBuffer() >= 1.0f) {
+                        stats.addHp((int) stats.getHpRegenBuffer());
+                        stats.setHpRegenBuffer(stats.getHpRegenBuffer() - (int) stats.getHpRegenBuffer());
+                        ModMessages.sendToPlayer(new HpDataSyncS2CPacket(stats.getHp()), ((ServerPlayer) player));
+                    }
                     //System.out.println(mana.getMana());
 
 
@@ -113,8 +123,17 @@ public class ModEvents {
                     if (!stats.getManaBarrierAlive()) {
                         stats.setManaBarrier(0);
                         ModMessages.sendToPlayer(new ManaBarrierDataSyncS2CPacket(stats.getManaBarrier()), ((ServerPlayer)player));
+
                     }
+                    System.out.println("test hp 1: "+ player.getHealth());
+                    float hpProcentage = (float)(stats.getHp()*100)/stats.getMaxHp();
+                    System.out.println("procentage: "+ hpProcentage);
+                    player.setHealth((float)Math.ceil(((20.0f/100)*hpProcentage)));
+                    System.out.println("test custo  hp: "+ stats.getHp());
+                    ModMessages.sendToPlayer(new HpDataSyncS2CPacket(stats.getHp()), ((ServerPlayer)player));
                 });
+
+
 
             }
 
@@ -130,8 +149,12 @@ public class ModEvents {
             if(event.getEntity() instanceof ServerPlayer player) {
 
                 player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+
                     ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(stats.getMana()), player);
                     ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(stats.getMaxMana()), player);
+
+                    ModMessages.sendToPlayer(new HpDataSyncS2CPacket(stats.getHp()), player);
+                    ModMessages.sendToPlayer(new MaxHpDataSyncS2CPacket(stats.getMaxHp()), player);
 
                     ModMessages.sendToPlayer(new ManaBarrierDataSyncS2CPacket(stats.getManaBarrier()), player);
                     ModMessages.sendToPlayer(new ManaBarrierAliveDataSyncS2CPacket(stats.getManaBarrierAlive()), player);
@@ -147,6 +170,10 @@ public class ModEvents {
                     if (stats.getMaxMana() <= statSystems.maxManaRewardPerLevel[0]) {
                         stats.setMaxMana(statSystems.maxManaRewardPerLevel[0]);
                         ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(stats.getMaxMana()), ((ServerPlayer) player));
+                    }
+                    if (stats.getMaxHp() <= statSystems.maxManaRewardPerLevel[0]) {
+                        stats.setMaxHp(statSystems.maxManaRewardPerLevel[0]);
+                        ModMessages.sendToPlayer(new MaxHpDataSyncS2CPacket(stats.getMaxHp()), ((ServerPlayer) player));
                     }
                     if (stats.getMaxManaBarrier() <= statSystems.maxManaBarrierRewardPerLevel[0]) {
                         stats.setMaxManaBarrier(statSystems.maxManaBarrierRewardPerLevel[0]);
@@ -188,16 +215,50 @@ public class ModEvents {
                     }
                     if (manaBarrierProcentage <= 50.0 && manaBarrierProcentage > 0) {
 
-                        event.setAmount(0);
+
                     }else {
-                        event.setAmount(0);
+
                     }
+                }else if (!stats.getManaBarrierAlive()) {
+                    if (stats.getHp() - (int)event.getAmount() <= 0) {
+                        stats.setHp(0);
+                        event.getEntity().kill();
+                    } else {
+                        stats.addHp(-(long)event.getAmount());
+
+                    }
+
+
+
                 }
+                ModMessages.sendToPlayer(new HpDataSyncS2CPacket(stats.getHp()), player);
                 ModMessages.sendToPlayer(new ManaBarrierDataSyncS2CPacket(stats.getManaBarrier()), player);
+            });
+            event.setAmount(0);
+        }
+
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+                stats.setHp((stats.getMaxHp()/100)*20);
+                ModMessages.sendToPlayer(new HpDataSyncS2CPacket(stats.getHp()), player);
             });
         }
     }
 
+    @SubscribeEvent
+    public static void onPlayerRegen(LivingHealEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
 
+                stats.addHp((long)event.getAmount());
+                ModMessages.sendToPlayer(new HpDataSyncS2CPacket(stats.getHp()), player);
+            });
+            event.setCanceled(true);
+        }
+    }
 
 }

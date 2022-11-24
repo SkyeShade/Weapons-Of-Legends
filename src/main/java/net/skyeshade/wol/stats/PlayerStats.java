@@ -95,6 +95,9 @@ public class PlayerStats {
     public void setMaxHp(long set) {
         this.max_hp = Math.max(set, MIN_MAXHP);
     }
+    public void setHp(long set) {
+        this.hp = Math.max(set, 0);
+    }
     public void setHpRegenBuffer(float set) {this.hpregenbuffer = set;}
     public void setManaRegenBuffer(float set) {this.manaregenbuffer = set;}
     public void setManaBarrierRegenBuffer(float set) {this.manabarrierregenbuffer = set;}
@@ -156,6 +159,7 @@ public class PlayerStats {
         this.manabarrier = source.manabarrier;
         this.max_manabarrier = source.max_manabarrier;
         this.manabarrierrevive = source.manabarrierrevive;
+        this.manabarrieralive = source.manabarrieralive;
         this.destructionActive = source.destructionActive;
         this.menuStatTabToggle = source.menuStatTabToggle;
         this.manacore_level = source.manacore_level;
