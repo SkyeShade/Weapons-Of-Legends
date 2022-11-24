@@ -9,6 +9,7 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.skyeshade.wol.WOL;
 
+import net.skyeshade.wol.networking.packet.AnimateHurtDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.destruction.DestructionActiveDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.destruction.UpdateDestructionActiveC2SPacket;
 import net.skyeshade.wol.networking.packet.hp.HpDataSyncS2CPacket;
@@ -185,6 +186,15 @@ public class ModMessages {
                 .decoder(MaxHpDataSyncS2CPacket::new)
                 .encoder(MaxHpDataSyncS2CPacket::toBytes)
                 .consumerMainThread(MaxHpDataSyncS2CPacket::handle)
+                .add();
+
+
+
+
+        net.messageBuilder(AnimateHurtDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(AnimateHurtDataSyncS2CPacket::new)
+                .encoder(AnimateHurtDataSyncS2CPacket::toBytes)
+                .consumerMainThread(AnimateHurtDataSyncS2CPacket::handle)
                 .add();
     }
 

@@ -17,18 +17,8 @@ import java.util.List;
 
 public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
     public static Capability<PlayerStats> PLAYER_STATS = CapabilityManager.get(new CapabilityToken<PlayerStats>() { });
-
-
-
     private PlayerStats stats = null;
-
-
     private final LazyOptional<PlayerStats> statsOptional = LazyOptional.of(this::createPlayerStats);
-
-
-
-
-
     private PlayerStats createPlayerStats() {if(this.stats == null) {this.stats = new PlayerStats();}return this.stats;}
 
     @Override
@@ -38,22 +28,15 @@ public class PlayerStatsProvider implements ICapabilityProvider, INBTSerializabl
         }
         return LazyOptional.empty();
     }
-
     List<PlayerStats> saveNBTDataList = new ArrayList<PlayerStats>();
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         createPlayerStats().saveNBTData(nbt);
         return nbt;
-
     }
-
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         createPlayerStats().loadNBTData(nbt);
-
-
-
-
     }
 }

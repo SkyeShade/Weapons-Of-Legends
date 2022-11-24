@@ -2,6 +2,7 @@ package net.skyeshade.wol.util;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.skyeshade.wol.networking.ModMessages;
+import net.skyeshade.wol.networking.packet.hp.HpDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.hp.MaxHpDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.mana.MaxManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.manacore.ManaCoreLevelDataSyncS2CPacket;
@@ -14,18 +15,18 @@ public class StatSystems {
     public long[] requiredCoreLevelXp = {
             100L,
             1000L,
-            10000L,
-            100000L,
-            1000000L,
-            10000000L,
-            100000000L,
-            1000000000L,
-            10000000000L,
-            100000000000L,
-            1000000000000L,
-            10000000000000L,
-            100000000000000L,
-            1000000000000000L
+            1000L,
+            1000L,
+            1000L,
+            1000L,
+            1000L,
+            1000L,
+            1000L,
+            1000L,
+            1000L,
+            1000L,
+            1000L,
+            1000L
     };
 
     public long[] maxManaRewardPerLevel = {
@@ -105,6 +106,7 @@ public class StatSystems {
                             stats.addMaxMana(maxManaRewardPerLevel[(int)stats.getManaCoreLevel()-1]);
                             stats.addMaxManaBarrier(maxManaBarrierRewardPerLevel[(int)stats.getManaCoreLevel()-1]);
                             stats.addMaxHp(maxHpRewardPerLevel[(int)stats.getManaCoreLevel()-1]);
+
                             ModMessages.sendToPlayer(new MaxHpDataSyncS2CPacket(stats.getMaxHp()), player);
                             ModMessages.sendToPlayer(new MaxManaBarrierDataSyncS2CPacket(stats.getMaxManaBarrier()), player);
                             ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(stats.getMaxMana()), player);
@@ -130,4 +132,6 @@ public class StatSystems {
         //long stopTime = System.currentTimeMillis();
         //System.out.println("xp calculation took: "+ (stopTime-startTime) + " ms");
     }
+
+
 }

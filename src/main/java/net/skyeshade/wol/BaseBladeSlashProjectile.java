@@ -15,7 +15,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -37,10 +36,10 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class SpellProjectile extends Projectile {
-    private static final double ARROW_BASE_DAMAGE = 2.0D;
-    private static final EntityDataAccessor<Byte> ID_FLAGS = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.BYTE);
-    private static final EntityDataAccessor<Byte> PIERCE_LEVEL = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.BYTE);
+public abstract class BaseBladeSlashProjectile extends Projectile {
+    //private static final double ARROW_BASE_DAMAGE = 2.0D;
+    private static final EntityDataAccessor<Byte> ID_FLAGS = SynchedEntityData.defineId(BaseBladeSlashProjectile.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Byte> PIERCE_LEVEL = SynchedEntityData.defineId(BaseBladeSlashProjectile.class, EntityDataSerializers.BYTE);
     private static final int FLAG_CRIT = 1;
     private static final int FLAG_NOPHYSICS = 2;
     private static final int FLAG_CROSSBOW = 4;
@@ -48,7 +47,7 @@ public abstract class SpellProjectile extends Projectile {
     private BlockState lastState;
     protected boolean inGround;
     protected int inGroundTime;
-    public SpellProjectile.Pickup pickup = SpellProjectile.Pickup.DISALLOWED;
+    public BaseBladeSlashProjectile.Pickup pickup = BaseBladeSlashProjectile.Pickup.DISALLOWED;
     public int shakeTime;
     private int life;
     private double baseDamage = 2.0D;
@@ -59,20 +58,20 @@ public abstract class SpellProjectile extends Projectile {
     @Nullable
     private List<Entity> piercedAndKilledEntities;
 
-    protected SpellProjectile(EntityType<? extends SpellProjectile> pEntityType, Level pLevel) {
+    protected BaseBladeSlashProjectile(EntityType<? extends BaseBladeSlashProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    protected SpellProjectile(EntityType<? extends SpellProjectile> pEntityType, double pX, double pY, double pZ, Level pLevel) {
+    protected BaseBladeSlashProjectile(EntityType<? extends BaseBladeSlashProjectile> pEntityType, double pX, double pY, double pZ, Level pLevel) {
         this(pEntityType, pLevel);
         this.setPos(pX, pY, pZ);
     }
 
-    protected SpellProjectile(EntityType<? extends SpellProjectile> pEntityType, LivingEntity pShooter, Level pLevel) {
+    protected BaseBladeSlashProjectile(EntityType<? extends BaseBladeSlashProjectile> pEntityType, LivingEntity pShooter, Level pLevel) {
         this(pEntityType, pShooter.getX(), pShooter.getEyeY() - (double)0.1F, pShooter.getZ(), pLevel);
         this.setOwner(pShooter);
         if (pShooter instanceof Player) {
-            this.pickup = SpellProjectile.Pickup.ALLOWED;
+            this.pickup = BaseBladeSlashProjectile.Pickup.ALLOWED;
         }
 
     }
@@ -389,7 +388,7 @@ public abstract class SpellProjectile extends Projectile {
             this.setYRot(this.getYRot() + 180.0F);
             this.yRotO += 180.0F;
             if (!this.level.isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
-                if (this.pickup == SpellProjectile.Pickup.ALLOWED) {
+                if (this.pickup == BaseBladeSlashProjectile.Pickup.ALLOWED) {
                     this.spawnAtLocation(this.getPickupItem(), 0.1F);
                 }
 
@@ -475,7 +474,7 @@ public abstract class SpellProjectile extends Projectile {
             this.baseDamage = pCompound.getDouble("damage");
         }
 
-        this.pickup = SpellProjectile.Pickup.byOrdinal(pCompound.getByte("pickup"));
+        this.pickup = BaseBladeSlashProjectile.Pickup.byOrdinal(pCompound.getByte("pickup"));
         this.setCritArrow(pCompound.getBoolean("crit"));
         this.setPierceLevel(pCompound.getByte("PierceLevel"));
         if (pCompound.contains("SoundEvent", 8)) {
@@ -488,7 +487,7 @@ public abstract class SpellProjectile extends Projectile {
     public void setOwner(@Nullable Entity pEntity) {
         super.setOwner(pEntity);
         if (pEntity instanceof Player) {
-            this.pickup = ((Player)pEntity).getAbilities().instabuild ? SpellProjectile.Pickup.CREATIVE_ONLY : SpellProjectile.Pickup.ALLOWED;
+            this.pickup = ((Player)pEntity).getAbilities().instabuild ? BaseBladeSlashProjectile.Pickup.CREATIVE_ONLY : BaseBladeSlashProjectile.Pickup.ALLOWED;
         }
 
     }
@@ -647,7 +646,7 @@ public abstract class SpellProjectile extends Projectile {
         ALLOWED,
         CREATIVE_ONLY;
 
-        public static SpellProjectile.Pickup byOrdinal(int pOrdinal) {
+        public static BaseBladeSlashProjectile.Pickup byOrdinal(int pOrdinal) {
             if (pOrdinal < 0 || pOrdinal > values().length) {
                 pOrdinal = 0;
             }

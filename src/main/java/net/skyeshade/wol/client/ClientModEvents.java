@@ -9,6 +9,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.skyeshade.wol.WOL;
 import net.skyeshade.wol.client.render.BladeSlashRenderer;
 import net.skyeshade.wol.entities.EntityInit;
+import net.skyeshade.wol.entities.spells.spellrenderer.FireBallRenderer;
 
 
 @Mod.EventBusSubscriber(modid = WOL.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -16,5 +17,7 @@ public class ClientModEvents {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         EntityRenderers.register(EntityInit.BLADE_SLASH.get(), BladeSlashRenderer::new);
+
+        EntityRenderers.register(EntityInit.FIREBALL.get(), FireBallRenderer::new);
     }
 }
