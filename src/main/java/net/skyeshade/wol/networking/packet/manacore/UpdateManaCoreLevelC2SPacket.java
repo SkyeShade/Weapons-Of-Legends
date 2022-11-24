@@ -37,9 +37,9 @@ public class UpdateManaCoreLevelC2SPacket {
 
                 // increase the water level / stats level of player
                 // Output the current stats level
-            player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_LEVEL).ifPresent(manacore_level -> {
-                manacore_level.addManaCoreLevel(manaCoreLevelChange);
-                ModMessages.sendToPlayer(new ManaCoreLevelDataSyncS2CPacket(manacore_level.getManaCoreLevel()), player);
+            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+                stats.addManaCoreLevel(manaCoreLevelChange);
+                ModMessages.sendToPlayer(new ManaCoreLevelDataSyncS2CPacket(stats.getManaCoreLevel()), player);
             });
 
 

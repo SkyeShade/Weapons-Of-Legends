@@ -3,6 +3,9 @@ package net.skyeshade.wol.client;
 public class ClientStatsData {
     private static long playerMana;
     private static long playerMaxMana;
+
+    private static long playerHp;
+    private static long playerMaxHp;
     private static long playerManaBarrier;
     private static long playerManaBarrierRevive;
     private static long playerMaxManaBarrier;
@@ -22,11 +25,23 @@ public class ClientStatsData {
     public static void setMaxMana(long max_mana) {
         ClientStatsData.playerMaxMana = max_mana;
     }
+    public static void setHp(long hp) {
+        ClientStatsData.playerHp = hp;
+    }
+    public static void setMaxHp(long max_hp) {
+        ClientStatsData.playerMaxHp = max_hp;
+    }
     public static long getPlayerMana() {
         return playerMana;
     }
     public static long getPlayerMaxMana() {
         return playerMaxMana;
+    }
+    public static long getPlayerHp() {
+        return playerHp;
+    }
+    public static long getPlayerMaxHp() {
+        return playerMaxHp;
     }
 
     public static void setManaBarrier(long manabarrier) {

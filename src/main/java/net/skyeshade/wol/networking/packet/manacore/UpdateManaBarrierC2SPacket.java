@@ -38,9 +38,9 @@ public class UpdateManaBarrierC2SPacket {
 
                 // increase the water level / stats level of player
                 // Output the current stats level
-            player.getCapability(PlayerStatsProvider.PLAYER_MANABARRIER).ifPresent(manabarrier -> {
-                manabarrier.addManaBarrier(manaBarrierChange);
-                ModMessages.sendToPlayer(new ManaBarrierDataSyncS2CPacket(manabarrier.getManaBarrier()), player);
+            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+                stats.addManaBarrier(manaBarrierChange);
+                ModMessages.sendToPlayer(new ManaBarrierDataSyncS2CPacket(stats.getManaBarrier()), player);
             });
 
 

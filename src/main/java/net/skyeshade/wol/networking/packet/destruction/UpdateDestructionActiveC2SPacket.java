@@ -34,12 +34,12 @@ public class UpdateDestructionActiveC2SPacket {
 
                 // increase the water level / stats level of player
                 // Output the current stats level
-            player.getCapability(PlayerStatsProvider.PLAYER_DESTRUCTION_ACTIVE).ifPresent(destructionActive -> {
+            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
 
-                destructionActive.setDestructionActive(destructionActiveChange);
+                stats.setDestructionActive(destructionActiveChange);
 
 
-                ModMessages.sendToPlayer(new DestructionActiveDataSyncS2CPacket(destructionActive.getDestructionActive()), player);
+                ModMessages.sendToPlayer(new DestructionActiveDataSyncS2CPacket(stats.getDestructionActive()), player);
             });
 
 

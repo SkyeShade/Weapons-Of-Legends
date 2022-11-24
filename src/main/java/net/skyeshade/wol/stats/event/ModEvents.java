@@ -31,7 +31,7 @@ public class ModEvents {
     @SubscribeEvent
     public static void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {
         if(event.getObject() instanceof Player) {
-            if(!event.getObject().getCapability(PlayerStatsProvider.PLAYER_MANA).isPresent()) {
+            if(!event.getObject().getCapability(PlayerStatsProvider.PLAYER_STATS).isPresent()) {
                 event.addCapability(new ResourceLocation(WOL.MOD_ID, "properties"), new PlayerStatsProvider());
             }
 
@@ -42,63 +42,11 @@ public class ModEvents {
     public static void onPlayerCloned(PlayerEvent.Clone event) {
         if(event.isWasDeath()) {
             event.getOriginal().reviveCaps();
-            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(oldStore -> {
-                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(newStore -> {
+            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(oldStore -> {
+                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(newStore -> {
                     newStore.copyFrom(oldStore);
                 });
             });
-            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MAXMANA).ifPresent(oldStore -> {
-                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MAXMANA).ifPresent(newStore -> {
-                    newStore.copyFrom(oldStore);
-                });
-            });
-            //manacore stuff
-            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MANABARRIER).ifPresent(oldStore -> {
-                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MANABARRIER).ifPresent(newStore -> {
-                    newStore.copyFrom(oldStore);
-                });
-            });
-            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MAXMANABARRIER).ifPresent(oldStore -> {
-                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MAXMANABARRIER).ifPresent(newStore -> {
-                    newStore.copyFrom(oldStore);
-                });
-            });
-            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MANABARRIERALIVE).ifPresent(oldStore -> {
-                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MANABARRIERALIVE).ifPresent(newStore -> {
-                    newStore.copyFrom(oldStore);
-                });
-            });
-            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MANABARRIERREVIVE).ifPresent(oldStore -> {
-                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MANABARRIERREVIVE).ifPresent(newStore -> {
-                    newStore.copyFrom(oldStore);
-                });
-            });
-            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_DESTRUCTION_ACTIVE).ifPresent(oldStore -> {
-                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_DESTRUCTION_ACTIVE).ifPresent(newStore -> {
-                    newStore.copyFrom(oldStore);
-                });
-            });
-            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MANACORE_LEVEL).ifPresent(oldStore -> {
-                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MANACORE_LEVEL).ifPresent(newStore -> {
-                    newStore.copyFrom(oldStore);
-                });
-            });
-            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MANACORE_XP).ifPresent(oldStore -> {
-                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MANACORE_XP).ifPresent(newStore -> {
-                    newStore.copyFrom(oldStore);
-                });
-            });
-            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MANATOXP).ifPresent(oldStore -> {
-                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MANATOXP).ifPresent(newStore -> {
-                    newStore.copyFrom(oldStore);
-                });
-            });
-            event.getOriginal().getCapability(PlayerStatsProvider.PLAYER_MENUSTATTABTOGGLE).ifPresent(oldStore -> {
-                event.getEntity().getCapability(PlayerStatsProvider.PLAYER_MENUSTATTABTOGGLE).ifPresent(newStore -> {
-                    newStore.copyFrom(oldStore);
-                });
-            });
-
 
             event.getOriginal().invalidateCaps();
 
@@ -127,54 +75,45 @@ public class ModEvents {
 
 
 
-                player.getCapability(PlayerStatsProvider.PLAYER_MAXMANA).ifPresent(maxmana -> {
-                    player.getCapability(PlayerStatsProvider.PLAYER_MANAREGENBUFFER).ifPresent(manaregenbuffer -> {
-                        player.getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(mana -> {
-                            manaregenbuffer.addManaRegenBuffer(((float) maxmana.getMaxMana() / (float) statSystems.secondsForBaseManaRegen) / 20.0F);
-                            if (manaregenbuffer.getManaRegenBuffer() >= 1.0f) {
-                                mana.addMana((int) manaregenbuffer.getManaRegenBuffer());
-                                manaregenbuffer.setManaRegenBuffer(manaregenbuffer.getManaRegenBuffer() - (int) manaregenbuffer.getManaRegenBuffer());
-                                ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), ((ServerPlayer) player));
-                            }
-                            //System.out.println(mana.getMana());
+                player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+                    stats.addManaRegenBuffer(((float) stats.getMaxMana() / (float) statSystems.secondsForBaseManaRegen) / 20.0F);
+                    if (stats.getManaRegenBuffer() >= 1.0f) {
+                        stats.addMana((int) stats.getManaRegenBuffer());
+                        stats.setManaRegenBuffer(stats.getManaRegenBuffer() - (int) stats.getManaRegenBuffer());
+                        ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(stats.getMana()), ((ServerPlayer) player));
+                    }
+                    //System.out.println(mana.getMana());
 
 
-                            if (mana.getMana() > 0) {
-                                player.getCapability(PlayerStatsProvider.PLAYER_MAXMANABARRIER).ifPresent(maxmanabarrier -> {
-                                    player.getCapability(PlayerStatsProvider.PLAYER_MANABARRIERREGENBUFFER).ifPresent(manabarrierregenbuffer -> {
-                                        player.getCapability(PlayerStatsProvider.PLAYER_MANABARRIER).ifPresent(manabarrier -> {
-                                            if (manabarrier.getManaBarrierAlive()) {
-                                                if (manabarrier.getManaBarrier() != maxmanabarrier.getMaxManaBarrier()) {
-                                                    manabarrierregenbuffer.addManaBarrierRegenBuffer(((float) maxmanabarrier.getMaxManaBarrier() / (float) statSystems.secondsForBaseManaBarrierRegen) / 20.0F);
-                                                    if (manabarrierregenbuffer.getManaBarrierRegenBuffer() >= 1.0f) {
-                                                        manabarrier.addManaBarrier((int) manabarrierregenbuffer.getManaBarrierRegenBuffer());
-                                                        mana.addMana(-statSystems.manaBarrierRegenCost);
-                                                        statSystems.xpSystem(-statSystems.manaBarrierRegenCost, (ServerPlayer) player);
-                                                        manabarrierregenbuffer.setManaBarrierRegenBuffer(manabarrierregenbuffer.getManaBarrierRegenBuffer() - (int) manabarrierregenbuffer.getManaBarrierRegenBuffer());
-                                                        ModMessages.sendToPlayer(new ManaBarrierDataSyncS2CPacket(manabarrier.getManaBarrier()), ((ServerPlayer) player));
-                                                    }
-                                                }
-                                            }else if (manabarrier.getManaBarrierRevive() < statSystems.secondsForBaseManaBarrierRevive){
-                                                if (tickcount % 20 == 0) {
-                                                    manabarrier.addManaBarrierRevive(1);
-                                                }
-                                            } else if (manabarrier.getManaBarrierRevive() == statSystems.secondsForBaseManaBarrierRevive){
-                                                manabarrier.setManaBarrierAlive(true);
-                                                manabarrier.setManaBarrierRevive(0);
-                                                ModMessages.sendToPlayer(new ManaBarrierAliveDataSyncS2CPacket(manabarrier.getManaBarrierAlive()), ((ServerPlayer)player));
-                                            }
-                                            //System.out.println(mana.getMana());
-                                        });
-                                    });
-                                });
-                            }
-                            if (!mana.getManaBarrierAlive()) {
-                                mana.setManaBarrier(0);
-                                ModMessages.sendToPlayer(new ManaBarrierDataSyncS2CPacket(mana.getManaBarrier()), ((ServerPlayer)player));
+                    if (stats.getMana() > 0) {
 
+                        if (stats.getManaBarrierAlive()) {
+                            if (stats.getManaBarrier() != stats.getMaxManaBarrier()) {
+                                stats.addManaBarrierRegenBuffer(((float) stats.getMaxManaBarrier() / (float) statSystems.secondsForBaseManaBarrierRegen) / 20.0F);
+                                if (stats.getManaBarrierRegenBuffer() >= 1.0f) {
+                                    stats.addManaBarrier((int) stats.getManaBarrierRegenBuffer());
+                                    stats.addMana(-statSystems.manaBarrierRegenCost);
+                                    statSystems.xpSystem(-statSystems.manaBarrierRegenCost, (ServerPlayer) player);
+                                    stats.setManaBarrierRegenBuffer(stats.getManaBarrierRegenBuffer() - (int) stats.getManaBarrierRegenBuffer());
+                                    ModMessages.sendToPlayer(new ManaBarrierDataSyncS2CPacket(stats.getManaBarrier()), ((ServerPlayer) player));
+                                }
                             }
-                        });
-                    });
+                        }else if (stats.getManaBarrierRevive() < statSystems.secondsForBaseManaBarrierRevive){
+                            if (tickcount % 20 == 0) {
+                                stats.addManaBarrierRevive(1);
+                            }
+                        } else if (stats.getManaBarrierRevive() == statSystems.secondsForBaseManaBarrierRevive){
+                            stats.setManaBarrierAlive(true);
+                            stats.setManaBarrierRevive(0);
+                            ModMessages.sendToPlayer(new ManaBarrierAliveDataSyncS2CPacket(stats.getManaBarrierAlive()), ((ServerPlayer)player));
+                        }
+                        //System.out.println(mana.getMana());
+
+                    }
+                    if (!stats.getManaBarrierAlive()) {
+                        stats.setManaBarrier(0);
+                        ModMessages.sendToPlayer(new ManaBarrierDataSyncS2CPacket(stats.getManaBarrier()), ((ServerPlayer)player));
+                    }
                 });
 
             }
@@ -189,61 +128,35 @@ public class ModEvents {
         if(!event.getLevel().isClientSide()) {
             StatSystems statSystems = new StatSystems();
             if(event.getEntity() instanceof ServerPlayer player) {
-                player.getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(mana -> {
-                    ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), player);
-                });
-                player.getCapability(PlayerStatsProvider.PLAYER_MAXMANA).ifPresent(max_mana -> {
-                    ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(max_mana.getMaxMana()), player);
-                });
+
+                player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+                    ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(stats.getMana()), player);
+                    ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(stats.getMaxMana()), player);
+
+                    ModMessages.sendToPlayer(new ManaBarrierDataSyncS2CPacket(stats.getManaBarrier()), player);
+                    ModMessages.sendToPlayer(new ManaBarrierAliveDataSyncS2CPacket(stats.getManaBarrierAlive()), player);
+                    ModMessages.sendToPlayer(new MaxManaBarrierDataSyncS2CPacket(stats.getMaxManaBarrier()), player);
+                    ModMessages.sendToPlayer(new ManaBarrierReviveDataSyncS2CPacket(stats.getManaBarrierRevive()), player);
+                    ModMessages.sendToPlayer(new DestructionActiveDataSyncS2CPacket(stats.getDestructionActive()), player);
+                    ModMessages.sendToPlayer(new MenuStatTabToggleDataSyncS2CPacket(stats.getMenuStatTabToggle()), player);
+                    ModMessages.sendToPlayer(new ManaCoreLevelDataSyncS2CPacket(stats.getManaCoreLevel()), player);
+                    ModMessages.sendToPlayer(new ManaCoreXpDataSyncS2CPacket(stats.getManaCoreXp()), player);
 
 
-                player.getCapability(PlayerStatsProvider.PLAYER_MAXMANA).ifPresent(max_mana -> {
-                    if (max_mana.getMaxMana() <= statSystems.maxManaRewardPerLevel[0]) {
-                        max_mana.setMaxMana(statSystems.maxManaRewardPerLevel[0]);
-                        ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(max_mana.getMaxMana()), ((ServerPlayer) player));
+
+                    if (stats.getMaxMana() <= statSystems.maxManaRewardPerLevel[0]) {
+                        stats.setMaxMana(statSystems.maxManaRewardPerLevel[0]);
+                        ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(stats.getMaxMana()), ((ServerPlayer) player));
                     }
-                });
-                //manacore stuff
-
-                player.getCapability(PlayerStatsProvider.PLAYER_MANABARRIER).ifPresent(manabarrier -> {
-                    ModMessages.sendToPlayer(new ManaBarrierDataSyncS2CPacket(manabarrier.getManaBarrier()), player);
-                });
-                player.getCapability(PlayerStatsProvider.PLAYER_MANABARRIERALIVE).ifPresent(manabarrieralive -> {
-                    ModMessages.sendToPlayer(new ManaBarrierAliveDataSyncS2CPacket(manabarrieralive.getManaBarrierAlive()), player);
-                });
-                player.getCapability(PlayerStatsProvider.PLAYER_MAXMANABARRIER).ifPresent(max_manabarrier -> {
-                    ModMessages.sendToPlayer(new MaxManaBarrierDataSyncS2CPacket(max_manabarrier.getMaxManaBarrier()), player);
-                });
-                player.getCapability(PlayerStatsProvider.PLAYER_MANABARRIERREVIVE).ifPresent(manabarrierrevive -> {
-                    ModMessages.sendToPlayer(new ManaBarrierReviveDataSyncS2CPacket(manabarrierrevive.getManaBarrierRevive()), player);
-                });
-
-                player.getCapability(PlayerStatsProvider.PLAYER_MAXMANABARRIER).ifPresent(max_manabarrier -> {
-                    if (max_manabarrier.getMaxManaBarrier() <= statSystems.maxManaBarrierRewardPerLevel[0]) {
-                        max_manabarrier.setMaxManaBarrier(statSystems.maxManaBarrierRewardPerLevel[0]);
-                        ModMessages.sendToPlayer(new MaxManaBarrierDataSyncS2CPacket(max_manabarrier.getMaxManaBarrier()), ((ServerPlayer) player));
+                    if (stats.getMaxManaBarrier() <= statSystems.maxManaBarrierRewardPerLevel[0]) {
+                        stats.setMaxManaBarrier(statSystems.maxManaBarrierRewardPerLevel[0]);
+                        ModMessages.sendToPlayer(new MaxManaBarrierDataSyncS2CPacket(stats.getMaxManaBarrier()), ((ServerPlayer) player));
                     }
-                });
-                player.getCapability(PlayerStatsProvider.PLAYER_DESTRUCTION_ACTIVE).ifPresent(destruction_active -> {
-                    ModMessages.sendToPlayer(new DestructionActiveDataSyncS2CPacket(destruction_active.getDestructionActive()), player);
-                });
-
-
-                player.getCapability(PlayerStatsProvider.PLAYER_MENUSTATTABTOGGLE).ifPresent(menuStatTabToggle -> {
-                    ModMessages.sendToPlayer(new MenuStatTabToggleDataSyncS2CPacket(menuStatTabToggle.getMenuStatTabToggle()), player);
-                });
-                player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_LEVEL).ifPresent(manacore_level -> {
-                    ModMessages.sendToPlayer(new ManaCoreLevelDataSyncS2CPacket(manacore_level.getManaCoreLevel()), player);
-                });
-                player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_XP).ifPresent(manacore_xp -> {
-                    ModMessages.sendToPlayer(new ManaCoreXpDataSyncS2CPacket(manacore_xp.getManaCoreXp()), player);
-                });
-
-                player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_LEVEL).ifPresent(manacore_level -> {
-                    if (manacore_level.getManaCoreLevel() < 1) {
-                        manacore_level.setManaCoreLevel(1);
-                        ModMessages.sendToPlayer(new ManaCoreLevelDataSyncS2CPacket(manacore_level.getManaCoreLevel()), ((ServerPlayer) player));
+                    if (stats.getManaCoreLevel() < 1) {
+                        stats.setManaCoreLevel(1);
+                        ModMessages.sendToPlayer(new ManaCoreLevelDataSyncS2CPacket(stats.getManaCoreLevel()), ((ServerPlayer) player));
                     }
+
                 });
 
             }
@@ -252,9 +165,9 @@ public class ModEvents {
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            player.getCapability(PlayerStatsProvider.PLAYER_MANABARRIER).ifPresent(manabarrier -> {
-                if (manabarrier.getManaBarrierAlive()) {
-                    float manaBarrierProcentage = (float)((manabarrier.getManaBarrier()*100) / manabarrier.getMaxManaBarrier());
+            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+                if (stats.getManaBarrierAlive()) {
+                    float manaBarrierProcentage = (float)((stats.getManaBarrier()*100) / stats.getMaxManaBarrier());
 
 
                     /*float damageAfterReduction = (event.getAmount()/100) * manaBarrierProcentage;
@@ -266,12 +179,12 @@ public class ModEvents {
                     } else {
                         manabarrier.addManaBarrier(-(long) damageAfterReduction);
                     }*/
-                    if (manabarrier.getManaBarrier() - (long)event.getAmount() <= 0) {
-                        manabarrier.setManaBarrierAlive(false);
-                        ModMessages.sendToPlayer(new ManaBarrierAliveDataSyncS2CPacket(manabarrier.getManaBarrierAlive()), player);
-                        manabarrier.setManaBarrier(0);
+                    if (stats.getManaBarrier() - (long)event.getAmount() <= 0) {
+                        stats.setManaBarrierAlive(false);
+                        ModMessages.sendToPlayer(new ManaBarrierAliveDataSyncS2CPacket(stats.getManaBarrierAlive()), player);
+                        stats.setManaBarrier(0);
                     } else {
-                        manabarrier.addManaBarrier(-(long)event.getAmount());
+                        stats.addManaBarrier(-(long)event.getAmount());
                     }
                     if (manaBarrierProcentage <= 50.0 && manaBarrierProcentage > 0) {
 
@@ -280,7 +193,7 @@ public class ModEvents {
                         event.setAmount(0);
                     }
                 }
-                ModMessages.sendToPlayer(new ManaBarrierDataSyncS2CPacket(manabarrier.getManaBarrier()), player);
+                ModMessages.sendToPlayer(new ManaBarrierDataSyncS2CPacket(stats.getManaBarrier()), player);
             });
         }
     }

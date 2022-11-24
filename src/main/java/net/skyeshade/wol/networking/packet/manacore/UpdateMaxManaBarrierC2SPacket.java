@@ -36,9 +36,9 @@ public class UpdateMaxManaBarrierC2SPacket {
 
                 // increase the water level / stats level of player
                 // Output the current stats level
-            player.getCapability(PlayerStatsProvider.PLAYER_MAXMANABARRIER).ifPresent(max_manabarrier -> {
-                max_manabarrier.addMaxManaBarrier(maxManaBarrierChange);
-                ModMessages.sendToPlayer(new MaxManaBarrierDataSyncS2CPacket(max_manabarrier.getMaxManaBarrier()), player);
+            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+                stats.addMaxManaBarrier(maxManaBarrierChange);
+                ModMessages.sendToPlayer(new MaxManaBarrierDataSyncS2CPacket(stats.getMaxManaBarrier()), player);
             });
 
 

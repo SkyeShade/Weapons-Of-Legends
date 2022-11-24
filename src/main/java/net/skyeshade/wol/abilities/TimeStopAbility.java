@@ -113,12 +113,12 @@ public class TimeStopAbility {
                         if (!player.level.isClientSide()) {
                             //adds new entities around the caster position
                             int valuesIndex = playerList.indexOf(player);
-                            player.getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(mana -> {
+                            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
                                 if (timer.get(valuesIndex) > 40) {
-                                    if (mana.getMana() >= 100) {
-                                        mana.addMana(-100);
+                                    if (stats.getMana() >= 100) {
+                                        stats.addMana(-100);
                                         statSystems.xpSystem(-100, (ServerPlayer) player);
-                                        ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), ((ServerPlayer) player));
+                                        ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(stats.getMana()), ((ServerPlayer) player));
 
 
 

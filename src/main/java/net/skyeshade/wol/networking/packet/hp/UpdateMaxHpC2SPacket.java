@@ -1,4 +1,4 @@
-package net.skyeshade.wol.networking.packet.manacore;
+package net.skyeshade.wol.networking.packet.hp;
 
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,16 +10,19 @@ import net.skyeshade.wol.stats.PlayerStatsProvider;
 
 import java.util.function.Supplier;
 
-public class UpdateManaBarrierAliveC2SPacket {
-    private final boolean manaBarrierAliveChange;
-    public UpdateManaBarrierAliveC2SPacket(boolean manaBarrierAlive) {this.manaBarrierAliveChange = manaBarrierAlive;}
+public class UpdateMaxHpC2SPacket {
 
-    public UpdateManaBarrierAliveC2SPacket(FriendlyByteBuf buf) {
-        this.manaBarrierAliveChange = buf.readBoolean();
+    private final long maxHpChange;
+    public UpdateMaxHpC2SPacket(long maxHpChange) {
+        this.maxHpChange = maxHpChange;
+    }
+
+    public UpdateMaxHpC2SPacket(FriendlyByteBuf buf) {
+        this.maxHpChange = buf.readLong();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeBoolean(manaBarrierAliveChange);
+        buf.writeLong(maxHpChange);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
@@ -34,11 +37,8 @@ public class UpdateManaBarrierAliveC2SPacket {
                 // increase the water level / stats level of player
                 // Output the current stats level
             player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
-
-                stats.setManaBarrierAlive(manaBarrierAliveChange);
-
-
-                ModMessages.sendToPlayer(new ManaBarrierAliveDataSyncS2CPacket(stats.getManaBarrierAlive()), player);
+                stats.addMaxHp(maxHpChange);
+                ModMessages.sendToPlayer(new MaxHpDataSyncS2CPacket(stats.getMaxHp()), player);
             });
 
 

@@ -34,12 +34,12 @@ public class UpdateMenuStatTabToggleC2SPacket {
 
                 // increase the water level / stats level of player
                 // Output the current stats level
-            player.getCapability(PlayerStatsProvider.PLAYER_MENUSTATTABTOGGLE).ifPresent(menuStatTabToggle -> {
+            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
 
-                menuStatTabToggle.setMenuStatTabToggle(menuStatTabToggleChange);
+                stats.setMenuStatTabToggle(menuStatTabToggleChange);
 
 
-                ModMessages.sendToPlayer(new MenuStatTabToggleDataSyncS2CPacket(menuStatTabToggle.getMenuStatTabToggle()), player);
+                ModMessages.sendToPlayer(new MenuStatTabToggleDataSyncS2CPacket(stats.getMenuStatTabToggle()), player);
             });
 
 

@@ -10,12 +10,18 @@ public class PlayerStats {
     private final long MIN_MANABARRIERREVIVE = 0;
     private final long MIN_MANA = 0;
     private final long MIN_MAXMANA = 0;
+    private final long MIN_MAXHP = 0;
     private final long MIN_MANACORE_LEVEL = 0;
     private final long MIN_MANATOXP = 0;
     private final long MAX_MANATOXP = 0;
     private final long MIN_MANACORE_XP = 0;
 
     private long mana;
+
+    private long hp;
+
+    private long max_hp;
+    private float hpregenbuffer;
     private long max_mana;
     private long manabarrier;
     private long max_manabarrier;
@@ -34,6 +40,18 @@ public class PlayerStats {
     //get functions
     public long getMana() {
         return mana;
+    }
+
+    public long getHp() {
+        return hp;
+    }
+
+    public long getMaxHp() {
+        return max_hp;
+    }
+
+    public float getHpRegenBuffer() {
+        return hpregenbuffer;
     }
     public float getManaRegenBuffer() {
         return manaregenbuffer;
@@ -74,6 +92,10 @@ public class PlayerStats {
     public void setMaxMana(long set) {
         this.max_mana = Math.max(set, MIN_MAXMANA);
     }
+    public void setMaxHp(long set) {
+        this.max_hp = Math.max(set, MIN_MAXHP);
+    }
+    public void setHpRegenBuffer(float set) {this.hpregenbuffer = set;}
     public void setManaRegenBuffer(float set) {this.manaregenbuffer = set;}
     public void setManaBarrierRegenBuffer(float set) {this.manabarrierregenbuffer = set;}
     public void setMaxManaBarrier(long set) {
@@ -103,6 +125,10 @@ public class PlayerStats {
 
 
     public void addMana(long add) {this.mana = Math.min(mana + add, max_mana);}
+
+    public void addHp(long add) {this.hp = Math.min(hp + add, max_hp);}
+    public void addMaxHp(long add) {this.max_hp = max_hp + add;}
+    public void addHpRegenBuffer(float add) {this.hpregenbuffer = hpregenbuffer + add;}
     public void addManaRegenBuffer(float add) {this.manaregenbuffer = manaregenbuffer + add;}
     public void addManaBarrierRegenBuffer(float add) {this.manabarrierregenbuffer = manabarrierregenbuffer + add;}
     public void addManaToXp(long add) {this.manatoxp = (manatoxp + add);}
@@ -117,19 +143,13 @@ public class PlayerStats {
     public void addManaCoreLevel(long add) {this.manacore_level = manacore_level + add;}
     public void addManaCoreXp(long add) {this.manacore_xp = manacore_xp + add;}
 
-    //sub functions
-    public void subMana(long sub) {
-        this.mana = Math.max(mana - sub, MIN_MANA);
-    }
-    public void subMaxMana(long sub) {
-        this.max_mana = Math.max(max_mana - sub, MIN_MAXMANA);
-    }
-    public void subManaBarrier(long sub) {this.manabarrier = Math.max(manabarrier - sub, MIN_MANABARRIER);}
-    public void subMaxManaBarrier(long sub) {this.max_manabarrier = Math.max(max_manabarrier - sub, MIN_MAXMANABARRIER);}
-    public void subManaBarrierRevive(long sub) {this.manabarrierrevive = Math.max(manabarrierrevive - sub, MIN_MANABARRIERREVIVE);}
+
 
     public void copyFrom(PlayerStats source) {
         this.mana = source.mana;
+        this.hp = source.hp;
+        this.max_hp = source.max_hp;
+        this.hpregenbuffer = source.hpregenbuffer;
         this.manaregenbuffer = source.manaregenbuffer;
         this.manabarrierregenbuffer = source.manabarrierregenbuffer;
         this.max_mana = source.max_mana;
@@ -145,6 +165,9 @@ public class PlayerStats {
     public void saveNBTData(CompoundTag nbt) {
         //System.out.prlongln("Saving NBT"+"\n"+mana+"\n"+max_mana);
         nbt.putLong("mana", mana);
+        nbt.putLong("hp", hp);
+        nbt.putLong("max_hp", max_hp);
+        nbt.putFloat("hpregenbuffer", hpregenbuffer);
         nbt.putFloat("manaregenbuffer", manaregenbuffer);
         nbt.putFloat("manabarrierregenbuffer", manabarrierregenbuffer);
         nbt.putLong("max_mana", max_mana);
@@ -163,6 +186,9 @@ public class PlayerStats {
     public void loadNBTData(CompoundTag nbt) {
         //System.out.prlongln("Loading NBT"+"\n"+mana+"\n"+max_mana);
         mana = nbt.getLong("mana");
+        hp = nbt.getLong("hp");
+        max_hp = nbt.getLong("max_hp");
+        hpregenbuffer = nbt.getFloat("hpregenbuffer");
         manaregenbuffer = nbt.getFloat("manaregenbuffer");
         manabarrierregenbuffer = nbt.getFloat("manabarrierregenbuffer");
         max_mana = nbt.getLong("max_mana");

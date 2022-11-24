@@ -38,14 +38,14 @@ public class UpdateManaC2SPacket {
 
                 // increase the water level / stats level of player
                 // Output the current stats level
-            player.getCapability(PlayerStatsProvider.PLAYER_MANA).ifPresent(mana -> {
+            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
 
-                    mana.addMana(manaChange);
+                    stats.addMana(manaChange);
                     statSystems.xpSystem(manaChange, player);
 
 
 
-                ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(mana.getMana()), player);
+                ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(stats.getMana()), player);
 
             });
 

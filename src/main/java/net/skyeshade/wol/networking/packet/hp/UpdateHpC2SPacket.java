@@ -1,4 +1,4 @@
-package net.skyeshade.wol.networking.packet.manacore;
+package net.skyeshade.wol.networking.packet.hp;
 
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -7,19 +7,24 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
+import net.skyeshade.wol.util.StatSystems;
 
 import java.util.function.Supplier;
 
-public class UpdateManaBarrierAliveC2SPacket {
-    private final boolean manaBarrierAliveChange;
-    public UpdateManaBarrierAliveC2SPacket(boolean manaBarrierAlive) {this.manaBarrierAliveChange = manaBarrierAlive;}
+public class UpdateHpC2SPacket {
+    private final long hpChange;
 
-    public UpdateManaBarrierAliveC2SPacket(FriendlyByteBuf buf) {
-        this.manaBarrierAliveChange = buf.readBoolean();
+    StatSystems statSystems = new StatSystems();
+    public UpdateHpC2SPacket(long hpChange) {
+        this.hpChange = hpChange;
+    }
+
+    public UpdateHpC2SPacket(FriendlyByteBuf buf) {
+        this.hpChange = buf.readLong();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeBoolean(manaBarrierAliveChange);
+        buf.writeLong(hpChange);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
@@ -35,10 +40,13 @@ public class UpdateManaBarrierAliveC2SPacket {
                 // Output the current stats level
             player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
 
-                stats.setManaBarrierAlive(manaBarrierAliveChange);
+                    stats.addHp(hpChange);
+                    statSystems.xpSystem(hpChange, player);
 
 
-                ModMessages.sendToPlayer(new ManaBarrierAliveDataSyncS2CPacket(stats.getManaBarrierAlive()), player);
+
+                ModMessages.sendToPlayer(new HpDataSyncS2CPacket(stats.getHp()), player);
+
             });
 
 

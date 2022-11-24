@@ -11,6 +11,10 @@ import net.skyeshade.wol.WOL;
 
 import net.skyeshade.wol.networking.packet.destruction.DestructionActiveDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.destruction.UpdateDestructionActiveC2SPacket;
+import net.skyeshade.wol.networking.packet.hp.HpDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.hp.MaxHpDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.hp.UpdateHpC2SPacket;
+import net.skyeshade.wol.networking.packet.hp.UpdateMaxHpC2SPacket;
 import net.skyeshade.wol.networking.packet.mana.ManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.mana.MaxManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.mana.UpdateManaC2SPacket;
@@ -157,6 +161,30 @@ public class ModMessages {
                 .decoder(ManaBarrierAliveDataSyncS2CPacket::new)
                 .encoder(ManaBarrierAliveDataSyncS2CPacket::toBytes)
                 .consumerMainThread(ManaBarrierAliveDataSyncS2CPacket::handle)
+                .add();
+
+        net.messageBuilder(UpdateHpC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateHpC2SPacket::new)
+                .encoder(UpdateHpC2SPacket::toBytes)
+                .consumerMainThread(UpdateHpC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(HpDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(HpDataSyncS2CPacket::new)
+                .encoder(HpDataSyncS2CPacket::toBytes)
+                .consumerMainThread(HpDataSyncS2CPacket::handle)
+                .add();
+
+        net.messageBuilder(UpdateMaxHpC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateMaxHpC2SPacket::new)
+                .encoder(UpdateMaxHpC2SPacket::toBytes)
+                .consumerMainThread(UpdateMaxHpC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(MaxHpDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(MaxHpDataSyncS2CPacket::new)
+                .encoder(MaxHpDataSyncS2CPacket::toBytes)
+                .consumerMainThread(MaxHpDataSyncS2CPacket::handle)
                 .add();
     }
 

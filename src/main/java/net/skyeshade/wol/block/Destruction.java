@@ -149,9 +149,9 @@ public class Destruction extends BaseDestruction {
     ArrayList<Player> activeBooleanPlayersList = new ArrayList<>();
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         for (Player player : pLevel.players()) {
-            player.getCapability(PlayerStatsProvider.PLAYER_DESTRUCTION_ACTIVE).ifPresent(destructionActive -> {
-                activeBooleanList.add(destructionActive.getDestructionActive());
-                if (destructionActive.getDestructionActive()) {
+            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+                activeBooleanList.add(stats.getDestructionActive());
+                if (stats.getDestructionActive()) {
                     activeBooleanPlayersList.add(player);
                 }
             });

@@ -36,9 +36,9 @@ public class UpdateManaBarrierReviveC2SPacket {
 
                 // increase the water level / stats level of player
                 // Output the current stats level
-            player.getCapability(PlayerStatsProvider.PLAYER_MANABARRIERREVIVE).ifPresent(manabarrierrevive -> {
-                manabarrierrevive.addManaBarrierRevive(manaBarrierReviveChange);
-                ModMessages.sendToPlayer(new ManaBarrierReviveDataSyncS2CPacket(manabarrierrevive.getManaBarrierRevive()), player);
+            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+                stats.addManaBarrierRevive(manaBarrierReviveChange);
+                ModMessages.sendToPlayer(new ManaBarrierReviveDataSyncS2CPacket(stats.getManaBarrierRevive()), player);
             });
 
 

@@ -9,7 +9,7 @@ import net.skyeshade.wol.networking.packet.manacore.MaxManaBarrierDataSyncS2CPac
 import net.skyeshade.wol.stats.PlayerStatsProvider;
 
 public class StatSystems {
-    int requiredManaUsageForXp = 100;
+    int requiredManaUsageForXp = 1;
     public long[] requiredCoreLevelXp = {
             100L,
             1000L,
@@ -75,46 +75,34 @@ public class StatSystems {
 
             absoluteManaChange = Math.abs(manaChange);
                 //if mana change is over requiredManaUsageForXp, it calculates how much xp and possibly level you should get and how much should remain in the xp buffer
-            player.getCapability(PlayerStatsProvider.PLAYER_MANATOXP).ifPresent(manatoxp -> {
-                player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_XP).ifPresent(manacorexp -> {
-                    player.getCapability(PlayerStatsProvider.PLAYER_MANACORE_LEVEL).ifPresent(manacore_level -> {
+            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+                for (long i = absoluteManaChange+stats.getManaToXp(); i >= requiredManaUsageForXp; i = i-requiredManaUsageForXp) {
+                    if (stats.getManaCoreXp()+1 >= requiredCoreLevelXp[(int)stats.getManaCoreLevel()-1]) {
+                        if (stats.getManaCoreLevel() != requiredCoreLevelXp.length) {
+                            stats.setManaCoreXp(0);
+                            stats.addManaCoreLevel(1);
 
-                        for (long i = absoluteManaChange+manatoxp.getManaToXp(); i >= requiredManaUsageForXp; i = i-requiredManaUsageForXp) {
+                            stats.addMaxMana(maxManaRewardPerLevel[(int)stats.getManaCoreLevel()-1]);
+                            stats.addMaxManaBarrier(maxManaBarrierRewardPerLevel[(int)stats.getManaCoreLevel()-1]);
+                            ModMessages.sendToPlayer(new MaxManaBarrierDataSyncS2CPacket(stats.getMaxManaBarrier()), player);
+                            ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(stats.getMaxMana()), player);
 
-                            if (manacorexp.getManaCoreXp()+1 >= requiredCoreLevelXp[(int)manacore_level.getManaCoreLevel()-1]) {
-
-
-                                if (manacore_level.getManaCoreLevel() != requiredCoreLevelXp.length) {
-                                    manacorexp.setManaCoreXp(0);
-                                    manacore_level.addManaCoreLevel(1);
-                                    player.getCapability(PlayerStatsProvider.PLAYER_MAXMANA).ifPresent(maxmana -> {
-                                        maxmana.addMaxMana(maxManaRewardPerLevel[(int)manacore_level.getManaCoreLevel()-1]);
-                                        maxmana.addMaxManaBarrier(maxManaBarrierRewardPerLevel[(int)manacore_level.getManaCoreLevel()-1]);
-                                        ModMessages.sendToPlayer(new MaxManaBarrierDataSyncS2CPacket(maxmana.getMaxManaBarrier()), player);
-                                        ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(maxmana.getMaxMana()), player);
-                                    });
-                                    ModMessages.sendToPlayer(new ManaCoreLevelDataSyncS2CPacket(manacore_level.getManaCoreLevel()), player);
-                                }else {
-                                    manacorexp.setManaCoreXp(requiredCoreLevelXp[requiredCoreLevelXp.length-1]);
-                                }
-
-                            } else {
-                                manacorexp.addManaCoreXp(1);
-                            }
-
-                            if (i-requiredManaUsageForXp < requiredManaUsageForXp) {
-                                manatoxp.setManaToXp(i-requiredManaUsageForXp);
-                            }
+                            ModMessages.sendToPlayer(new ManaCoreLevelDataSyncS2CPacket(stats.getManaCoreLevel()), player);
+                        }else {
+                            stats.setManaCoreXp(requiredCoreLevelXp[requiredCoreLevelXp.length-1]);
                         }
-                        if (absoluteManaChange < requiredManaUsageForXp) {
-                            manatoxp.addManaToXp(absoluteManaChange);
-                        }
-                        ModMessages.sendToPlayer(new ManaCoreXpDataSyncS2CPacket(manacorexp.getManaCoreXp()), player);
 
-                    });
-
-                });
-
+                    } else {
+                        stats.addManaCoreXp(1);
+                    }
+                    if (i-requiredManaUsageForXp < requiredManaUsageForXp) {
+                        stats.setManaToXp(i-requiredManaUsageForXp);
+                    }
+                }
+                if (absoluteManaChange < requiredManaUsageForXp) {
+                    stats.addManaToXp(absoluteManaChange);
+                }
+                ModMessages.sendToPlayer(new ManaCoreXpDataSyncS2CPacket(stats.getManaCoreXp()), player);
             });
         }
         //long stopTime = System.currentTimeMillis();
