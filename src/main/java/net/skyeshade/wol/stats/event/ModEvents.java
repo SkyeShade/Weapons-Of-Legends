@@ -245,12 +245,12 @@ public class ModEvents {
                     //event.setAmount(0);
 
                 }
-                //event.setAmount(0);
+
                 ModMessages.sendToPlayer(new HpDataSyncS2CPacket(stats.getHp()), player);
                 ModMessages.sendToPlayer(new ManaBarrierDataSyncS2CPacket(stats.getManaBarrier()), player);
             });
             //event.setCanceled(true);
-
+            event.setAmount(0);
 
         }
 

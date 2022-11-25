@@ -15,6 +15,7 @@ import net.skyeshade.wol.client.gui.screens.stats.StatsScreen;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.networking.packet.destruction.UpdateDestructionActiveC2SPacket;
 import net.skyeshade.wol.networking.packet.mana.UpdateManaC2SPacket;
+import net.skyeshade.wol.networking.packet.mana.UpdateMaxManaC2SPacket;
 import net.skyeshade.wol.networking.packet.manacore.UpdateManaBarrierC2SPacket;
 import net.skyeshade.wol.networking.packet.manacore.UpdateManaBarrierReviveC2SPacket;
 import net.skyeshade.wol.networking.packet.manacore.UpdateMaxManaBarrierC2SPacket;
@@ -52,6 +53,7 @@ public class ClientEvents {
                 if (Minecraft.getInstance().options.keyMappings[25].consumeClick()) {
 
                     System.out.println("TEST1");
+                    ModMessages.sendToServer(new UpdateMaxManaC2SPacket(0));
 
                 }
                 if (Minecraft.getInstance().options.keyMappings[26].consumeClick()) {

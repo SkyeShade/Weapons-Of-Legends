@@ -1,145 +1,163 @@
 package net.skyeshade.wol.entities.spells.fireelement;
 
-import com.mojang.math.Vector3d;
 import com.mojang.math.Vector3f;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import net.skyeshade.wol.BaseBladeSlashProjectile;
-import net.skyeshade.wol.entities.spells.fireelement.FireBall;
-import net.skyeshade.wol.entities.BladeSlashProjectileEntity;
+import org.jetbrains.annotations.NotNull;
 
-public class FireBall extends Projectile {
-    private int life;
-    protected boolean inGround;
+import java.util.concurrent.ThreadLocalRandom;
 
-    private static final EntityDataAccessor<Byte> ID_FLAGS = SynchedEntityData.defineId(FireBall.class, EntityDataSerializers.BYTE);
-    private static final EntityDataAccessor<Byte> PIERCE_LEVEL = SynchedEntityData.defineId(FireBall.class, EntityDataSerializers.BYTE);
+public class FireBall extends BaseBladeSlashProjectile {
+    LivingEntity attacker;
 
-    public FireBall(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    Vec3 currentDeltamovement;
+
+
+
+
+    public FireBall(EntityType<FireBall> entityType, Level world) {
+        super(entityType, world);
+
     }
 
-    protected FireBall(EntityType<? extends FireBall> pEntityType, double pX, double pY, double pZ, Level pLevel) {
-        this(pEntityType, pLevel);
-        this.setPos(pX, pY, pZ);
+    public FireBall(EntityType<FireBall> entityType, double x, double y, double z, Level world) {
+        super(entityType, x, y, z, world);
+    }
+
+    public FireBall(EntityType<FireBall> entityType, LivingEntity shooter, Level world) {
+
+        super(entityType, shooter, world);
+        attacker = shooter;
+        shooter.playSound(SoundEvents.PLAYER_ATTACK_SWEEP,1.0F, 0.2F);
+        //if (this.distanceTo(shooter) > 10) {
+        //    this.discard();
+        //}
+        this.playSound(SoundEvents.TRIDENT_THROW, 1.0F, 0.1F);
+
+        //currentDeltamovement = this.getDeltaMovement();
     }
 
 
 
-
-    @Override
-    public void shoot(double pX, double pY, double pZ, float pVelocity, float pInaccuracy) {
-        super.shoot(pX, pY, pZ, pVelocity, pInaccuracy);
-        this.life = 0;
-    }
-    @Override
-    public void lerpTo(double pX, double pY, double pZ, float pYaw, float pPitch, int pPosRotationIncrements, boolean pTeleport) {
-        this.setPos(pX, pY, pZ);
-        this.setRot(pYaw, pPitch);
-    }
-    @Override
-    public void lerpMotion(double pX, double pY, double pZ) {
-        super.lerpMotion(pX, pY, pZ);
-        this.life = 0;
-    }
-
-    protected void tickDespawn() {
-        ++this.life;
-        if (this.life >= 200) {
-            this.discard();
-        }
-
+    protected ItemStack getPickupItem() {
+        return ItemStack.EMPTY;
     }
 
     @Override
-    protected void defineSynchedData() {}
+    protected void onHitEntity(EntityHitResult pResult) {
+
+        super.onHitEntity(pResult);
+
+        this.setSoundEvent(SoundEvents.TRIDENT_HIT);
+
+        pResult.getEntity().hurt(DamageSource.MAGIC, 20);
+        this.playSound(SoundEvents.TRIDENT_HIT, 10.0F, 0.1F);
+        this.getLevel().explode(this, this.getX(),this.getY(),this.getZ(), 2, true, Explosion.BlockInteraction.BREAK);
+
+        this.discard();
 
 
-    public void move(MoverType pType, Vec3 pPos) {
-        super.move(pType, pPos);
-        //this.setDeltaMovement(0, +100*(vec3.y+1), 0);
     }
 
     @Override
     protected void onHitBlock(BlockHitResult pResult) {
         super.onHitBlock(pResult);
-
+        this.setSoundEvent(SoundEvents.TRIDENT_HIT);
+        //this.level.explode(this, this.getX(), this.getY(), this.getZ(), 1.0f, false, Explosion.BlockInteraction.BREAK);
         if (!this.level.getBlockState(pResult.getBlockPos()).is(Blocks.BEDROCK) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_PORTAL_FRAME) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_GATEWAY) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_PORTAL))
             this.level.destroyBlock(pResult.getBlockPos(), true);
+
+        this.getLevel().explode(this, this.getX(),this.getY(),this.getZ(), 2, true, Explosion.BlockInteraction.BREAK);
         this.discard();
 
     }
 
-    float x = 1.0f;
-    float y = 1.0f;
-    float z = 1.0f;
+
     @Override
-    public void tick() {
-        if (!this.level.isClientSide) {
-            this.tickDespawn();
-        }
-        /*BlockPos blockpos = this.blockPosition();
-        BlockState blockstate = this.level.getBlockState(blockpos);
-        if (!blockstate.isAir()) {
-            VoxelShape voxelshape = blockstate.getCollisionShape(this.level, blockpos);
-            if (!voxelshape.isEmpty()) {
-                Vec3 vec31 = this.position();
-
-                for(AABB aabb : voxelshape.toAabbs()) {
-                    if (aabb.move(blockpos).contains(vec31)) {
-                        this.inGround = true;
-
-                        break;
-                    }
-                }
-            }
-        }*/
-        Vec3 vec3 = new Vec3(1.0D, 1.0D, 1.0D);
-        super.tick();
-
-        //this.setDeltaMovement(this.getDeltaMovement().x*10+vec3.x, this.getDeltaMovement().y*10+vec3.y, this.getDeltaMovement().z*10+vec3.z);
-
-
-
-
-        this.setPos(this.getX()+x, this.getY()+y,this.getZ()+z);
-
-        if (x > 0)
-            x = x-0.01f;
-        y = y-0.02f;
-        if (z > 0)
-            z = z-0.01f;
-
-
-        BlockPos blockPos = new BlockPos(this.getBlockX(),this.getBlockY(),this.getBlockZ());
-        if (!this.getLevel().getBlockState(blockPos).isAir()) {
-            System.out.println("e");
-
-            this.getLevel().explode(this,this.getX(),this.getY(),this.getZ(),10.0f,true, Explosion.BlockInteraction.BREAK);
+    protected void tickDespawn() {
+        if (this.tickCount > 300){
+            //this.level.explode(this, this.getX(), this.getY(), this.getZ(), 1.0f, true, Explosion.BlockInteraction.BREAK);
             this.discard();
         }
-        //this.setNoGravity(true);
-        //System.out.println("e");
-
     }
+
+    @Override
+    public void setSoundEvent(@NotNull SoundEvent pSoundEvent) {
+
+        this.playSound(SoundEvents.TRIDENT_HIT, 10.0F, 0.1F);
+        super.setSoundEvent(pSoundEvent);
+    }
+
+
+
+    int randomNum = ThreadLocalRandom.current().nextInt(0, 360);
+    @Override
+    public void tick() {
+
+
+            if (this.isInWater()) {
+                if (currentDeltamovement == null) {
+                    currentDeltamovement = this.getDeltaMovement();
+                }else {
+                    this.setDeltaMovement(currentDeltamovement.x * 300.0F, currentDeltamovement.y * 300.0F, currentDeltamovement.z * 300.0F);
+                }
+            }
+
+            this.setPierceLevel((byte) 10);
+
+            //System.out.println("ticking");
+            //ParticleOptions particleOptions = ParticleTypes.HEART;
+
+            //this.level.addAlwaysVisibleParticle(particleOptions,true, this.getX(), this.getY(), this.getZ(), 1, 1, 1);
+
+
+            double dx = this.getXRot();
+            double dy = this.getYRot();
+
+            //System.out.println("Rotx: " +dx);
+
+            //System.out.println("Roty: " +dy);
+
+            Vector3f vector3f = new Vector3f(0.6f,0f,0f);
+
+
+
+
+
+                for (float ii = 0.0f; ii < 4.0; ii= ii+0.4f) {
+
+                    this.level.addParticle(new DustParticleOptions(vector3f,2.0f),
+                            this.getX()+((this.getX()-1-this.getX())*Math.sin((dy+180)*Math.PI/180) - ((this.getZ()+ii-2.0f)-this.getZ())*Math.cos((dy+180)*Math.PI/180)),
+                            this.getY()+((this.getX()-1-this.getX())*Math.sin((randomNum)*Math.PI/180) - ((this.getZ()+ii-2.0f)-this.getZ())*Math.cos((randomNum)*Math.PI/180)),
+                            this.getZ()+((this.getX()-1-this.getX())*Math.cos((dy+180)*Math.PI/180) + ((this.getZ()+ii-2.0f)-this.getZ())*Math.sin((dy+180)*Math.PI/180)),
+                            -this.getDeltaMovement().x*10, -this.getDeltaMovement().y*10, -this.getDeltaMovement().z*10);
+
+                    //System.out.println(this.getX()+(this.getX()+1.25f/ii-this.getX())*Math.cos((dy+180)/Math.PI) - (this.getZ()-this.getZ())*Math.sin((dy+180)/Math.PI));
+                }
+
+
+
+            //bladeSlashParticles.bladeParticleEffect(this, 200);
+
+
+        super.tick();
+    }
+
+
 
 
 
@@ -147,4 +165,5 @@ public class FireBall extends Projectile {
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
+
 }

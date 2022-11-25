@@ -22,5 +22,5 @@ public class EntityInit {
 
 
     public static final RegistryObject<EntityType<FireBall>> FIREBALL = ENTITY_TYPES.register("fireball",
-            () -> EntityType.Builder.of(FireBall::new, MobCategory.MISC).sized(2.5F, 0.5F).build("fireball"));
+            () -> EntityType.Builder.of((EntityType.EntityFactory<FireBall>) FireBall::new, MobCategory.MISC).sized(2.5F, 0.5F).build("fireball"));
 }

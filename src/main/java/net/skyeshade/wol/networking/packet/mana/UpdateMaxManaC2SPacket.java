@@ -5,6 +5,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
+import net.skyeshade.wol.entities.EntityInit;
+import net.skyeshade.wol.entities.spells.fireelement.FireBall;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
 
@@ -41,6 +43,11 @@ public class UpdateMaxManaC2SPacket {
                 ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(stats.getMaxMana()), player);
             });
 
+
+
+            FireBall fireball = new FireBall(EntityInit.FIREBALL.get(), player,player.level);
+            fireball.shootFromRotation(player, player.getXRot(), player.getYRot(), -1.0F, 3.01f, 1.0F);
+            player.level.addFreshEntity(fireball);
 
         });
         return true;
