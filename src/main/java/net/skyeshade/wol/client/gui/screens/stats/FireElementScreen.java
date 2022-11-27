@@ -51,11 +51,12 @@ public class FireElementScreen extends Screen {
    public boolean hoverFireBallSpell = false;
 
    private int spellSlotHoverIndex;
-   public boolean spellWindow = false;
+
    public long hoverSpellID = 0;
 
 
    DisplaySpellInformation displaySpellInformation = new DisplaySpellInformation();
+
    //StatsIcons statsIcons = new StatsIcons();
    private double scrollX;
    private double scrollY;
@@ -95,17 +96,7 @@ public class FireElementScreen extends Screen {
 
 
       }
-       if (spellWindow) {
-           spellWindow = displaySpellInformation.mouseClickEvent(pButton);
-       }else {
-           if (pButton == 0) {
-               if (hoverFireBallSpell) {
-                   spellWindow = true;
-                   hoverSpellID = 1;
-                   Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-               }
-           }
-       }
+      displaySpellInformation.mouseSpellClickEvent(pButton);
       return super.mouseClicked(pMouseX, pMouseY, pButton);
 
    }
@@ -123,10 +114,9 @@ public class FireElementScreen extends Screen {
 
 
        this.renderWindow(pPoseStack, pMouseX, pMouseY, i, j);
-       if (spellWindow) {
-           displaySpellInformation.displaySpellInformation(hoverSpellID,pPoseStack, pMouseX, pMouseY, i, j);
-           this.renderOnTopSpellInfo(pPoseStack, pMouseX, pMouseY, i, j);
-       }
+
+       displaySpellInformation.displaySpellInformation(pPoseStack, pMouseX, pMouseY, i, j, this.font);
+
 
    }
 
@@ -184,22 +174,21 @@ public class FireElementScreen extends Screen {
 
 
 
-
+      displaySpellInformation.hoverSpell = false;
       int fireBallSpellDisplacementX = 0;
       int fireBallSpellDisplacementY = 0;
-      RenderSystem.setShaderTexture(0, SpellIconDeterminer.determineSpellIconFromID(1));
-      blit(pPoseStack, i+fireBallSpellDisplacementX-13+WINDOW_INSIDE_WIDTH,j+fireBallSpellDisplacementY-13+WINDOW_INSIDE_HEIGHT,0,0,26,26,26,26);
-      if (!spellWindow) {
-          if (StatsIcons.isMouseOver(i + fireBallSpellDisplacementX + WINDOW_INSIDE_WIDTH + pOffsetX + 26, j + fireBallSpellDisplacementY + WINDOW_INSIDE_HEIGHT + pOffsetY + 26, pMouseX + 18, pMouseY + 9, 26, 26)) {
-              RenderSystem.setShaderTexture(0, ICON_HIGH);
-              blit(pPoseStack, i + fireBallSpellDisplacementX - 13 + WINDOW_INSIDE_WIDTH, j + fireBallSpellDisplacementY - 13 + WINDOW_INSIDE_HEIGHT, 0, 0, 26, 26, 26, 26);
-              hoverFireBallSpell = true;
-          } else {
-              hoverFireBallSpell = false;
-          }
-      }
 
-      pPoseStack.popPose();
+      displaySpellInformation.displaySpell(1,pPoseStack,i,j,fireBallSpellDisplacementX,fireBallSpellDisplacementY,pOffsetX,pOffsetY,pMouseX,pMouseY,WINDOW_INSIDE_WIDTH,WINDOW_INSIDE_HEIGHT);
+
+
+      int waterSpellDisplacementX = 26;
+      int waterSpellDisplacementY = 0;
+
+      displaySpellInformation.displaySpell(2,pPoseStack,i,j,waterSpellDisplacementX,waterSpellDisplacementY,pOffsetX,pOffsetY,pMouseX,pMouseY,WINDOW_INSIDE_WIDTH,WINDOW_INSIDE_HEIGHT);
+
+
+
+       pPoseStack.popPose();
 
    }
 
@@ -247,7 +236,7 @@ public class FireElementScreen extends Screen {
       }
    }
    public void scroll(double pDragX, double pDragY) {
-        if (!spellWindow) {
+        if (!displaySpellInformation.spellWindow) {
             this.scrollX = Mth.clamp(this.scrollX + pDragX, -234.0D, 0.0D);
             this.scrollY = Mth.clamp(this.scrollY + pDragY, -207.0D, 0.0D);
         }
