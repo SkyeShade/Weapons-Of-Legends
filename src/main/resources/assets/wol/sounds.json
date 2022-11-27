@@ -10,5 +10,23 @@
     "sounds": [
       "wol:start_time"
     ]
+  },
+  "distant_explosion": {
+    "subtitle": "sounds.wol.distant_explosion",
+    "sounds": [
+      "wol:distant_explosion"
+    ]
+  },
+  "explosion": {
+    "subtitle": "sounds.wol.explosion",
+    "sounds": [
+      "wol:explosion"
+    ]
+  },
+  "fire_wave": {
+    "subtitle": "sounds.wol.fire_wave",
+    "sounds": [
+      "wol:fire_wave"
+    ]
   }
 }

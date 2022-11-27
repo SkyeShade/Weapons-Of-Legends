@@ -48,7 +48,7 @@ public class TimeStopAbility {
     static ArrayList<ArrayList<Float>> yRot = new ArrayList<>();
     static ArrayList<ArrayList<Float>> yHeadRot = new ArrayList<>();
 
-    static StatSystems statSystems = new StatSystems();
+
 
 
     static double slowValue = 1000;
@@ -117,7 +117,7 @@ public class TimeStopAbility {
                                 if (timer.get(valuesIndex) > 40) {
                                     if (stats.getMana() >= 100) {
                                         stats.addMana(-100);
-                                        statSystems.xpSystem(-100, (ServerPlayer) player);
+                                        StatSystems.xpSystem(-100, (ServerPlayer) player);
                                         ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(stats.getMana()), ((ServerPlayer) player));
 
 

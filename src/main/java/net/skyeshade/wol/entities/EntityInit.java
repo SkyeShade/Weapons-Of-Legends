@@ -7,7 +7,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.skyeshade.wol.WOL;
-import net.skyeshade.wol.entities.spells.fireelement.FireBall;
+import net.skyeshade.wol.entities.spells.fireelement.FireBallEntity;
 
 
 public class EntityInit {
@@ -21,6 +21,6 @@ public class EntityInit {
 
 
 
-    public static final RegistryObject<EntityType<FireBall>> FIREBALL = ENTITY_TYPES.register("fireball",
-            () -> EntityType.Builder.of((EntityType.EntityFactory<FireBall>) FireBall::new, MobCategory.MISC).sized(2.5F, 0.5F).build("fireball"));
+    public static final RegistryObject<EntityType<FireBallEntity>> FIREBALL = ENTITY_TYPES.register("fireball",
+            () -> EntityType.Builder.of((EntityType.EntityFactory<FireBallEntity>) FireBallEntity::new, MobCategory.MISC).sized(0.8F, 0.8F).build("fireball"));
 }

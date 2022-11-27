@@ -7,11 +7,11 @@ import org.lwjgl.glfw.GLFW;
 
 public class KeyBinding {
     public static final String KEY_CATEGORY_WOL = "key.category.wol.tutorial";
-    public static final String KEY_SUB_MANA = "key.wol.submana";
+    public static final String KEY_SPELLSLOTS_TOGGLE = "key.wol.spellslottoggle";
 
     public static final String KEY_ADD_MAXMANA = "key.wol.addmaxmana";
-
-    public static final KeyMapping MANASUB_KEY = new KeyMapping(KEY_SUB_MANA, KeyConflictContext.IN_GAME,
+    
+    public static final KeyMapping SPELLSLOTS_TOGGLE_KEY = new KeyMapping(KEY_SPELLSLOTS_TOGGLE, KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, KEY_CATEGORY_WOL);
 
     public static final KeyMapping MAXMANAADD_KEY = new KeyMapping(KEY_ADD_MAXMANA, KeyConflictContext.IN_GAME,

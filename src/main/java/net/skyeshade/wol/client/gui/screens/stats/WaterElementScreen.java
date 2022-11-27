@@ -40,7 +40,7 @@ public class WaterElementScreen extends Screen {
    public static final int BACKGROUND_TILE_COUNT_Y = 7;
 
    public boolean hoverArrowBack = false;
-   StatsIcons statsIcons = new StatsIcons();
+   //StatsIcons statsIcons = new StatsIcons();
    private double scrollX;
    private double scrollY;
 
@@ -82,16 +82,6 @@ public class WaterElementScreen extends Screen {
 
 
 
-
-   public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-      if (this.minecraft.options.keyAdvancements.matches(pKeyCode, pScanCode)) {
-         this.minecraft.setScreen((Screen)null);
-         this.minecraft.mouseHandler.grabMouse();
-         return true;
-      } else {
-         return super.keyPressed(pKeyCode, pScanCode, pModifiers);
-      }
-   }
 
    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
       int i = (this.width - WINDOW_WIDTH) / 2;
@@ -159,7 +149,7 @@ public class WaterElementScreen extends Screen {
       RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
 
 
-      if (statsIcons.isMouseOver(i+Mth.floor(117.0D)+pOffsetX+26+WINDOW_INSIDE_WIDTH/2,j+Mth.floor(103.5D)+pOffsetY+26+WINDOW_INSIDE_HEIGHT/2,pMouseX+18,pMouseY+9,26,26)) {
+      if (StatsIcons.isMouseOver(i+Mth.floor(117.0D)+pOffsetX+26+WINDOW_INSIDE_WIDTH/2,j+Mth.floor(103.5D)+pOffsetY+26+WINDOW_INSIDE_HEIGHT/2,pMouseX+18,pMouseY+9,26,26)) {
          blit(pPoseStack, i+Mth.floor(117.0D)-13+WINDOW_INSIDE_WIDTH/2,j+Mth.floor(103.5D)-13+WINDOW_INSIDE_HEIGHT/2,0,128+26,26,26);
 
       } else {
@@ -180,7 +170,7 @@ public class WaterElementScreen extends Screen {
       this.blit(pPoseStack, pOffsetX, pOffsetY, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 
-      if (statsIcons.isMouseOver(pOffsetX+6,pOffsetY+5,pMouseX-8,pMouseY-5,20,12)) {
+      if (StatsIcons.isMouseOver(pOffsetX+6,pOffsetY+5,pMouseX-8,pMouseY-5,20,12)) {
          RenderSystem.setShaderTexture(0, WINDOW_ARROWBACK_HIGHLIGHTED);
          blit(pPoseStack, pOffsetX+6,pOffsetY+5,0,0,18,10,18,10);
          hoverArrowBack = true;

@@ -10,13 +10,13 @@ import static net.minecraft.client.gui.GuiComponent.blit;
 
 
 public class StatsIcons {
-    public boolean isMouseOver(int pX, int pY, int pMouseX, int pMouseY,int hitBoxX,int hitBoxY) {
+    public static boolean isMouseOver(int pX, int pY, int pMouseX, int pMouseY,int hitBoxX,int hitBoxY) {
             if (Math.abs(pMouseX-pX) < hitBoxX/2 && Math.abs(pMouseY-pY) < hitBoxY/2) {
                 return true;
             }
             return false;
     }
-    public int getBarPVOffset(long corelevel) {
+    public static int getBarPVOffset(long corelevel) {
 
         if(corelevel == 1){
             return 10;

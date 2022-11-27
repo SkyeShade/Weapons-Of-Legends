@@ -25,13 +25,14 @@ public class StatsScreen extends Screen {
    private static final ResourceLocation STATWINDOW_LOCATION = new ResourceLocation("wol:textures/gui/statwindow.png");
    private static final ResourceLocation WINDOW_BACKGROUND = new ResourceLocation("wol:textures/gui/dark.png");
    private static final ResourceLocation FIRE_ICON = new ResourceLocation("wol:textures/gui/fire_icon.png");
-   private static final ResourceLocation FIRE_ICON_HIGH = new ResourceLocation("wol:textures/gui/fire_icon_high.png");
+
    private static final ResourceLocation WATER_ICON = new ResourceLocation("wol:textures/gui/water_icon.png");
-   private static final ResourceLocation WATER_ICON_HIGH = new ResourceLocation("wol:textures/gui/water_icon_high.png");
+
    private static final ResourceLocation EARTH_ICON = new ResourceLocation("wol:textures/gui/earth_icon.png");
-   private static final ResourceLocation EARTH_ICON_HIGH = new ResourceLocation("wol:textures/gui/earth_icon_high.png");
+
    private static final ResourceLocation WIND_ICON = new ResourceLocation("wol:textures/gui/wind_icon.png");
-   private static final ResourceLocation WIND_ICON_HIGH = new ResourceLocation("wol:textures/gui/wind_icon_high.png");
+
+   private static final ResourceLocation ICON_HIGH = new ResourceLocation("wol:textures/gui/icon_high.png");
 
    private static final ResourceLocation BARS_LOCATION = new ResourceLocation("wol:textures/gui/bars.png");
 
@@ -42,7 +43,7 @@ public class StatsScreen extends Screen {
 
 
 
-   StatSystems statSystems = new StatSystems();
+
 
 
 
@@ -69,7 +70,7 @@ public class StatsScreen extends Screen {
 
    public boolean hoverStatsTab = false;
 
-   StatsIcons statsIcons = new StatsIcons();
+   //StatsIcons statsIcons = new StatsIcons();
    private double scrollX;
    private double scrollY;
 
@@ -131,15 +132,7 @@ public class StatsScreen extends Screen {
 
 
 
-   public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-      if (this.minecraft.options.keyAdvancements.matches(pKeyCode, pScanCode)) {
-         this.minecraft.setScreen((Screen)null);
-         this.minecraft.mouseHandler.grabMouse();
-         return true;
-      } else {
-         return super.keyPressed(pKeyCode, pScanCode, pModifiers);
-      }
-   }
+
 
    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
       int i = (this.width - WINDOW_WIDTH) / 2;
@@ -214,50 +207,52 @@ public class StatsScreen extends Screen {
       //Fire icon
       int fireDisplacementX = -78;
       int fireDisplacementY = 0;
-      if (statsIcons.isMouseOver(i+fireDisplacementX+WINDOW_INSIDE_WIDTH+pOffsetX+26,j+fireDisplacementY+WINDOW_INSIDE_HEIGHT+pOffsetY+26,pMouseX+18,pMouseY+9,26,26)) {
-         RenderSystem.setShaderTexture(0, FIRE_ICON_HIGH);
+      RenderSystem.setShaderTexture(0, FIRE_ICON);
+      blit(pPoseStack, i+fireDisplacementX-13+WINDOW_INSIDE_WIDTH,j+fireDisplacementY-13+WINDOW_INSIDE_HEIGHT,0,0,26,26,26,26);
+      if (StatsIcons.isMouseOver(i+fireDisplacementX+WINDOW_INSIDE_WIDTH+pOffsetX+26,j+fireDisplacementY+WINDOW_INSIDE_HEIGHT+pOffsetY+26,pMouseX+18,pMouseY+9,26,26)) {
+         RenderSystem.setShaderTexture(0, ICON_HIGH);
          blit(pPoseStack, i+fireDisplacementX-13+WINDOW_INSIDE_WIDTH,j+fireDisplacementY-13+WINDOW_INSIDE_HEIGHT,0,0,26,26,26,26);
          hoverElementFire = true;
       } else {
          hoverElementFire = false;
-         RenderSystem.setShaderTexture(0, FIRE_ICON);
-         blit(pPoseStack, i+fireDisplacementX-13+WINDOW_INSIDE_WIDTH,j+fireDisplacementY-13+WINDOW_INSIDE_HEIGHT,0,0,26,26,26,26);
+
       }
       //Water icon
       int waterDisplacementX = 0;
       int waterDisplacementY = 78;
-      if (statsIcons.isMouseOver(i+waterDisplacementX+WINDOW_INSIDE_WIDTH+pOffsetX+26,j+waterDisplacementY+WINDOW_INSIDE_HEIGHT+pOffsetY+26,pMouseX+18,pMouseY+9,26,26)) {
-         RenderSystem.setShaderTexture(0, WATER_ICON_HIGH);
+      RenderSystem.setShaderTexture(0, WATER_ICON);
+      blit(pPoseStack, i+waterDisplacementX-13+WINDOW_INSIDE_WIDTH,j+waterDisplacementY-13+WINDOW_INSIDE_HEIGHT,0,0,26,26,26,26);
+      if (StatsIcons.isMouseOver(i+waterDisplacementX+WINDOW_INSIDE_WIDTH+pOffsetX+26,j+waterDisplacementY+WINDOW_INSIDE_HEIGHT+pOffsetY+26,pMouseX+18,pMouseY+9,26,26)) {
+         RenderSystem.setShaderTexture(0, ICON_HIGH);
          blit(pPoseStack, i+waterDisplacementX-13+WINDOW_INSIDE_WIDTH,j+waterDisplacementY-13+WINDOW_INSIDE_HEIGHT,0,0,26,26,26,26);
          hoverElementWater = true;
       } else {
          hoverElementWater = false;
-         RenderSystem.setShaderTexture(0, WATER_ICON);
-         blit(pPoseStack, i+waterDisplacementX-13+WINDOW_INSIDE_WIDTH,j+waterDisplacementY-13+WINDOW_INSIDE_HEIGHT,0,0,26,26,26,26);
       }
       //Earth icon
       int earthDisplacementX = 0;
       int earthDisplacementY = -78;
-      if (statsIcons.isMouseOver(i+earthDisplacementX+WINDOW_INSIDE_WIDTH+pOffsetX+26,j+earthDisplacementY+WINDOW_INSIDE_HEIGHT+pOffsetY+26,pMouseX+18,pMouseY+9,26,26)) {
-         RenderSystem.setShaderTexture(0, EARTH_ICON_HIGH);
+      RenderSystem.setShaderTexture(0, EARTH_ICON);
+      blit(pPoseStack, i+earthDisplacementX-13+WINDOW_INSIDE_WIDTH,j+earthDisplacementY-13+WINDOW_INSIDE_HEIGHT,0,0,26,26,26,26);
+      if (StatsIcons.isMouseOver(i+earthDisplacementX+WINDOW_INSIDE_WIDTH+pOffsetX+26,j+earthDisplacementY+WINDOW_INSIDE_HEIGHT+pOffsetY+26,pMouseX+18,pMouseY+9,26,26)) {
+         RenderSystem.setShaderTexture(0, ICON_HIGH);
          blit(pPoseStack, i+earthDisplacementX-13+WINDOW_INSIDE_WIDTH,j+earthDisplacementY-13+WINDOW_INSIDE_HEIGHT,0,0,26,26,26,26);
          hoverElementEarth = true;
       } else {
          hoverElementEarth = false;
-         RenderSystem.setShaderTexture(0, EARTH_ICON);
-         blit(pPoseStack, i+earthDisplacementX-13+WINDOW_INSIDE_WIDTH,j+earthDisplacementY-13+WINDOW_INSIDE_HEIGHT,0,0,26,26,26,26);
+
       }
       //Wind icon
       int windDisplacementX = 78;
       int windDisplacementY = 0;
-      if (statsIcons.isMouseOver(i+windDisplacementX+WINDOW_INSIDE_WIDTH+pOffsetX+26,j+windDisplacementY+WINDOW_INSIDE_HEIGHT+pOffsetY+26,pMouseX+18,pMouseY+9,26,26)) {
-         RenderSystem.setShaderTexture(0, WIND_ICON_HIGH);
+      RenderSystem.setShaderTexture(0, WIND_ICON);
+      blit(pPoseStack, i+windDisplacementX-13+WINDOW_INSIDE_WIDTH,j+windDisplacementY-13+WINDOW_INSIDE_HEIGHT,0,0,26,26,26,26);
+      if (StatsIcons.isMouseOver(i+windDisplacementX+WINDOW_INSIDE_WIDTH+pOffsetX+26,j+windDisplacementY+WINDOW_INSIDE_HEIGHT+pOffsetY+26,pMouseX+18,pMouseY+9,26,26)) {
+         RenderSystem.setShaderTexture(0, ICON_HIGH);
          blit(pPoseStack, i+windDisplacementX-13+WINDOW_INSIDE_WIDTH,j+windDisplacementY-13+WINDOW_INSIDE_HEIGHT,0,0,26,26,26,26);
          hoverElementWind = true;
       } else {
          hoverElementWind = false;
-         RenderSystem.setShaderTexture(0, WIND_ICON);
-         blit(pPoseStack, i+windDisplacementX-13+WINDOW_INSIDE_WIDTH,j+windDisplacementY-13+WINDOW_INSIDE_HEIGHT,0,0,26,26,26,26);
       }
 
 
@@ -280,7 +275,7 @@ public class StatsScreen extends Screen {
          this.blit(pPoseStack, pOffsetX-145, pOffsetY, 0, 0, 149, WINDOW_HEIGHT);
       }
 
-      if (statsIcons.isMouseOver(pOffsetX+9,pOffsetY+18,pMouseX-12,pMouseY-11,25,25)) {
+      if (StatsIcons.isMouseOver(pOffsetX+9,pOffsetY+18,pMouseX-12,pMouseY-11,25,25)) {
          RenderSystem.setShaderTexture(0, STATMENU_ICON_HIGH);
          blit(pPoseStack, pOffsetX+9,pOffsetY+18,0,0,24,24,24,24);
          hoverStatsTab = true;
@@ -297,17 +292,17 @@ public class StatsScreen extends Screen {
 
       long xpAmount = ClientStatsData.getPlayerManaCoreXp();
       //int xpRequired =(1000*(int)Math.pow(4, 3));
-      long xpRequired = statSystems.requiredCoreLevelXp[(int)ClientStatsData.getPlayerManaCoreLevel()-1];
+      long xpRequired = StatSystems.requiredCoreLevelXp[(int)ClientStatsData.getPlayerManaCoreLevel()-1];
       float xpProcentage = (float)xpAmount/xpRequired;
 
 
 
 
       RenderSystem.setShaderTexture(0, BARS_LOCATION);
-      blit(pPoseStack, pOffsetX+WINDOW_WIDTH/2-196/2,pOffsetY+222-5/2,0, statsIcons.getBarPVOffset(ClientStatsData.getPlayerManaCoreLevel()), 196,5);
+      blit(pPoseStack, pOffsetX+WINDOW_WIDTH/2-196/2,pOffsetY+222-5/2,0, StatsIcons.getBarPVOffset(ClientStatsData.getPlayerManaCoreLevel()), 196,5);
       int uwidthProcentage = (int)(196*xpProcentage);
       RenderSystem.setShaderTexture(0, BARS_LOCATION);
-      blit(pPoseStack, pOffsetX+WINDOW_WIDTH/2-196/2,pOffsetY+222-5/2,0,statsIcons.getBarPVOffset(ClientStatsData.getPlayerManaCoreLevel())+5,uwidthProcentage,5);
+      blit(pPoseStack, pOffsetX+WINDOW_WIDTH/2-196/2,pOffsetY+222-5/2,0,StatsIcons.getBarPVOffset(ClientStatsData.getPlayerManaCoreLevel())+5,uwidthProcentage,5);
 
       long rightcore = ClientStatsData.getPlayerManaCoreLevel()+1;
       ResourceLocation CORE_LEFT = new ResourceLocation("wol:textures/gui/cores/core"+ClientStatsData.getPlayerManaCoreLevel()+".png");
@@ -317,7 +312,7 @@ public class StatsScreen extends Screen {
       RenderSystem.setShaderTexture(0, CORE_RIGHT);
       blit(pPoseStack, pOffsetX+WINDOW_WIDTH/2-26/2+196/2+8,pOffsetY+214-26/2,0,0,26,26,26,26);
 
-      if (statsIcons.isMouseOver(pOffsetX+WINDOW_WIDTH/2,pOffsetY+224-5/2,pMouseX,pMouseY,196,10)) {
+      if (StatsIcons.isMouseOver(pOffsetX+WINDOW_WIDTH/2,pOffsetY+224-5/2,pMouseX,pMouseY,196,10)) {
 
          this.font.draw(pPoseStack, xpAmount+"/"+xpRequired, (float)(pMouseX-(String.valueOf(xpAmount).length())*6-2), (float)(pMouseY-10), 16753920);
       }
@@ -325,24 +320,24 @@ public class StatsScreen extends Screen {
 
       if (ClientStatsData.getPlayerMenuStatTabToggle()) {
 
-         if (statsIcons.isMouseOver(pOffsetX+WINDOW_WIDTH/2+196/2+8,pOffsetY+214,pMouseX,pMouseY,26,26)  && ClientStatsData.getPlayerManaCoreLevel() < 14) {
-            this.font.draw(pPoseStack, "Max Mana: " + ClientStatsData.getPlayerMaxMana() + " + " + statSystems.maxManaRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()], (float)(pOffsetX -134), (float)(pOffsetY + 10), 16753920);
-            this.font.draw(pPoseStack, "Mana Regen: " + ClientStatsData.getPlayerMaxMana()/statSystems.secondsForBaseManaRegen  + "/s" + " + " + statSystems.maxManaRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()]/statSystems.secondsForBaseManaRegen, (float)(pOffsetX -134), (float)(pOffsetY + 20), 16753920);
-            this.font.draw(pPoseStack, "Barrier: " + ClientStatsData.getPlayerMaxManaBarrier() + " + " + statSystems.maxManaBarrierRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()], (float)(pOffsetX -134), (float)(pOffsetY + 30), 16753920);
-            this.font.draw(pPoseStack, "Barrier Regen: " + ClientStatsData.getPlayerMaxManaBarrier()/statSystems.secondsForBaseManaBarrierRegen  + "/s" + " + " + statSystems.maxManaBarrierRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()]/statSystems.secondsForBaseManaBarrierRegen, (float)(pOffsetX -134), (float)(pOffsetY + 40), 16753920);
+         if (StatsIcons.isMouseOver(pOffsetX+WINDOW_WIDTH/2+196/2+8,pOffsetY+214,pMouseX,pMouseY,26,26)  && ClientStatsData.getPlayerManaCoreLevel() < 14) {
+            this.font.draw(pPoseStack, "Max Mana: " + ClientStatsData.getPlayerMaxMana() + " + " + StatSystems.maxManaRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()], (float)(pOffsetX -134), (float)(pOffsetY + 10), 16753920);
+            this.font.draw(pPoseStack, "Mana Regen: " + ClientStatsData.getPlayerMaxMana()/StatSystems.secondsForBaseManaRegen  + "/s" + " + " + StatSystems.maxManaRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()]/StatSystems.secondsForBaseManaRegen, (float)(pOffsetX -134), (float)(pOffsetY + 20), 16753920);
+            this.font.draw(pPoseStack, "Barrier: " + ClientStatsData.getPlayerMaxManaBarrier() + " + " + StatSystems.maxManaBarrierRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()], (float)(pOffsetX -134), (float)(pOffsetY + 30), 16753920);
+            this.font.draw(pPoseStack, "Barrier Regen: " + ClientStatsData.getPlayerMaxManaBarrier()/StatSystems.secondsForBaseManaBarrierRegen  + "/s" + " + " + StatSystems.maxManaBarrierRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()]/StatSystems.secondsForBaseManaBarrierRegen, (float)(pOffsetX -134), (float)(pOffsetY + 40), 16753920);
 
-            this.font.draw(pPoseStack, "Hp: " +ClientStatsData.getPlayerHp()+ "/" + ClientStatsData.getPlayerMaxHp() + " + " + statSystems.maxHpRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()], (float)(pOffsetX -134), (float)(pOffsetY + 50), 16753920);
-            this.font.draw(pPoseStack, "Hp Regen: " + ClientStatsData.getPlayerMaxHp()/statSystems.secondsForBaseHpRegen  + "/s" + " + " + statSystems.maxHpRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()]/statSystems.secondsForBaseHpRegen, (float)(pOffsetX -134), (float)(pOffsetY + 60), 16753920);
+            this.font.draw(pPoseStack, "Hp: " +ClientStatsData.getPlayerHp()+ "/" + ClientStatsData.getPlayerMaxHp() + " + " + StatSystems.maxHpRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()], (float)(pOffsetX -134), (float)(pOffsetY + 50), 16753920);
+            this.font.draw(pPoseStack, "Hp Regen: " + ClientStatsData.getPlayerMaxHp()/StatSystems.secondsForBaseHpRegen  + "/s" + " + " + StatSystems.maxHpRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()]/StatSystems.secondsForBaseHpRegen, (float)(pOffsetX -134), (float)(pOffsetY + 60), 16753920);
          }else {
 
             this.font.draw(pPoseStack, "Max Mana: " + ClientStatsData.getPlayerMaxMana(), (float)(pOffsetX -134), (float)(pOffsetY + 10), 16753920);
-            this.font.draw(pPoseStack, "Mana Regen: " + ClientStatsData.getPlayerMaxMana()/statSystems.secondsForBaseManaRegen + "/s", (float)(pOffsetX -134), (float)(pOffsetY + 20), 16753920);
+            this.font.draw(pPoseStack, "Mana Regen: " + ClientStatsData.getPlayerMaxMana()/StatSystems.secondsForBaseManaRegen + "/s", (float)(pOffsetX -134), (float)(pOffsetY + 20), 16753920);
 
             this.font.draw(pPoseStack, "Barrier: " + ClientStatsData.getPlayerMaxManaBarrier(), (float)(pOffsetX -134), (float)(pOffsetY + 30), 16753920);
-            this.font.draw(pPoseStack, "Barrier Regen: " + ClientStatsData.getPlayerMaxManaBarrier()/statSystems.secondsForBaseManaBarrierRegen + "/s", (float)(pOffsetX -134), (float)(pOffsetY + 40), 16753920);
+            this.font.draw(pPoseStack, "Barrier Regen: " + ClientStatsData.getPlayerMaxManaBarrier()/StatSystems.secondsForBaseManaBarrierRegen + "/s", (float)(pOffsetX -134), (float)(pOffsetY + 40), 16753920);
 
             this.font.draw(pPoseStack, "Hp: " +ClientStatsData.getPlayerHp()+ "/" + ClientStatsData.getPlayerMaxHp(), (float)(pOffsetX -134), (float)(pOffsetY + 50), 16753920);
-            this.font.draw(pPoseStack, "Hp Regen: " + ClientStatsData.getPlayerMaxHp()/statSystems.secondsForBaseHpRegen  + "/s", (float)(pOffsetX -134), (float)(pOffsetY + 60), 16753920);
+            this.font.draw(pPoseStack, "Hp Regen: " + ClientStatsData.getPlayerMaxHp()/StatSystems.secondsForBaseHpRegen  + "/s", (float)(pOffsetX -134), (float)(pOffsetY + 60), 16753920);
          }
 
       }

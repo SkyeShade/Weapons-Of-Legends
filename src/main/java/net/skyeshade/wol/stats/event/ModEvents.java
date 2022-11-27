@@ -1,11 +1,7 @@
 package net.skyeshade.wol.stats.event;
 
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -17,15 +13,12 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.skyeshade.wol.WOL;
 import net.skyeshade.wol.abilities.TimeStopAbility;
 import net.skyeshade.wol.networking.ModMessages;
-import net.skyeshade.wol.networking.packet.AnimateHurtDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.destruction.DestructionActiveDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.hp.HpDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.hp.MaxHpDataSyncS2CPacket;
@@ -33,14 +26,15 @@ import net.skyeshade.wol.networking.packet.mana.ManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.mana.MaxManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.manacore.*;
 import net.skyeshade.wol.networking.packet.menutoggle.MenuStatTabToggleDataSyncS2CPacket;
-import net.skyeshade.wol.sound.ModSounds;
+import net.skyeshade.wol.networking.packet.spellslots.SpellSlotsDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.spellslots.SpellSlotsToggleDataSyncS2CPacket;
 import net.skyeshade.wol.stats.PlayerStats;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
 import net.skyeshade.wol.util.StatSystems;
 
 @Mod.EventBusSubscriber(modid = WOL.MOD_ID)
 public class ModEvents {
-    static StatSystems statSystems = new StatSystems();
+
     @SubscribeEvent
     public static void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {
         if(event.getObject() instanceof Player) {
@@ -89,14 +83,14 @@ public class ModEvents {
 
                 if (player.isAlive()) {
                     player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
-                        stats.addManaRegenBuffer(((float) stats.getMaxMana() / (float) statSystems.secondsForBaseManaRegen) / 20.0F);
+                        stats.addManaRegenBuffer(((float) stats.getMaxMana() / (float) StatSystems.secondsForBaseManaRegen) / 20.0F);
                         if (stats.getManaRegenBuffer() >= 1.0f) {
                             stats.addMana((int) stats.getManaRegenBuffer());
                             stats.setManaRegenBuffer(stats.getManaRegenBuffer() - (int) stats.getManaRegenBuffer());
                             ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(stats.getMana()), ((ServerPlayer) player));
                         }
 
-                        stats.addHpRegenBuffer(((float) stats.getMaxHp() / (float) statSystems.secondsForBaseHpRegen) / 20.0F);
+                        stats.addHpRegenBuffer(((float) stats.getMaxHp() / (float) StatSystems.secondsForBaseHpRegen) / 20.0F);
                         if (stats.getHpRegenBuffer() >= 1.0f) {
                             stats.addHp((int) stats.getHpRegenBuffer());
                             stats.setHpRegenBuffer(stats.getHpRegenBuffer() - (int) stats.getHpRegenBuffer());
@@ -109,20 +103,20 @@ public class ModEvents {
 
                             if (stats.getManaBarrierAlive()) {
                                 if (stats.getManaBarrier() != stats.getMaxManaBarrier()) {
-                                    stats.addManaBarrierRegenBuffer(((float) stats.getMaxManaBarrier() / (float) statSystems.secondsForBaseManaBarrierRegen) / 20.0F);
+                                    stats.addManaBarrierRegenBuffer(((float) stats.getMaxManaBarrier() / (float) StatSystems.secondsForBaseManaBarrierRegen) / 20.0F);
                                     if (stats.getManaBarrierRegenBuffer() >= 1.0f) {
                                         stats.addManaBarrier((int) stats.getManaBarrierRegenBuffer());
-                                        stats.addMana(-statSystems.manaBarrierRegenCost);
-                                        statSystems.xpSystem(-statSystems.manaBarrierRegenCost, (ServerPlayer) player);
+                                        stats.addMana(-StatSystems.manaBarrierRegenCost);
+                                        StatSystems.xpSystem(-StatSystems.manaBarrierRegenCost, (ServerPlayer) player);
                                         stats.setManaBarrierRegenBuffer(stats.getManaBarrierRegenBuffer() - (int) stats.getManaBarrierRegenBuffer());
                                         ModMessages.sendToPlayer(new ManaBarrierDataSyncS2CPacket(stats.getManaBarrier()), ((ServerPlayer) player));
                                     }
                                 }
-                            } else if (stats.getManaBarrierRevive() < statSystems.secondsForBaseManaBarrierRevive) {
+                            } else if (stats.getManaBarrierRevive() < StatSystems.secondsForBaseManaBarrierRevive) {
                                 if (tickcount % 20 == 0) {
                                     stats.addManaBarrierRevive(1);
                                 }
-                            } else if (stats.getManaBarrierRevive() == statSystems.secondsForBaseManaBarrierRevive) {
+                            } else if (stats.getManaBarrierRevive() == StatSystems.secondsForBaseManaBarrierRevive) {
                                 player.getLevel().playSound(null, player.blockPosition(), SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 0.5f, 0.6f);
                                 stats.setManaBarrierAlive(true);
                                 stats.setManaBarrierRevive(0);
@@ -158,7 +152,7 @@ public class ModEvents {
         if(!event.getLevel().isClientSide()) {
             //event.getLevel().getGameRules().getRule(GameRules.RULE_NATURAL_REGENERATION).setFrom(GameRules.BooleanValue.set(false, event.getLevel().getServer()), event.getLevel().getServer());
 
-            StatSystems statSystems = new StatSystems();
+            //StatSystems StatSystems = new StatSystems();
             if(event.getEntity() instanceof ServerPlayer player) {
 
                 player.getLevel().getGameRules().getRule(GameRules.RULE_NATURAL_REGENERATION).set(false, event.getLevel().getServer());
@@ -176,23 +170,25 @@ public class ModEvents {
                     ModMessages.sendToPlayer(new ManaBarrierReviveDataSyncS2CPacket(stats.getManaBarrierRevive()), player);
                     ModMessages.sendToPlayer(new DestructionActiveDataSyncS2CPacket(stats.getDestructionActive()), player);
                     ModMessages.sendToPlayer(new MenuStatTabToggleDataSyncS2CPacket(stats.getMenuStatTabToggle()), player);
+
+                    ModMessages.sendToPlayer(new SpellSlotsToggleDataSyncS2CPacket(stats.getSpellSlotsToggle()), player);
                     ModMessages.sendToPlayer(new ManaCoreLevelDataSyncS2CPacket(stats.getManaCoreLevel()), player);
                     ModMessages.sendToPlayer(new ManaCoreXpDataSyncS2CPacket(stats.getManaCoreXp()), player);
+                    ModMessages.sendToPlayer(new SpellSlotsDataSyncS2CPacket(stats.getSpellSlots()), player);
+                    System.out.println();
 
-
-
-                    if (stats.getMaxMana() < statSystems.maxManaRewardPerLevel[0]) {
-                        stats.setMaxMana(statSystems.maxManaRewardPerLevel[0]);
+                    if (stats.getMaxMana() < StatSystems.maxManaRewardPerLevel[0]) {
+                        stats.setMaxMana(StatSystems.maxManaRewardPerLevel[0]);
                         ModMessages.sendToPlayer(new MaxManaDataSyncS2CPacket(stats.getMaxMana()), ((ServerPlayer) player));
                     }
-                    if (stats.getMaxHp() < statSystems.maxHpRewardPerLevel[0]) {
-                        stats.setMaxHp(statSystems.maxHpRewardPerLevel[0]);
+                    if (stats.getMaxHp() < StatSystems.maxHpRewardPerLevel[0]) {
+                        stats.setMaxHp(StatSystems.maxHpRewardPerLevel[0]);
                         stats.setHp(stats.getMaxHp());
                         ModMessages.sendToPlayer(new MaxHpDataSyncS2CPacket(stats.getMaxHp()), ((ServerPlayer) player));
                         ModMessages.sendToPlayer(new HpDataSyncS2CPacket(stats.getHp()), ((ServerPlayer) player));
                     }
-                    if (stats.getMaxManaBarrier() < statSystems.maxManaBarrierRewardPerLevel[0]) {
-                        stats.setMaxManaBarrier(statSystems.maxManaBarrierRewardPerLevel[0]);
+                    if (stats.getMaxManaBarrier() < StatSystems.maxManaBarrierRewardPerLevel[0]) {
+                        stats.setMaxManaBarrier(StatSystems.maxManaBarrierRewardPerLevel[0]);
                         ModMessages.sendToPlayer(new MaxManaBarrierDataSyncS2CPacket(stats.getMaxManaBarrier()), ((ServerPlayer) player));
                     }
                     if (stats.getManaCoreLevel() < 1) {

@@ -43,8 +43,7 @@ public abstract class BaseSpellProjectile extends Projectile {
     @Nullable
     private BlockState lastState;
     protected boolean inGround;
-    protected int inGroundTime;
-    public int shakeTime;
+
     private int life;
     private double baseDamage = 2.0D;
     private int knockback;
@@ -79,7 +78,7 @@ public abstract class BaseSpellProjectile extends Projectile {
         }
 
         d0 *= 64.0D * getViewScale();
-        return pDistance < d0 * d0;
+        return true;
     }
 
     protected void defineSynchedData() {
@@ -92,6 +91,7 @@ public abstract class BaseSpellProjectile extends Projectile {
      */
     public void shoot(double pX, double pY, double pZ, float pVelocity, float pInaccuracy) {
         super.shoot(pX, pY, pZ, pVelocity, pInaccuracy);
+
         this.life = 0;
     }
 
@@ -135,31 +135,29 @@ public abstract class BaseSpellProjectile extends Projectile {
 
                 for(AABB aabb : voxelshape.toAabbs()) {
                     if (aabb.move(blockpos).contains(vec31)) {
-                        this.inGround = true;
+                        this.inGround = false;
+
                         break;
                     }
                 }
             }
         }
 
-        if (this.shakeTime > 0) {
-            --this.shakeTime;
-        }
 
         if (this.isInWaterOrRain() || blockstate.is(Blocks.POWDER_SNOW) || this.isInFluidType((fluidType, height) -> this.canFluidExtinguish(fluidType))) {
             this.clearFire();
         }
 
-        if (this.inGround && !flag) {
+        if (false && !flag) {
             if (this.lastState != blockstate && this.shouldFall()) {
                 this.startFalling();
             } else if (!this.level.isClientSide) {
                 this.tickDespawn();
             }
 
-            ++this.inGroundTime;
+
         } else {
-            this.inGroundTime = 0;
+
             Vec3 vec32 = this.position();
             Vec3 vec33 = vec32.add(vec3);
             HitResult hitresult = this.level.clip(new ClipContext(vec32, vec33, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
@@ -234,7 +232,7 @@ public abstract class BaseSpellProjectile extends Projectile {
     }
 
     private boolean shouldFall() {
-        return this.inGround && this.level.noCollision((new AABB(this.position(), this.position())).inflate(0.06D));
+        return false;
     }
 
     private void startFalling() {
@@ -267,6 +265,8 @@ public abstract class BaseSpellProjectile extends Projectile {
      */
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
+
+
         Entity entity = pResult.getEntity();
         float f = (float)this.getDeltaMovement().length();
         int i = Mth.ceil(Mth.clamp((double)f * this.baseDamage, 0.0D, 2.147483647E9D));
@@ -314,9 +314,7 @@ public abstract class BaseSpellProjectile extends Projectile {
                 }
 
                 this.doPostHurtEffects(livingentity);
-                if (entity1 != null && livingentity != entity1 && livingentity instanceof Player && entity1 instanceof ServerPlayer && !this.isSilent()) {
-                    ((ServerPlayer)entity1).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
-                }
+
 
 
 
@@ -344,8 +342,8 @@ public abstract class BaseSpellProjectile extends Projectile {
         Vec3 vec31 = vec3.normalize().scale((double)0.05F);
         this.setPosRaw(this.getX() - vec31.x, this.getY() - vec31.y, this.getZ() - vec31.z);
         //this.playSound(this.getHitGroundSoundEvent(), 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
-        this.inGround = true;
-        this.shakeTime = 7;
+        this.inGround = false;
+
 
 
     }
@@ -373,7 +371,7 @@ public abstract class BaseSpellProjectile extends Projectile {
             pCompound.put("inBlockState", NbtUtils.writeBlockState(this.lastState));
         }
 
-        pCompound.putByte("shake", (byte)this.shakeTime);
+
         pCompound.putBoolean("inGround", this.inGround);
 
         pCompound.putDouble("damage", this.baseDamage);
@@ -391,7 +389,7 @@ public abstract class BaseSpellProjectile extends Projectile {
             this.lastState = NbtUtils.readBlockState(pCompound.getCompound("inBlockState"));
         }
 
-        this.shakeTime = pCompound.getByte("shake") & 255;
+
         this.inGround = pCompound.getBoolean("inGround");
         if (pCompound.contains("damage", 99)) {
             this.baseDamage = pCompound.getDouble("damage");

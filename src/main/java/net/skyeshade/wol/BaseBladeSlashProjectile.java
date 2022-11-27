@@ -454,7 +454,7 @@ public abstract class BaseBladeSlashProjectile extends Projectile {
         pCompound.putDouble("damage", this.baseDamage);
         pCompound.putBoolean("crit", this.isCritArrow());
         pCompound.putByte("PierceLevel", this.getPierceLevel());
-        pCompound.putString("SoundEvent", Registry.SOUND_EVENT.getKey(this.soundEvent).toString());
+        //pCompound.putString("SoundEvent", Registry.SOUND_EVENT.getKey(this.soundEvent).toString());
         pCompound.putBoolean("ShotFromCrossbow", this.shotFromCrossbow());
     }
 

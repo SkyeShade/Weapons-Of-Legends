@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.skyeshade.wol.WOL;
+import net.skyeshade.wol.client.gui.screens.stats.SpellIconDeterminer;
 import net.skyeshade.wol.util.LongHudFormatter;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -19,6 +20,8 @@ public class HudOverlay {
     private static final ResourceLocation EMPTY_MANA_START = new ResourceLocation(WOL.MOD_ID, "textures/stats/empty_mana_start2.png");
     private static final ResourceLocation EMPTY_MANA_SEGMENT = new ResourceLocation(WOL.MOD_ID, "textures/stats/empty_mana_segment2.png");
     private static final ResourceLocation EMPTY_MANA_END = new ResourceLocation(WOL.MOD_ID, "textures/stats/empty_mana_end2.png");
+
+    private static final ResourceLocation SPELLBAR = new ResourceLocation(WOL.MOD_ID, "textures/gui/spellbar.png");
     public static final IGuiOverlay HUD_STATS = ((gui, poseStack, partialTick, width, height) -> {
         //long x = width / 2;
         int xManaBar = 5;
@@ -128,5 +131,20 @@ public class HudOverlay {
             Minecraft.getInstance().font.draw(poseStack, LongHudFormatter.format(ClientStatsData.getPlayerMaxManaBarrier()), xManaBarrierBar + manaCoreTextCentre + 8, yManaBarrierBar + 1, 12878902);
             //Minecraft.getInstance().font.draw(poseStack, String.valueOf(ClientStatsData.getPlayerMaxManaCore()), xManaBarrierBar + manaCoreTextCentre+8, yManaBarrierBar+1 , 12878902);
         }
+
+        if (ClientStatsData.getPlayerSpellSlotsToggle()) {
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.enableBlend();
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, SPELLBAR);
+            GuiComponent.blit(poseStack, width / 2 - 92, height - 23, 0, 0, 184, 23, 184, 23);
+            for (int i = 0; i < 9; i++) {
+
+                RenderSystem.setShaderTexture(0, SpellIconDeterminer.determineSpellIconFromID(ClientStatsData.getPlayerSpellSlots()[i]));
+                GuiComponent.blit(poseStack, width / 2 - 80 + i * 20, height - 19, 0, 0, 8, 8, 8, 8);
+
+            }
+        }
+
     });
 }

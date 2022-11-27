@@ -21,6 +21,15 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> START_TIME =
             registerSoundEvent("start_time");
 
+    public static final RegistryObject<SoundEvent> DISTANT_EXPLOSION =
+            registerSoundEvent("distant_explosion");
+
+
+    public static final RegistryObject<SoundEvent> EXPLOSION =
+            registerSoundEvent("explosion");
+    public static final RegistryObject<SoundEvent> FIRE_WAVE =
+            registerSoundEvent("fire_wave");
+
 
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {

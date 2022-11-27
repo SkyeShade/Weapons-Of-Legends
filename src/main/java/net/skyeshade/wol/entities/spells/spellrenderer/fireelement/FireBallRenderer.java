@@ -4,8 +4,6 @@ package net.skyeshade.wol.entities.spells.spellrenderer.fireelement;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import net.minecraft.client.model.ShulkerBulletModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -15,18 +13,16 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.projectile.ShulkerBullet;
-import net.skyeshade.wol.WOL;
 import net.skyeshade.wol.client.model.FireBallModel;
-import net.skyeshade.wol.entities.spells.fireelement.FireBall;
+import net.skyeshade.wol.entities.spells.fireelement.FireBallEntity;
 
 
-public class FireBallRenderer extends EntityRenderer<FireBall> {
+public class FireBallRenderer extends EntityRenderer<FireBallEntity> {
 
 
     private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("wol:textures/entity/spark.png");
     private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(TEXTURE_LOCATION);
-    private final FireBallModel<FireBall> model;
+    private final FireBallModel<FireBallEntity> model;
 
     public FireBallRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -35,20 +31,20 @@ public class FireBallRenderer extends EntityRenderer<FireBall> {
 
 
 
-    protected int getBlockLightLevel(FireBall pEntity, BlockPos pPos) {
+    protected int getBlockLightLevel(FireBallEntity pEntity, BlockPos pPos) {
         return 15;
     }
 
-    public void render(FireBall pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
+    public void render(FireBallEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
         pMatrixStack.pushPose();
         float f = Mth.rotlerp(pEntity.yRotO, pEntity.getYRot(), pPartialTicks);
         float f1 = Mth.lerp(pPartialTicks, pEntity.xRotO, pEntity.getXRot());
         float f2 = (float)pEntity.tickCount + pPartialTicks;
         pMatrixStack.translate(0.0D, (double)0.15F, 0.0D);
-        pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(Mth.sin(f2 * 0.1F) * 180.0F));
-        pMatrixStack.mulPose(Vector3f.XP.rotationDegrees(Mth.cos(f2 * 0.1F) * 180.0F));
-        pMatrixStack.mulPose(Vector3f.ZP.rotationDegrees(Mth.sin(f2 * 0.15F) * 360.0F));
-        pMatrixStack.scale(-0.5F, -0.5F, 0.5F);
+        pMatrixStack.mulPose(Vector3f.YP.rotationDegrees((int)(Math.random() * 180 + 1)));
+        pMatrixStack.mulPose(Vector3f.XP.rotationDegrees((int)(Math.random() * 180 + 1)));
+        pMatrixStack.mulPose(Vector3f.ZP.rotationDegrees((int)(Math.random() * 180 + 1)));
+        pMatrixStack.scale(-2.5F-(pEntity.sizeBullshit/2), -2.5F-(pEntity.sizeBullshit/2), 2.5F+(pEntity.sizeBullshit/2));
         this.model.setupAnim(pEntity, 0.0F, 0.0F, 0.0F, f, f1);
         VertexConsumer vertexconsumer = pBuffer.getBuffer(this.model.renderType(TEXTURE_LOCATION));
         this.model.renderToBuffer(pMatrixStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
@@ -62,7 +58,7 @@ public class FireBallRenderer extends EntityRenderer<FireBall> {
     /**
      * Returns the location of an entity's texture.
      */
-    public ResourceLocation getTextureLocation(FireBall pEntity) {
+    public ResourceLocation getTextureLocation(FireBallEntity pEntity) {
         return TEXTURE_LOCATION;
     }
 }

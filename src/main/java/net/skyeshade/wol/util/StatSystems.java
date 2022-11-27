@@ -11,8 +11,8 @@ import net.skyeshade.wol.networking.packet.manacore.MaxManaBarrierDataSyncS2CPac
 import net.skyeshade.wol.stats.PlayerStatsProvider;
 
 public class StatSystems {
-    int requiredManaUsageForXp = 1;
-    public long[] requiredCoreLevelXp = {
+    static int requiredManaUsageForXp = 1;
+    public static long[] requiredCoreLevelXp = {
             100L,
             1000L,
             1000L,
@@ -29,7 +29,7 @@ public class StatSystems {
             1000L
     };
 
-    public long[] maxManaRewardPerLevel = {
+    public static long[] maxManaRewardPerLevel = {
             1000L,
             2000L,
             3000L,
@@ -46,7 +46,7 @@ public class StatSystems {
             2050312L
     };
 
-    public long[] maxManaBarrierRewardPerLevel = {
+    public static long[] maxManaBarrierRewardPerLevel = {
             100L,
             200L,
             300L,
@@ -63,7 +63,7 @@ public class StatSystems {
             205031L
     };
 
-    public long[] maxHpRewardPerLevel = {
+    public static long[] maxHpRewardPerLevel = {
             100L,
             2000L,
             3000L,
@@ -80,20 +80,20 @@ public class StatSystems {
             2050312L
     };
 
-    public long secondsForBaseHpRegen = 600;
-    public long secondsForBaseManaRegen = 600;
+    public static long secondsForBaseHpRegen = 600;
+    public static long secondsForBaseManaRegen = 600;
 
-    public long secondsForBaseManaBarrierRegen = 60;
+    public static long secondsForBaseManaBarrierRegen = 60;
 
-    public long manaBarrierRegenCost = 1;
+    public static long manaBarrierRegenCost = 1;
 
-    public long secondsForBaseManaBarrierRevive = 60;
+    public static long secondsForBaseManaBarrierRevive = 60;
 
-    long absoluteManaChange;
-    public void xpSystem (long manaChange, ServerPlayer player){
+
+    public static void xpSystem (long manaChange, ServerPlayer player){
         //long startTime = System.currentTimeMillis();
         if (manaChange < 0) {
-
+            long absoluteManaChange;
             absoluteManaChange = Math.abs(manaChange);
                 //if mana change is over requiredManaUsageForXp, it calculates how much xp and possibly level you should get and how much should remain in the xp buffer
             player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {

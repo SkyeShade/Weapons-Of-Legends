@@ -15,6 +15,7 @@ import net.skyeshade.wol.client.ClientStatsData;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.networking.packet.mana.UpdateManaC2SPacket;
 import net.skyeshade.wol.sound.ModSounds;
+import net.skyeshade.wol.util.StatSystems;
 
 public class TimeStopSwordItem extends SwordItem {
 
@@ -35,6 +36,7 @@ public class TimeStopSwordItem extends SwordItem {
         if (ClientStatsData.getPlayerMana() >= 1000) {
             if(pPlayer.getLevel().isClientSide()) {
                 ModMessages.sendToServer(new UpdateManaC2SPacket(-1000));
+
 
             }
 

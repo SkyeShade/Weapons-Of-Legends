@@ -1,4 +1,4 @@
-package net.skyeshade.wol.networking.packet.mana;
+package net.skyeshade.wol.networking.packet.spellslots;
 
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -7,24 +7,26 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
-import net.skyeshade.wol.util.StatSystems;
 
 import java.util.function.Supplier;
 
-public class UpdateManaC2SPacket {
-    private final long manaChange;
+public class UpdateSpellSlotsC2SPacket {
 
 
-    public UpdateManaC2SPacket(long manaChange) {
-        this.manaChange = manaChange;
+    private final long[] spellSlotArray;
+    public UpdateSpellSlotsC2SPacket(long spellSlot, int index) {
+
+        this.spellSlotArray = new long[]{spellSlot, (long) index};
     }
 
-    public UpdateManaC2SPacket(FriendlyByteBuf buf) {
-        this.manaChange = buf.readLong();
+    public UpdateSpellSlotsC2SPacket(FriendlyByteBuf buf) {
+        this.spellSlotArray = buf.readLongArray();
+
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeLong(manaChange);
+
+        buf.writeLongArray(spellSlotArray);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
@@ -40,13 +42,9 @@ public class UpdateManaC2SPacket {
                 // Output the current stats level
             player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
 
-                    stats.addMana(manaChange);
-                    StatSystems.xpSystem(manaChange, player);
+                stats.setSpellSlots(spellSlotArray[0], (int)spellSlotArray[1]);
 
-
-
-                ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(stats.getMana()), player);
-
+                ModMessages.sendToPlayer(new SpellSlotsDataSyncS2CPacket(stats.getSpellSlots()), player);
             });
 
 

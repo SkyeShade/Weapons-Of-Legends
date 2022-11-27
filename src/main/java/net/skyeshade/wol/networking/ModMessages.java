@@ -22,7 +22,12 @@ import net.skyeshade.wol.networking.packet.mana.UpdateManaC2SPacket;
 import net.skyeshade.wol.networking.packet.mana.UpdateMaxManaC2SPacket;
 import net.skyeshade.wol.networking.packet.manacore.*;
 import net.skyeshade.wol.networking.packet.menutoggle.MenuStatTabToggleDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.spellslots.SpellSlotsDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.spellslots.SpellSlotsToggleDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.menutoggle.UpdateMenuStatTabToggleC2SPacket;
+import net.skyeshade.wol.networking.packet.spellslots.UpdateSpellSlotsC2SPacket;
+import net.skyeshade.wol.networking.packet.spellslots.UpdateSpellSlotsToggleC2SPacket;
+import net.skyeshade.wol.networking.packet.spellfire.SpellCastingC2SPacket;
 
 public class ModMessages {
     private static SimpleChannel INSTANCE;
@@ -190,11 +195,47 @@ public class ModMessages {
 
 
 
-
         net.messageBuilder(AnimateHurtDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(AnimateHurtDataSyncS2CPacket::new)
                 .encoder(AnimateHurtDataSyncS2CPacket::toBytes)
                 .consumerMainThread(AnimateHurtDataSyncS2CPacket::handle)
+                .add();
+
+
+        net.messageBuilder(SpellCastingC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SpellCastingC2SPacket::new)
+                .encoder(SpellCastingC2SPacket::toBytes)
+                .consumerMainThread(SpellCastingC2SPacket::handle)
+                .add();
+
+
+
+
+
+
+
+        net.messageBuilder(UpdateSpellSlotsToggleC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateSpellSlotsToggleC2SPacket::new)
+                .encoder(UpdateSpellSlotsToggleC2SPacket::toBytes)
+                .consumerMainThread(UpdateSpellSlotsToggleC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(SpellSlotsToggleDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SpellSlotsToggleDataSyncS2CPacket::new)
+                .encoder(SpellSlotsToggleDataSyncS2CPacket::toBytes)
+                .consumerMainThread(SpellSlotsToggleDataSyncS2CPacket::handle)
+                .add();
+
+        net.messageBuilder(UpdateSpellSlotsC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateSpellSlotsC2SPacket::new)
+                .encoder(UpdateSpellSlotsC2SPacket::toBytes)
+                .consumerMainThread(UpdateSpellSlotsC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(SpellSlotsDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SpellSlotsDataSyncS2CPacket::new)
+                .encoder(SpellSlotsDataSyncS2CPacket::toBytes)
+                .consumerMainThread(SpellSlotsDataSyncS2CPacket::handle)
                 .add();
     }
 

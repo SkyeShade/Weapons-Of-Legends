@@ -13,11 +13,14 @@ public class ClientStatsData {
     private static long playerManaCoreLevel;
     private static long playerManaCoreXp;
 
+    private static long[] playerSpellSlots = {0,0,0,0,0,0,0,0,0};
     private static boolean playerDestructionActive;
 
     private static boolean playerManaBarrierAlive;
 
     private static boolean playerMenuStatTabToggle;
+
+    private static boolean playerSpellSlotsToggle;
 
     public static void setMana(long mana) {
         ClientStatsData.playerMana = mana;
@@ -43,6 +46,7 @@ public class ClientStatsData {
     public static long getPlayerMaxHp() {
         return playerMaxHp;
     }
+    public static long[] getPlayerSpellSlots() {return playerSpellSlots;}
 
     public static void setManaBarrier(long manabarrier) {
         ClientStatsData.playerManaBarrier = manabarrier;
@@ -50,12 +54,15 @@ public class ClientStatsData {
     public static void setMaxManaBarrier(long max_manabarrier) {ClientStatsData.playerMaxManaBarrier = max_manabarrier;}
     public static void setManaBarrierRevive(long manabarrierrevive) {ClientStatsData.playerManaBarrierRevive = manabarrierrevive;}
 
+    public static void setPlayerSpellSlots(long[] playerSpellSlots) {ClientStatsData.playerSpellSlots = playerSpellSlots;}
 
     public static void setDestructionActive(boolean destructionActive) {ClientStatsData.playerDestructionActive = destructionActive;}
 
     public static void setManaBarrierAlive(boolean manaBarrierAlive) {ClientStatsData.playerManaBarrierAlive = manaBarrierAlive;}
 
     public static void setMenuStatTabToggle(boolean menuStatTabToggle) {ClientStatsData.playerMenuStatTabToggle = menuStatTabToggle;}
+
+    public static void setSpellSlotsToggle(boolean spellSlotsToggle) {ClientStatsData.playerSpellSlotsToggle = spellSlotsToggle;}
 
     public static void setManaCoreLevel(long manacore_level) {
         ClientStatsData.playerManaCoreLevel = manacore_level;
@@ -83,6 +90,8 @@ public class ClientStatsData {
     }
 
     public static boolean getPlayerMenuStatTabToggle() {return playerMenuStatTabToggle;}
+
+    public static boolean getPlayerSpellSlotsToggle() {return playerSpellSlotsToggle;}
 
     public static long getPlayerManaCoreLevel() {
         return playerManaCoreLevel;

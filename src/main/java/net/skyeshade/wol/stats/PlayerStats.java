@@ -2,6 +2,8 @@ package net.skyeshade.wol.stats;
 
 import net.minecraft.nbt.CompoundTag;
 
+import java.lang.reflect.Array;
+
 
 public class PlayerStats {
 
@@ -20,6 +22,7 @@ public class PlayerStats {
 
     private long hp;
 
+    private long[] spellSlots = {0,0,0,0,0,0,0,0,0};
     private long max_hp;
     private float hpregenbuffer;
     private long max_mana;
@@ -27,6 +30,8 @@ public class PlayerStats {
     private long max_manabarrier;
     private long manabarrierrevive;
     private boolean manabarrieralive;
+
+    private boolean spellSlotsToggle;
     private long manacore_level;
     private long manacore_xp;
     private long manatoxp;
@@ -79,11 +84,19 @@ public class PlayerStats {
         return manacore_xp;
     }
 
+    public long[] getSpellSlots() {
+        return spellSlots;
+    }
+
     public boolean getDestructionActive() {
         return destructionActive;
     }
     public boolean getMenuStatTabToggle() {
         return menuStatTabToggle;
+    }
+
+    public boolean getSpellSlotsToggle() {
+        return spellSlotsToggle;
     }
 
     public boolean getManaBarrierAlive() {return manabarrieralive;}
@@ -97,6 +110,10 @@ public class PlayerStats {
     }
     public void setHp(long set) {
         this.hp = Math.max(set, 0);
+    }
+
+    public void setSpellSlots(long set, int index) {
+        this.spellSlots[index] = set;
     }
     public void setHpRegenBuffer(float set) {this.hpregenbuffer = set;}
     public void setManaRegenBuffer(float set) {this.manaregenbuffer = set;}
@@ -120,7 +137,10 @@ public class PlayerStats {
         this.manacore_xp = Math.max(set, MIN_MANACORE_XP);
     }
     public void setDestructionActive(boolean set) {this.destructionActive = set;}
+
     public void setMenuStatTabToggle(boolean set) {this.menuStatTabToggle = set;}
+
+    public void setSpellSlotsToggle(boolean set) {this.spellSlotsToggle = set;}
     public void setManaBarrierAlive(boolean set) {this.manabarrieralive = set;}
 
 
@@ -165,6 +185,8 @@ public class PlayerStats {
         this.manacore_level = source.manacore_level;
         this.manacore_xp = source.manacore_xp;
         this.manatoxp = source.manatoxp;
+        this.spellSlotsToggle = source.spellSlotsToggle;
+        this.spellSlots = source.spellSlots;
     }
     public void saveNBTData(CompoundTag nbt) {
         //System.out.prlongln("Saving NBT"+"\n"+mana+"\n"+max_mana);
@@ -180,10 +202,12 @@ public class PlayerStats {
         nbt.putLong("manabarrierrevive", manabarrierrevive);
         nbt.putBoolean("destruction_active", destructionActive);
         nbt.putBoolean("menuStatTabToggle", menuStatTabToggle);
+        nbt.putBoolean("spellSlotsToggle", spellSlotsToggle);
         nbt.putBoolean("manabarrieralive", manabarrieralive);
         nbt.putLong("manacore_level", manacore_level);
         nbt.putLong("manacore_xp", manacore_xp);
         nbt.putLong("manatoxp", manatoxp);
+        nbt.putLongArray("spellslots", spellSlots);
 
     }
 
@@ -201,9 +225,11 @@ public class PlayerStats {
         manabarrierrevive = nbt.getLong("manabarrierrevive");
         destructionActive = nbt.getBoolean("destruction_active");
         menuStatTabToggle = nbt.getBoolean("menuStatTabToggle");
+        spellSlotsToggle = nbt.getBoolean("spellSlotsToggle");
         manabarrieralive = nbt.getBoolean("manabarrieralive");
         manacore_level = nbt.getLong("manacore_level");
         manacore_xp = nbt.getLong("manacore_xp");
         manatoxp = nbt.getLong("manatoxp");
+        spellSlots = nbt.getLongArray("spellslots");
     }
 }

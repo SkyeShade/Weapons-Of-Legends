@@ -24,9 +24,12 @@ public class FireElementScreen extends Screen {
    private static final ResourceLocation WINDOW_LOCATION = new ResourceLocation("wol:textures/gui/window.png");
    private static final ResourceLocation WINDOW_ARROWBACK = new ResourceLocation("wol:textures/gui/arrow_back.png");
 
-
+   private static final ResourceLocation EXIT = new ResourceLocation("wol:textures/gui/exit.png");
+   private static final ResourceLocation EXIT_HIGH = new ResourceLocation("wol:textures/gui/exit_high.png");
 
    private static final ResourceLocation WINDOW_ARROWBACK_HIGHLIGHTED = new ResourceLocation("wol:textures/gui/arrow_back_high.png");
+
+   private static final ResourceLocation ICON_HIGH = new ResourceLocation("wol:textures/gui/icon_high.png");
    private static final ResourceLocation WINDOW_BACKGROUND = new ResourceLocation("wol:textures/gui/dark.png");
 
    private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/advancements/widgets.png");
@@ -43,8 +46,17 @@ public class FireElementScreen extends Screen {
    public static final int BACKGROUND_TILE_COUNT_X = 14;
    public static final int BACKGROUND_TILE_COUNT_Y = 7;
 
+
    public boolean hoverArrowBack = false;
-   StatsIcons statsIcons = new StatsIcons();
+   public boolean hoverFireBallSpell = false;
+
+   private int spellSlotHoverIndex;
+   public boolean spellWindow = false;
+   public long hoverSpellID = 0;
+
+
+   DisplaySpellInformation displaySpellInformation = new DisplaySpellInformation();
+   //StatsIcons statsIcons = new StatsIcons();
    private double scrollX;
    private double scrollY;
 
@@ -72,6 +84,7 @@ public class FireElementScreen extends Screen {
    }
 
    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+
       if (pButton == 0) {
          int i = (this.width - 252) / 2;
          int j = (this.height - 140) / 2;
@@ -79,7 +92,20 @@ public class FireElementScreen extends Screen {
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             Minecraft.getInstance().setScreen(new StatsScreen());
          }
+
+
       }
+       if (spellWindow) {
+           spellWindow = displaySpellInformation.mouseClickEvent(pButton);
+       }else {
+           if (pButton == 0) {
+               if (hoverFireBallSpell) {
+                   spellWindow = true;
+                   hoverSpellID = 1;
+                   Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+               }
+           }
+       }
       return super.mouseClicked(pMouseX, pMouseY, pButton);
 
    }
@@ -87,26 +113,20 @@ public class FireElementScreen extends Screen {
 
 
 
-   public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-      if (this.minecraft.options.keyAdvancements.matches(pKeyCode, pScanCode)) {
-         this.minecraft.setScreen((Screen)null);
-         this.minecraft.mouseHandler.grabMouse();
-         return true;
-      } else {
-         return super.keyPressed(pKeyCode, pScanCode, pModifiers);
-      }
-   }
+
 
    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-      int i = (this.width - WINDOW_WIDTH) / 2;
-      int j = (this.height - WINDOW_HEIGHT) / 2;
-      this.renderBackground(pPoseStack);
-      this.renderInside(pPoseStack, pMouseX, pMouseY, i, j);
+       int i = (this.width - WINDOW_WIDTH) / 2;
+       int j = (this.height - WINDOW_HEIGHT) / 2;
+       this.renderBackground(pPoseStack);
+       this.renderInside(pPoseStack, pMouseX, pMouseY, i, j);
 
 
-      this.renderWindow(pPoseStack, pMouseX, pMouseY, i, j);
-      this.drawManaCoreProgressBar(pPoseStack, pMouseX, pMouseY, i, j);
-
+       this.renderWindow(pPoseStack, pMouseX, pMouseY, i, j);
+       if (spellWindow) {
+           displaySpellInformation.displaySpellInformation(hoverSpellID,pPoseStack, pMouseX, pMouseY, i, j);
+           this.renderOnTopSpellInfo(pPoseStack, pMouseX, pMouseY, i, j);
+       }
 
    }
 
@@ -115,15 +135,15 @@ public class FireElementScreen extends Screen {
 
    private void renderInside(PoseStack pPoseStack, int pMouseX, int pMouseY, int pOffsetX, int pOffsetY) {
 
-         PoseStack posestack = RenderSystem.getModelViewStack();
-         posestack.pushPose();
-         posestack.translate((double)(pOffsetX + 9), (double)(pOffsetY + 18), 0.0D);
-         RenderSystem.applyModelViewMatrix();
+       PoseStack posestack = RenderSystem.getModelViewStack();
+       posestack.pushPose();
+       posestack.translate((double)(pOffsetX + 9), (double)(pOffsetY + 18), 0.0D);
+       RenderSystem.applyModelViewMatrix();
 
-         posestack.popPose();
-         RenderSystem.applyModelViewMatrix();
-         RenderSystem.depthFunc(515);
-         RenderSystem.disableDepthTest();
+       posestack.popPose();
+       RenderSystem.applyModelViewMatrix();
+       RenderSystem.depthFunc(515);
+       RenderSystem.disableDepthTest();
 
 
 
@@ -161,15 +181,22 @@ public class FireElementScreen extends Screen {
       }
 
       RenderSystem.setShader(GameRenderer::getPositionTexShader);
-      RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
 
 
-      if (statsIcons.isMouseOver(i+Mth.floor(117.0D)+pOffsetX+26+WINDOW_INSIDE_WIDTH/2,j+Mth.floor(103.5D)+pOffsetY+26+WINDOW_INSIDE_HEIGHT/2,pMouseX+18,pMouseY+9,26,26)) {
-         blit(pPoseStack, i+Mth.floor(117.0D)-13+WINDOW_INSIDE_WIDTH/2,j+Mth.floor(103.5D)-13+WINDOW_INSIDE_HEIGHT/2,0,128+26,26,26);
 
-      } else {
-         blit(pPoseStack, i+Mth.floor(117.0D)-13+WINDOW_INSIDE_WIDTH/2,j+Mth.floor(103.5D)-13+WINDOW_INSIDE_HEIGHT/2,0,128,26,26);
 
+      int fireBallSpellDisplacementX = 0;
+      int fireBallSpellDisplacementY = 0;
+      RenderSystem.setShaderTexture(0, SpellIconDeterminer.determineSpellIconFromID(1));
+      blit(pPoseStack, i+fireBallSpellDisplacementX-13+WINDOW_INSIDE_WIDTH,j+fireBallSpellDisplacementY-13+WINDOW_INSIDE_HEIGHT,0,0,26,26,26,26);
+      if (!spellWindow) {
+          if (StatsIcons.isMouseOver(i + fireBallSpellDisplacementX + WINDOW_INSIDE_WIDTH + pOffsetX + 26, j + fireBallSpellDisplacementY + WINDOW_INSIDE_HEIGHT + pOffsetY + 26, pMouseX + 18, pMouseY + 9, 26, 26)) {
+              RenderSystem.setShaderTexture(0, ICON_HIGH);
+              blit(pPoseStack, i + fireBallSpellDisplacementX - 13 + WINDOW_INSIDE_WIDTH, j + fireBallSpellDisplacementY - 13 + WINDOW_INSIDE_HEIGHT, 0, 0, 26, 26, 26, 26);
+              hoverFireBallSpell = true;
+          } else {
+              hoverFireBallSpell = false;
+          }
       }
 
       pPoseStack.popPose();
@@ -185,7 +212,7 @@ public class FireElementScreen extends Screen {
       this.blit(pPoseStack, pOffsetX, pOffsetY, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 
-      if (statsIcons.isMouseOver(pOffsetX+6,pOffsetY+5,pMouseX-8,pMouseY-5,20,12)) {
+      if (StatsIcons.isMouseOver(pOffsetX+6,pOffsetY+5,pMouseX-8,pMouseY-5,20,12)) {
          RenderSystem.setShaderTexture(0, WINDOW_ARROWBACK_HIGHLIGHTED);
          blit(pPoseStack, pOffsetX+6,pOffsetY+5,0,0,18,10,18,10);
          hoverArrowBack = true;
@@ -197,9 +224,14 @@ public class FireElementScreen extends Screen {
 
 
 
+
+
       this.font.draw(pPoseStack, "Fire", (float)(pOffsetX -1-19/2+ WINDOW_WIDTH/2), (float)(pOffsetY + 6), 16753920);
 
    }
+   public void renderOnTopSpellInfo(PoseStack pPoseStack, int pMouseX, int pMouseY, int pOffsetX, int pOffsetY) {
+
+    }
 
    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
       if (pButton != 0) {
@@ -215,12 +247,15 @@ public class FireElementScreen extends Screen {
       }
    }
    public void scroll(double pDragX, double pDragY) {
-      this.scrollX = Mth.clamp(this.scrollX + pDragX, -234.0D, 0.0D);
-      this.scrollY = Mth.clamp(this.scrollY + pDragY, -207.0D, 0.0D);
+        if (!spellWindow) {
+            this.scrollX = Mth.clamp(this.scrollX + pDragX, -234.0D, 0.0D);
+            this.scrollY = Mth.clamp(this.scrollY + pDragY, -207.0D, 0.0D);
+        }
+
    }
 
-   public void drawManaCoreProgressBar(PoseStack pPoseStack, int pMouseX, int pMouseY, int pOffsetX, int pOffsetY) {
 
-   }
+
+
 
 }
