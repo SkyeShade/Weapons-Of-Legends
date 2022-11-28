@@ -112,7 +112,7 @@ public class DisplaySpellInformation extends Screen {
                     spellDesc.displayDesc(spellID,false, true,pPoseStack,pOffsetX,pOffsetY,0,0,font);
                     if (StatsIcons.isMouseOver(pOffsetX + 41-4, pOffsetY +185, pMouseX - 8, pMouseY - 7, 12, 17)) {
                         RenderSystem.setShaderTexture(0, BUTTON_RIGHT_HIGH);
-                        blit(pPoseStack, pOffsetX + 41, pOffsetY +185, 0, 0, 10, 15, -10, -15);
+                        blit(pPoseStack, pOffsetX + 41, pOffsetY +185, 0, 0, 10, 15, -10, 15);
 
                         hoverPrevPage = true;
                     } else {
