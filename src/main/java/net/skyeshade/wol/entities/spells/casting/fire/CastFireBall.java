@@ -7,6 +7,10 @@ import net.skyeshade.wol.entities.spells.fireelement.FireBallEntity;
 
 public class CastFireBall {
 
+    //Casts fireball
+    //
+    //
+    //
 
     public static void castFireBall (ServerPlayer player) {
         FireBallEntity fireball = new FireBallEntity(EntityInit.FIREBALL.get(), player,player.level);

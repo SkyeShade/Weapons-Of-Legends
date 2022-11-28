@@ -21,7 +21,7 @@ public class PlayerStats {
     private long mana;
 
     private long hp;
-
+    //stores all spellslots from 1 to 9
     private long[] spellSlots = {0,0,0,0,0,0,0,0,0};
     private long max_hp;
     private float hpregenbuffer;

@@ -1,23 +1,20 @@
 package net.skyeshade.wol.client.gui.screens.stats;
 
-import com.google.common.collect.Maps;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.advancements.Advancement;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.skyeshade.wol.client.gui.screens.stats.spellguihandling.DisplaySpellInformation;
 
 import javax.annotation.Nullable;
-import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
 public class FireElementScreen extends Screen {
@@ -178,13 +175,13 @@ public class FireElementScreen extends Screen {
       int fireBallSpellDisplacementX = 0;
       int fireBallSpellDisplacementY = 0;
 
-      displaySpellInformation.displaySpell(1,pPoseStack,i,j,fireBallSpellDisplacementX,fireBallSpellDisplacementY,pOffsetX,pOffsetY,pMouseX,pMouseY,WINDOW_INSIDE_WIDTH,WINDOW_INSIDE_HEIGHT);
+      displaySpellInformation.displaySpell(1,pPoseStack,i,j,fireBallSpellDisplacementX,fireBallSpellDisplacementY,pOffsetX,pOffsetY,pMouseX,pMouseY,WINDOW_INSIDE_WIDTH,WINDOW_INSIDE_HEIGHT, this.font);
 
 
       int waterSpellDisplacementX = 26;
       int waterSpellDisplacementY = 0;
 
-      displaySpellInformation.displaySpell(2,pPoseStack,i,j,waterSpellDisplacementX,waterSpellDisplacementY,pOffsetX,pOffsetY,pMouseX,pMouseY,WINDOW_INSIDE_WIDTH,WINDOW_INSIDE_HEIGHT);
+      displaySpellInformation.displaySpell(2,pPoseStack,i,j,waterSpellDisplacementX,waterSpellDisplacementY,pOffsetX,pOffsetY,pMouseX,pMouseY,WINDOW_INSIDE_WIDTH,WINDOW_INSIDE_HEIGHT, this.font);
 
 
 

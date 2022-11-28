@@ -22,6 +22,8 @@ public class ClientModEvents {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
 
+
+
         EntityRenderers.register(EntityInit.BLADE_SLASH.get(), BladeSlashRenderer::new);
 
         EntityRenderers.register(EntityInit.FIREBALL.get(), FireBallRenderer::new);

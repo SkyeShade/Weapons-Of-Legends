@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.skyeshade.wol.WOL;
-import net.skyeshade.wol.client.gui.screens.stats.SpellIconDeterminer;
+import net.skyeshade.wol.client.gui.screens.stats.spellguihandling.SpellIconDeterminer;
 import net.skyeshade.wol.util.LongHudFormatter;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -77,19 +77,6 @@ public class HudOverlay {
             }
         }
 
-
-        //manacore progress2
-
-        /*RenderSystem.setShaderTexture(0, FILLED_MANABARRIER_EXHAUSTION);
-        for(int i = 0; i < xScaleManaBarrierBar+1; i++) {
-            if(((float)ClientStatsData.getPlayerManaCoreExhaustion()/(float)ClientStatsData.getPlayerMaxManaCore())*100 > (i/(float)(xScaleManaBarrierBar+1))*100) {
-                GuiComponent.blit(poseStack,xManaBarrierBar +1 + (i),yManaBarrierBar ,0,0,1,9,
-                        1,9);
-
-            } else {
-                break;
-            }
-        }*/
 
         RenderSystem.setShaderTexture(0, EMPTY_MANA_START);
         GuiComponent.blit(poseStack,xManaBar, yManaBar,0,0,endStartCapPixelWidth,9, endStartCapPixelWidth,9);
