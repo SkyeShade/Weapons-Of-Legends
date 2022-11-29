@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.skyeshade.wol.client.model.FireBallModel;
+import net.skyeshade.wol.entities.spells.spellrenderer.model.FireBallModel;
 import net.skyeshade.wol.entities.spells.fireelement.FireBallEntity;
 
 

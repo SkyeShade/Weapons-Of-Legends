@@ -27,7 +27,6 @@ public class BladeSlashProjectileEntity extends BaseBladeSlashProjectile {
 
 
 
-
     public BladeSlashProjectileEntity(EntityType<BladeSlashProjectileEntity> entityType, Level world) {
         super(entityType, world);
 

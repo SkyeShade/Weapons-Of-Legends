@@ -172,79 +172,76 @@ public class Destruction extends BaseDestruction {
 
 
         pLevel.scheduleTick(pPos, this, getFireTickDelay(pLevel.random));
-        if (pLevel.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
-            if (!pState.canSurvive(pLevel, pPos)) {
-                pLevel.removeBlock(pPos, false);
+        if (!pState.canSurvive(pLevel, pPos)) {
+            pLevel.removeBlock(pPos, false);
+        }
+
+
+        BlockState blockstate = pLevel.getBlockState(pPos.below());
+        boolean flag = blockstate.isFireSource(pLevel, pPos, Direction.UP);
+        int i = pState.getValue(AGE);
+        if (!flag && pLevel.isRaining() && this.isNearRain(pLevel, pPos) && pRandom.nextFloat() < 0.2F + (float)i * 0.03F) {
+            pLevel.removeBlock(pPos, false);
+        } else {
+            int j = Math.min(15, i + pRandom.nextInt(3) / 2);
+            if (i != j) {
+                pState = pState.setValue(AGE, Integer.valueOf(j));
+                pLevel.setBlock(pPos, pState, 4);
             }
 
-
-
-            BlockState blockstate = pLevel.getBlockState(pPos.below());
-            boolean flag = blockstate.isFireSource(pLevel, pPos, Direction.UP);
-            int i = pState.getValue(AGE);
-            if (!flag && pLevel.isRaining() && this.isNearRain(pLevel, pPos) && pRandom.nextFloat() < 0.2F + (float)i * 0.03F) {
-                pLevel.removeBlock(pPos, false);
-            } else {
-                int j = Math.min(15, i + pRandom.nextInt(3) / 2);
-                if (i != j) {
-                    pState = pState.setValue(AGE, Integer.valueOf(j));
-                    pLevel.setBlock(pPos, pState, 4);
-                }
-
-                if (!flag) {
-                    if (!this.isValidFireLocation(pLevel, pPos)) {
-                        BlockPos blockpos = pPos.below();
-                        if (!pLevel.getBlockState(blockpos).isFaceSturdy(pLevel, blockpos, Direction.UP) || i > 3) {
-                            pLevel.removeBlock(pPos, false);
-                        }
-
-                        return;
-                    }
-
-                    if (i == 15 && pRandom.nextInt(4) == 0 && !this.canCatchFire(pLevel, pPos.below(), Direction.UP)) {
+            if (!flag) {
+                if (!this.isValidFireLocation(pLevel, pPos)) {
+                    BlockPos blockpos = pPos.below();
+                    if (!pLevel.getBlockState(blockpos).isFaceSturdy(pLevel, blockpos, Direction.UP) || i > 3) {
                         pLevel.removeBlock(pPos, false);
-                        return;
                     }
+
+                    return;
                 }
 
-                boolean flag1 = pLevel.isHumidAt(pPos);
-                int k = flag1 ? -50 : 0;
-                this.tryCatchFire(pLevel, pPos.east(), 300 + k, pRandom, i, Direction.WEST);
-                this.tryCatchFire(pLevel, pPos.west(), 300 + k, pRandom, i, Direction.EAST);
-                this.tryCatchFire(pLevel, pPos.below(), 100 + k, pRandom, i, Direction.UP);
-                this.tryCatchFire(pLevel, pPos.above(), 300 + k, pRandom, i, Direction.DOWN);
-                this.tryCatchFire(pLevel, pPos.north(), 300 + k, pRandom, i, Direction.SOUTH);
-                this.tryCatchFire(pLevel, pPos.south(), 300 + k, pRandom, i, Direction.NORTH);
-                BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+                if (i == 15 && pRandom.nextInt(4) == 0 && !this.canCatchFire(pLevel, pPos.below(), Direction.UP)) {
+                    pLevel.removeBlock(pPos, false);
+                    return;
+                }
+            }
 
-                for(int l = -1; l <= 1; ++l) {
-                    for(int i1 = -1; i1 <= 1; ++i1) {
-                        for(int j1 = -1; j1 <= 4; ++j1) {
-                            if (l != 0 || j1 != 0 || i1 != 0) {
-                                int k1 = 100;
-                                if (j1 > 1) {
-                                    k1 += (j1 - 1) * 100;
+            boolean flag1 = pLevel.isHumidAt(pPos);
+            int k = flag1 ? -50 : 0;
+            this.tryCatchFire(pLevel, pPos.east(), 300 + k, pRandom, i, Direction.WEST);
+            this.tryCatchFire(pLevel, pPos.west(), 300 + k, pRandom, i, Direction.EAST);
+            this.tryCatchFire(pLevel, pPos.below(), 100 + k, pRandom, i, Direction.UP);
+            this.tryCatchFire(pLevel, pPos.above(), 300 + k, pRandom, i, Direction.DOWN);
+            this.tryCatchFire(pLevel, pPos.north(), 300 + k, pRandom, i, Direction.SOUTH);
+            this.tryCatchFire(pLevel, pPos.south(), 300 + k, pRandom, i, Direction.NORTH);
+            BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+
+            for(int l = -1; l <= 1; ++l) {
+                for(int i1 = -1; i1 <= 1; ++i1) {
+                    for(int j1 = -1; j1 <= 4; ++j1) {
+                        if (l != 0 || j1 != 0 || i1 != 0) {
+                            int k1 = 100;
+                            if (j1 > 1) {
+                                k1 += (j1 - 1) * 100;
+                            }
+
+                            blockpos$mutableblockpos.setWithOffset(pPos, l, j1, i1);
+                            int l1 = this.getIgniteOdds(pLevel, blockpos$mutableblockpos);
+                            if (l1 > 0) {
+                                int i2 = (l1 + 40 + pLevel.getDifficulty().getId() * 7) / (i + 30);
+                                if (flag1) {
+                                    i2 /= 2;
                                 }
 
-                                blockpos$mutableblockpos.setWithOffset(pPos, l, j1, i1);
-                                int l1 = this.getIgniteOdds(pLevel, blockpos$mutableblockpos);
-                                if (l1 > 0) {
-                                    int i2 = (l1 + 40 + pLevel.getDifficulty().getId() * 7) / (i + 30);
-                                    if (flag1) {
-                                        i2 /= 2;
-                                    }
-
-                                    if (i2 > 0 && pRandom.nextInt(k1) <= i2 && (!pLevel.isRaining() || !this.isNearRain(pLevel, blockpos$mutableblockpos))) {
-                                        int j2 = Math.min(15, i + pRandom.nextInt(5) / 4);
-                                        pLevel.setBlock(blockpos$mutableblockpos, this.getStateWithAge(pLevel, blockpos$mutableblockpos, j2), 3);
-                                    }
+                                if (i2 > 0 && pRandom.nextInt(k1) <= i2 && (!pLevel.isRaining() || !this.isNearRain(pLevel, blockpos$mutableblockpos))) {
+                                    int j2 = Math.min(15, i + pRandom.nextInt(5) / 4);
+                                    pLevel.setBlock(blockpos$mutableblockpos, this.getStateWithAge(pLevel, blockpos$mutableblockpos, j2), 3);
                                 }
                             }
                         }
                     }
                 }
-
             }
+
         }
     }
 

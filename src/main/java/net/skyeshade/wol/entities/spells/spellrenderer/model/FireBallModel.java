@@ -1,4 +1,4 @@
-package net.skyeshade.wol.client.model;
+package net.skyeshade.wol.entities.spells.spellrenderer.model;
 
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;

@@ -32,54 +32,55 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
 public abstract class BaseSpellProjectile extends Projectile {
+    private static final EntityDataAccessor<Byte> ID_FLAGS = SynchedEntityData.defineId(BaseSpellProjectile.class, EntityDataSerializers.BYTE);
 
-    private static final EntityDataAccessor<Byte> ID_FLAGS = SynchedEntityData.defineId(net.skyeshade.wol.entities.spells.BaseSpellProjectile.class, EntityDataSerializers.BYTE);
+    private static final int FLAG_CRIT = 1;
+    private static final int FLAG_NOPHYSICS = 2;
 
     @Nullable
     private BlockState lastState;
-    protected boolean inGround;
 
+
+    public int shakeTime;
     private int life;
     private double baseDamage = 2.0D;
     private int knockback;
+    private SoundEvent soundEvent = this.getDefaultHitGroundSoundEvent();
 
 
-
-    protected BaseSpellProjectile(EntityType<? extends net.skyeshade.wol.entities.spells.BaseSpellProjectile> pEntityType, Level pLevel) {
+    protected BaseSpellProjectile(EntityType<? extends BaseSpellProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
-    protected BaseSpellProjectile(EntityType<? extends net.skyeshade.wol.entities.spells.BaseSpellProjectile> pEntityType, double pX, double pY, double pZ, Level pLevel) {
+    protected BaseSpellProjectile(EntityType<? extends BaseSpellProjectile> pEntityType, double pX, double pY, double pZ, Level pLevel) {
         this(pEntityType, pLevel);
         this.setPos(pX, pY, pZ);
     }
 
-    protected BaseSpellProjectile(EntityType<? extends net.skyeshade.wol.entities.spells.BaseSpellProjectile> pEntityType, LivingEntity pShooter, Level pLevel) {
+    protected BaseSpellProjectile(EntityType<? extends BaseSpellProjectile> pEntityType, LivingEntity pShooter, Level pLevel) {
         this(pEntityType, pShooter.getX(), pShooter.getEyeY() - (double)0.1F, pShooter.getZ(), pLevel);
         this.setOwner(pShooter);
 
 
     }
 
-
+    public void setSoundEvent(SoundEvent pSoundEvent) {
+        this.soundEvent = pSoundEvent;
+    }
 
     /**
      * Checks if the entity is in range to render.
      */
-    public boolean shouldRenderAtSqrDistance(double pDistance) {
-        double d0 = this.getBoundingBox().getSize() * 10.0D;
-        if (Double.isNaN(d0)) {
-            d0 = 1.0D;
-        }
 
-        d0 *= 64.0D * getViewScale();
-        return true;
-    }
+
+
+
 
     protected void defineSynchedData() {
         this.entityData.define(ID_FLAGS, (byte)0);
@@ -91,7 +92,6 @@ public abstract class BaseSpellProjectile extends Projectile {
      */
     public void shoot(double pX, double pY, double pZ, float pVelocity, float pInaccuracy) {
         super.shoot(pX, pY, pZ, pVelocity, pInaccuracy);
-
         this.life = 0;
     }
 
@@ -135,7 +135,6 @@ public abstract class BaseSpellProjectile extends Projectile {
 
                 for(AABB aabb : voxelshape.toAabbs()) {
                     if (aabb.move(blockpos).contains(vec31)) {
-                        this.inGround = false;
 
                         break;
                     }
@@ -143,20 +142,15 @@ public abstract class BaseSpellProjectile extends Projectile {
             }
         }
 
+        if (this.shakeTime > 0) {
+            --this.shakeTime;
+        }
 
         if (this.isInWaterOrRain() || blockstate.is(Blocks.POWDER_SNOW) || this.isInFluidType((fluidType, height) -> this.canFluidExtinguish(fluidType))) {
             this.clearFire();
         }
 
-        if (false && !flag) {
-            if (this.lastState != blockstate && this.shouldFall()) {
-                this.startFalling();
-            } else if (!this.level.isClientSide) {
-                this.tickDespawn();
-            }
 
-
-        } else {
 
             Vec3 vec32 = this.position();
             Vec3 vec33 = vec32.add(vec3);
@@ -185,7 +179,9 @@ public abstract class BaseSpellProjectile extends Projectile {
                     this.hasImpulse = true;
                 }
 
-
+                if (entityhitresult == null) {
+                    break;
+                }
 
                 hitresult = null;
             }
@@ -194,7 +190,11 @@ public abstract class BaseSpellProjectile extends Projectile {
             double d5 = vec3.x;
             double d6 = vec3.y;
             double d1 = vec3.z;
-
+            if (this.isCritArrow()) {
+                for(int i = 0; i < 4; ++i) {
+                    this.level.addParticle(ParticleTypes.CRIT, this.getX() + d5 * (double)i / 4.0D, this.getY() + d6 * (double)i / 4.0D, this.getZ() + d1 * (double)i / 4.0D, -d5, -d6 + 0.2D, -d1);
+                }
+            }
 
             double d7 = this.getX() + d5;
             double d2 = this.getY() + d6;
@@ -229,14 +229,14 @@ public abstract class BaseSpellProjectile extends Projectile {
             this.setPos(d7, d2, d3);
             this.checkInsideBlocks();
         }
-    }
+
 
     private boolean shouldFall() {
-        return false;
+        return this.level.noCollision((new AABB(this.position(), this.position())).inflate(0.06D));
     }
 
     private void startFalling() {
-        this.inGround = false;
+
         Vec3 vec3 = this.getDeltaMovement();
         this.setDeltaMovement(vec3.multiply((double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F)));
         this.life = 0;
@@ -265,14 +265,15 @@ public abstract class BaseSpellProjectile extends Projectile {
      */
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
-
-
         Entity entity = pResult.getEntity();
         float f = (float)this.getDeltaMovement().length();
         int i = Mth.ceil(Mth.clamp((double)f * this.baseDamage, 0.0D, 2.147483647E9D));
 
 
-
+        if (this.isCritArrow()) {
+            long j = (long)this.random.nextInt(i / 2 + 2);
+            i = (int)Math.min(j + (long)i, 2147483647L);
+        }
 
         Entity entity1 = this.getOwner();
         DamageSource damagesource;
@@ -314,12 +315,16 @@ public abstract class BaseSpellProjectile extends Projectile {
                 }
 
                 this.doPostHurtEffects(livingentity);
+                if (entity1 != null && livingentity != entity1 && livingentity instanceof Player && entity1 instanceof ServerPlayer && !this.isSilent()) {
+                    ((ServerPlayer)entity1).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
+                }
 
 
 
 
             }
 
+            this.playSound(this.soundEvent, 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
 
         } else {
             entity.setRemainingFireTicks(k);
@@ -327,6 +332,7 @@ public abstract class BaseSpellProjectile extends Projectile {
             this.setYRot(this.getYRot() + 180.0F);
             this.yRotO += 180.0F;
             if (!this.level.isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+
 
                 this.discard();
             }
@@ -342,12 +348,25 @@ public abstract class BaseSpellProjectile extends Projectile {
         Vec3 vec31 = vec3.normalize().scale((double)0.05F);
         this.setPosRaw(this.getX() - vec31.x, this.getY() - vec31.y, this.getZ() - vec31.z);
         //this.playSound(this.getHitGroundSoundEvent(), 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
-        this.inGround = false;
 
+        this.shakeTime = 7;
+        this.setCritArrow(false);
+
+        //this.setSoundEvent(SoundEvents.ARROW_HIT);
 
 
     }
 
+    /**
+     * The sound made when an entity is hit by this projectile
+     */
+    protected SoundEvent getDefaultHitGroundSoundEvent() {
+        return null;
+    }
+
+    protected final SoundEvent getHitGroundSoundEvent() {
+        return this.soundEvent;
+    }
 
     protected void doPostHurtEffects(LivingEntity pTarget) {
     }
@@ -360,8 +379,8 @@ public abstract class BaseSpellProjectile extends Projectile {
         return ProjectileUtil.getEntityHitResult(this.level, this, pStartVec, pEndVec, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity);
     }
 
-    protected boolean canHitEntity(Entity e) {
-        return super.canHitEntity(e);
+    protected boolean canHitEntity(Entity p_36743_) {
+        return true;
     }
 
     public void addAdditionalSaveData(CompoundTag pCompound) {
@@ -371,11 +390,13 @@ public abstract class BaseSpellProjectile extends Projectile {
             pCompound.put("inBlockState", NbtUtils.writeBlockState(this.lastState));
         }
 
+        pCompound.putByte("shake", (byte)this.shakeTime);
 
-        pCompound.putBoolean("inGround", this.inGround);
 
         pCompound.putDouble("damage", this.baseDamage);
+        pCompound.putBoolean("crit", this.isCritArrow());
 
+        //pCompound.putString("SoundEvent", Registry.SOUND_EVENT.getKey(this.soundEvent).toString());
 
     }
 
@@ -389,10 +410,17 @@ public abstract class BaseSpellProjectile extends Projectile {
             this.lastState = NbtUtils.readBlockState(pCompound.getCompound("inBlockState"));
         }
 
+        this.shakeTime = pCompound.getByte("shake") & 255;
 
-        this.inGround = pCompound.getBoolean("inGround");
         if (pCompound.contains("damage", 99)) {
             this.baseDamage = pCompound.getDouble("damage");
+        }
+
+
+        this.setCritArrow(pCompound.getBoolean("crit"));
+
+        if (pCompound.contains("SoundEvent", 8)) {
+            this.soundEvent = Registry.SOUND_EVENT.getOptional(new ResourceLocation(pCompound.getString("SoundEvent"))).orElse(this.getDefaultHitGroundSoundEvent());
         }
 
 
@@ -408,12 +436,18 @@ public abstract class BaseSpellProjectile extends Projectile {
      * Called by a player entity when they collide with an entity
      */
     public void playerTouch(Player pEntity) {
-        if (!this.level.isClientSide) {
-
+        if (!this.level.isClientSide && (this.isNoPhysics()) && this.shakeTime <= 0) {
+            if (this.tryPickup(pEntity)) {
+                pEntity.take(this, 1);
+                this.discard();
+            }
 
         }
     }
 
+    protected boolean tryPickup(Player pPlayer) {
+        return false;
+    }
 
 
 
@@ -451,6 +485,14 @@ public abstract class BaseSpellProjectile extends Projectile {
         return 0.13F;
     }
 
+    /**
+     * Whether the arrow has a stream of critical hit particles flying behind it.
+     */
+    public void setCritArrow(boolean pCritArrow) {
+        this.setFlag(1, pCritArrow);
+    }
+
+
 
     private void setFlag(int pId, boolean pValue) {
         byte b0 = this.entityData.get(ID_FLAGS);
@@ -462,8 +504,38 @@ public abstract class BaseSpellProjectile extends Projectile {
 
     }
 
+    /**
+     * Whether the arrow has a stream of critical hit particles flying behind it.
+     */
+    public boolean isCritArrow() {
+        byte b0 = this.entityData.get(ID_FLAGS);
+        return (b0 & 1) != 0;
+    }
+
+    /**
+     * Whether the arrow was shot from a crossbow.
+     */
 
 
+
+
+    public void setEnchantmentEffectsFromEntity(LivingEntity pShooter, float pVelocity) {
+        int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER_ARROWS, pShooter);
+        int j = EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH_ARROWS, pShooter);
+        this.setBaseDamage((double)(pVelocity * 2.0F) + this.random.triangle((double)this.level.getDifficulty().getId() * 0.11D, 0.57425D));
+        if (i > 0) {
+            this.setBaseDamage(this.getBaseDamage() + (double)i * 0.5D + 0.5D);
+        }
+
+        if (j > 0) {
+            this.setKnockback(j);
+        }
+
+        if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FLAMING_ARROWS, pShooter) > 0) {
+            this.setSecondsOnFire(100);
+        }
+
+    }
 
     protected float getWaterInertia() {
         return 0.6F;
@@ -488,5 +560,22 @@ public abstract class BaseSpellProjectile extends Projectile {
         }
     }
 
+    /**
+     * Sets data about if this arrow entity was shot from a crossbow
+     */
 
+
+    public static enum Pickup {
+        DISALLOWED,
+        ALLOWED,
+        CREATIVE_ONLY;
+
+        public static BaseSpellProjectile.Pickup byOrdinal(int pOrdinal) {
+            if (pOrdinal < 0 || pOrdinal > values().length) {
+                pOrdinal = 0;
+            }
+
+            return values()[pOrdinal];
+        }
+    }
 }

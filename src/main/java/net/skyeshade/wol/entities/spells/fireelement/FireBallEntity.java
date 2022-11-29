@@ -16,12 +16,13 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.skyeshade.wol.BaseBladeSlashProjectile;
+import net.skyeshade.wol.entities.spells.BaseSpellProjectile;
 import net.skyeshade.wol.sound.ModSounds;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class FireBallEntity extends BaseBladeSlashProjectile {
+public class FireBallEntity extends BaseSpellProjectile {
     LivingEntity attacker;
 
     Vec3 currentDeltamovement;
@@ -44,6 +45,10 @@ public class FireBallEntity extends BaseBladeSlashProjectile {
         attacker = shooter;
 
         this.playSound(SoundEvents.FIRECHARGE_USE,1.0F, 0.1F);
+        //this.shouldRenderAtSqrDistance(100000);
+
+       // this.shouldRenderAtSqrDistance(10000);
+
         //if (this.distanceTo(shooter) > 10) {
         //    this.discard();
         //}
@@ -51,12 +56,19 @@ public class FireBallEntity extends BaseBladeSlashProjectile {
 
         //currentDeltamovement = this.getDeltaMovement();
     }
+    @Override
+    public boolean shouldRenderAtSqrDistance(double pDistance) {
+        double d0 = this.getBoundingBox().getSize() * 10.0D;
+        if (Double.isNaN(d0)) {
+            d0 = 1.0D;
+        }
 
-
-
-    protected ItemStack getPickupItem() {
-        return ItemStack.EMPTY;
+        d0 *= 64.0D * getViewScale();
+        return true;
     }
+
+
+
     protected void playSoundOnHit() {
         this.playSound(ModSounds.DISTANT_EXPLOSION.get(), 40.0F, 0.1F);
         //this.playSound(ModSounds.EXPLOSION.get(), 4.0F, 1.0F);
@@ -92,6 +104,8 @@ public class FireBallEntity extends BaseBladeSlashProjectile {
     }
 
 
+
+
     @Override
     protected void tickDespawn() {
         if (this.tickCount > 300){
@@ -100,11 +114,7 @@ public class FireBallEntity extends BaseBladeSlashProjectile {
         }
     }
 
-    @Override
-    public void setSoundEvent(@NotNull SoundEvent pSoundEvent) {
 
-        super.setSoundEvent(pSoundEvent);
-    }
 
 
 
