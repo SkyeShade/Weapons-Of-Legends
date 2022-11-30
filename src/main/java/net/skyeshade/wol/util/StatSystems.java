@@ -64,20 +64,20 @@ public class StatSystems {
     };
 
     public static long[] maxHpRewardPerLevel = {
-            100L,
-            2000L,
-            3000L,
-            4500L,
-            9000L,
-            13500L,
-            20250L,
-            40500L,
-            60750L,
-            91125L,
-            182250L,
-            273375L,
-            410062L,
-            2050312L
+            20L,
+            40L,
+            80L,
+            160L,
+            320L,
+            640L,
+            1280L,
+            5120L,
+            10240L,
+            20480L,
+            40960L,
+            81920L,
+            163840L,
+            327680L
     };
 
     public static long secondsForBaseHpRegen = 600;

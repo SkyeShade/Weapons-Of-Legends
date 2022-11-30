@@ -82,7 +82,7 @@ public class FireBallEntity extends BaseSpellProjectile {
         playSoundOnHit();
         pResult.getEntity().hurt(DamageSource.MAGIC, 20);
 
-        this.getLevel().explode(this, this.getX(),this.getY(),this.getZ(), 4+sizeBullshit, true, Explosion.BlockInteraction.BREAK);
+        this.getLevel().explode(this, this.getX(),this.getY(),this.getZ(), 1+sizeBullshit, true, Explosion.BlockInteraction.BREAK);
 
         this.discard();
 
@@ -98,7 +98,7 @@ public class FireBallEntity extends BaseSpellProjectile {
         if (!this.level.getBlockState(pResult.getBlockPos()).is(Blocks.BEDROCK) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_PORTAL_FRAME) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_GATEWAY) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_PORTAL))
             this.level.destroyBlock(pResult.getBlockPos(), true);
 
-        this.getLevel().explode(this, this.getX(),this.getY(),this.getZ(), 4+sizeBullshit, true, Explosion.BlockInteraction.BREAK);
+        this.getLevel().explode(this, this.getX(),this.getY(),this.getZ(), 1+sizeBullshit, true, Explosion.BlockInteraction.BREAK);
         this.discard();
 
     }

@@ -44,7 +44,7 @@ public class FireBallRenderer extends EntityRenderer<FireBallEntity> {
         pMatrixStack.mulPose(Vector3f.YP.rotationDegrees((int)(Math.random() * 180 + 1)));
         pMatrixStack.mulPose(Vector3f.XP.rotationDegrees((int)(Math.random() * 180 + 1)));
         pMatrixStack.mulPose(Vector3f.ZP.rotationDegrees((int)(Math.random() * 180 + 1)));
-        pMatrixStack.scale(-2.5F-(pEntity.sizeBullshit/2), -2.5F-(pEntity.sizeBullshit/2), 2.5F+(pEntity.sizeBullshit/2));
+        pMatrixStack.scale(-0.5F-(pEntity.sizeBullshit/2), -0.5F-(pEntity.sizeBullshit/2), 0.5F+(pEntity.sizeBullshit/2));
         this.model.setupAnim(pEntity, 0.0F, 0.0F, 0.0F, f, f1);
         VertexConsumer vertexconsumer = pBuffer.getBuffer(this.model.renderType(TEXTURE_LOCATION));
         this.model.renderToBuffer(pMatrixStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);

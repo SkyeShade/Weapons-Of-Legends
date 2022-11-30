@@ -23,6 +23,16 @@ public class PlayerStats {
     private long hp;
     //stores all spellslots from 1 to 9
     private long[] spellSlots = {0,0,0,0,0,0,0,0,0};
+
+    // row length is number of spells, add one per spell id, this is literally only so it doesnt get confusing af
+    private long[] spellPowerLevel = {0,0};
+    //also add another number per spell id
+    private long[] spellRange = {0,0};
+    //also add one for each spell id
+    private boolean[] spellPassiveToggle = {false,false};
+
+
+
     private long max_hp;
     private float hpregenbuffer;
     private long max_mana;
