@@ -28,6 +28,10 @@ import net.skyeshade.wol.networking.packet.menutoggle.UpdateMenuStatTabToggleC2S
 import net.skyeshade.wol.networking.packet.spellslots.UpdateSpellSlotsC2SPacket;
 import net.skyeshade.wol.networking.packet.spellslots.UpdateSpellSlotsToggleC2SPacket;
 import net.skyeshade.wol.networking.packet.spellfire.SpellCastingC2SPacket;
+import net.skyeshade.wol.networking.packet.spellstatupdate.SpellPowerLevelDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.spellstatupdate.SpellRangeDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.spellstatupdate.UpdateSpellPowerLevelC2SPacket;
+import net.skyeshade.wol.networking.packet.spellstatupdate.UpdateSpellRangeC2SPacket;
 
 public class ModMessages {
     private static SimpleChannel INSTANCE;
@@ -236,6 +240,32 @@ public class ModMessages {
                 .decoder(SpellSlotsDataSyncS2CPacket::new)
                 .encoder(SpellSlotsDataSyncS2CPacket::toBytes)
                 .consumerMainThread(SpellSlotsDataSyncS2CPacket::handle)
+                .add();
+
+
+
+        net.messageBuilder(UpdateSpellPowerLevelC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateSpellPowerLevelC2SPacket::new)
+                .encoder(UpdateSpellPowerLevelC2SPacket::toBytes)
+                .consumerMainThread(UpdateSpellPowerLevelC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(SpellPowerLevelDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SpellPowerLevelDataSyncS2CPacket::new)
+                .encoder(SpellPowerLevelDataSyncS2CPacket::toBytes)
+                .consumerMainThread(SpellPowerLevelDataSyncS2CPacket::handle)
+                .add();
+
+        net.messageBuilder(UpdateSpellRangeC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateSpellRangeC2SPacket::new)
+                .encoder(UpdateSpellRangeC2SPacket::toBytes)
+                .consumerMainThread(UpdateSpellRangeC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(SpellRangeDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SpellRangeDataSyncS2CPacket::new)
+                .encoder(SpellRangeDataSyncS2CPacket::toBytes)
+                .consumerMainThread(SpellRangeDataSyncS2CPacket::handle)
                 .add();
     }
 

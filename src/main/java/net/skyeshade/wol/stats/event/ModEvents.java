@@ -28,6 +28,8 @@ import net.skyeshade.wol.networking.packet.manacore.*;
 import net.skyeshade.wol.networking.packet.menutoggle.MenuStatTabToggleDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.spellslots.SpellSlotsDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.spellslots.SpellSlotsToggleDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.spellstatupdate.SpellPowerLevelDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.spellstatupdate.SpellRangeDataSyncS2CPacket;
 import net.skyeshade.wol.stats.PlayerStats;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
 import net.skyeshade.wol.util.StatSystems;
@@ -175,6 +177,10 @@ public class ModEvents {
                     ModMessages.sendToPlayer(new ManaCoreLevelDataSyncS2CPacket(stats.getManaCoreLevel()), player);
                     ModMessages.sendToPlayer(new ManaCoreXpDataSyncS2CPacket(stats.getManaCoreXp()), player);
                     ModMessages.sendToPlayer(new SpellSlotsDataSyncS2CPacket(stats.getSpellSlots()), player);
+
+                    ModMessages.sendToPlayer(new SpellPowerLevelDataSyncS2CPacket(stats.getSpellPowerLevel()), player);
+                    ModMessages.sendToPlayer(new SpellRangeDataSyncS2CPacket(stats.getSpellRange()), player);
+                    //ModMessages.sendToPlayer(new SpellPDataSyncS2CPacket(stats.getSpellSlots()), player);
                     System.out.println();
 
                     if (stats.getMaxMana() < StatSystems.maxManaRewardPerLevel[0]) {

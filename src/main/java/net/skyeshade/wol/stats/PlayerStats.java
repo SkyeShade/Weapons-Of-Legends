@@ -1,6 +1,7 @@
 package net.skyeshade.wol.stats;
 
 import net.minecraft.nbt.CompoundTag;
+import net.skyeshade.wol.util.SpellBaseStatVariables;
 
 import java.lang.reflect.Array;
 
@@ -25,11 +26,12 @@ public class PlayerStats {
     private long[] spellSlots = {0,0,0,0,0,0,0,0,0};
 
     // row length is number of spells, add one per spell id, this is literally only so it doesnt get confusing af
-    private long[] spellPowerLevel = {0,0};
+    private long[] spellPowerLevel = SpellBaseStatVariables.spellPowerLevel;
     //also add another number per spell id
-    private long[] spellRange = {0,0};
+    private long[] spellRange = SpellBaseStatVariables.spellRange;
     //also add one for each spell id
-    private boolean[] spellPassiveToggle = {false,false};
+    //byte instead of boolean, 0 = false 1 = true
+    private byte[] spellPassiveToggle = SpellBaseStatVariables.spellPassiveToggle;
 
 
 
@@ -98,6 +100,18 @@ public class PlayerStats {
         return spellSlots;
     }
 
+    public long[] getSpellPowerLevel() {
+        return spellPowerLevel;
+    }
+
+    public long[] getSpellRange() {
+        return spellRange;
+    }
+
+    public byte[] getSpellPassiveToggle() {
+        return spellPassiveToggle;
+    }
+
     public boolean getDestructionActive() {
         return destructionActive;
     }
@@ -124,6 +138,18 @@ public class PlayerStats {
 
     public void setSpellSlots(long set, int index) {
         this.spellSlots[index] = set;
+    }
+
+    public void setSpellPowerLevel(long set, int index) {
+        this.spellPowerLevel[index] = set;
+    }
+
+    public void setSpellRange(long set, int index) {
+        this.spellRange[index] = set;
+    }
+
+    public void setSpellPassiveToggle(byte set, int index) {
+        this.spellPassiveToggle[index] = set;
     }
     public void setHpRegenBuffer(float set) {this.hpregenbuffer = set;}
     public void setManaRegenBuffer(float set) {this.manaregenbuffer = set;}
@@ -159,6 +185,15 @@ public class PlayerStats {
 
     public void addMana(long add) {this.mana = Math.min(mana + add, max_mana);}
 
+
+
+    public void addSpellPowerLevel(long add, int index) {
+        this.spellPowerLevel[index] = spellPowerLevel[index] + add;
+    }
+
+    public void addSpellRange(long add, int index) {
+        this.spellRange[index] = spellRange[index] + add;
+    }
     public void addHp(long add) {this.hp = Math.min(hp + add, max_hp);}
     public void addMaxHp(long add) {this.max_hp = max_hp + add;}
     public void addHpRegenBuffer(float add) {this.hpregenbuffer = hpregenbuffer + add;}
@@ -197,6 +232,9 @@ public class PlayerStats {
         this.manatoxp = source.manatoxp;
         this.spellSlotsToggle = source.spellSlotsToggle;
         this.spellSlots = source.spellSlots;
+        this.spellPowerLevel = source.spellPowerLevel;
+        this.spellRange = source.spellRange;
+        this.spellPassiveToggle = source.spellPassiveToggle;
     }
     public void saveNBTData(CompoundTag nbt) {
         //System.out.prlongln("Saving NBT"+"\n"+mana+"\n"+max_mana);
@@ -218,6 +256,10 @@ public class PlayerStats {
         nbt.putLong("manacore_xp", manacore_xp);
         nbt.putLong("manatoxp", manatoxp);
         nbt.putLongArray("spellslots", spellSlots);
+        nbt.putLongArray("spellpowerlevel", spellPowerLevel);
+        nbt.putLongArray("spellrange", spellRange);
+        nbt.putByteArray("spellpassivetoggle", spellPassiveToggle);
+
 
     }
 
@@ -241,5 +283,8 @@ public class PlayerStats {
         manacore_xp = nbt.getLong("manacore_xp");
         manatoxp = nbt.getLong("manatoxp");
         spellSlots = nbt.getLongArray("spellslots");
+        spellPowerLevel = nbt.getLongArray("spellpowerlevel");
+        spellRange = nbt.getLongArray("spellrange");
+        spellPassiveToggle = nbt.getByteArray("spellpassivetoggle");
     }
 }

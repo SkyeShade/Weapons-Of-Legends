@@ -31,6 +31,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.skyeshade.wol.client.ClientStatsData;
+import net.skyeshade.wol.stats.PlayerStatsProvider;
 
 
 import javax.annotation.Nullable;
@@ -53,6 +55,10 @@ public abstract class BaseSpellProjectile extends Projectile {
     private int knockback;
     private SoundEvent soundEvent = this.getDefaultHitGroundSoundEvent();
 
+    public long power;
+
+
+
 
     protected BaseSpellProjectile(EntityType<? extends BaseSpellProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -66,9 +72,22 @@ public abstract class BaseSpellProjectile extends Projectile {
     protected BaseSpellProjectile(EntityType<? extends BaseSpellProjectile> pEntityType, LivingEntity pShooter, Level pLevel) {
         this(pEntityType, pShooter.getX(), pShooter.getEyeY() - (double)0.1F, pShooter.getZ(), pLevel);
         this.setOwner(pShooter);
+        ServerPlayer player = (ServerPlayer) pShooter;
+        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+            power = stats.getSpellPowerLevel()[1];
+        });
+        if (pShooter.level.isClientSide) {
+            System.out.println("client side: "+power);
+        }else {
+            System.out.println("server side: "+power);
+        }
+
+
 
 
     }
+
+
 
     public void setSoundEvent(SoundEvent pSoundEvent) {
         this.soundEvent = pSoundEvent;

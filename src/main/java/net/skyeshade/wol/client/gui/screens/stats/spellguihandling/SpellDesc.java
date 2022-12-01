@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.skyeshade.wol.client.ClientStatsData;
 import net.skyeshade.wol.util.SpellBaseStatVariables;
 
 import java.util.Arrays;
@@ -55,6 +56,8 @@ public class SpellDesc extends Screen {
             drawCenteredString(pPoseStack,font,"Mana Cost: "+ SpellBaseStatVariables.getSpellBaseStats(spellID,2),pOffsetX + 56-30+100,pOffsetY + 60 + 18*2,16753920);
             drawCenteredString(pPoseStack,font,"Casting Time: "+ (SpellBaseStatVariables.getSpellBaseStats(spellID,3)*1000)/20 + "ms",pOffsetX + 56-30+100,pOffsetY + 60 + 18*3,16753920);
             drawCenteredString(pPoseStack,font,"Cooldown: "+ (SpellBaseStatVariables.getSpellBaseStats(spellID,4)*1000)/20 + "ms",pOffsetX + 56-30+100,pOffsetY + 60 + 18*4,16753920);
+            drawCenteredString(pPoseStack,font,"Power: "+ ClientStatsData.getPlayerSpellPowerLevel()[(int)spellID],pOffsetX + 56-30+100,pOffsetY + 60 + 18*5,16753920);
+
         }
         String[] stringArray = text.split(" ");
         String text2 = "";

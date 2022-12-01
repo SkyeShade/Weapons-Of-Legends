@@ -12,9 +12,12 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.skyeshade.wol.client.ClientStatsData;
 import net.skyeshade.wol.entities.spells.spellrenderer.model.FireBallModel;
 import net.skyeshade.wol.entities.spells.fireelement.FireBallEntity;
+import net.skyeshade.wol.stats.PlayerStatsProvider;
 
 
 public class FireBallRenderer extends EntityRenderer<FireBallEntity> {
@@ -23,6 +26,8 @@ public class FireBallRenderer extends EntityRenderer<FireBallEntity> {
     private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("wol:textures/entity/spark.png");
     private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(TEXTURE_LOCATION);
     private final FireBallModel<FireBallEntity> model;
+
+
 
     public FireBallRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -36,15 +41,20 @@ public class FireBallRenderer extends EntityRenderer<FireBallEntity> {
     }
 
     public void render(FireBallEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
+
+
+
+
         pMatrixStack.pushPose();
         float f = Mth.rotlerp(pEntity.yRotO, pEntity.getYRot(), pPartialTicks);
         float f1 = Mth.lerp(pPartialTicks, pEntity.xRotO, pEntity.getXRot());
-        float f2 = (float)pEntity.tickCount + pPartialTicks;
-        pMatrixStack.translate(0.0D, (double)0.15F, 0.0D);
-        pMatrixStack.mulPose(Vector3f.YP.rotationDegrees((int)(Math.random() * 180 + 1)));
-        pMatrixStack.mulPose(Vector3f.XP.rotationDegrees((int)(Math.random() * 180 + 1)));
-        pMatrixStack.mulPose(Vector3f.ZP.rotationDegrees((int)(Math.random() * 180 + 1)));
-        pMatrixStack.scale(-0.5F-(pEntity.sizeBullshit/2), -0.5F-(pEntity.sizeBullshit/2), 0.5F+(pEntity.sizeBullshit/2));
+        float f2 = (float) pEntity.tickCount + pPartialTicks;
+        pMatrixStack.translate(0.0D, (double) 0.15F, 0.0D);
+        pMatrixStack.mulPose(Vector3f.YP.rotationDegrees((int) (Math.random() * 180 + 1)));
+        pMatrixStack.mulPose(Vector3f.XP.rotationDegrees((int) (Math.random() * 180 + 1)));
+        pMatrixStack.mulPose(Vector3f.ZP.rotationDegrees((int) (Math.random() * 180 + 1)));
+        pMatrixStack.scale(-0.5F - (pEntity.power), -0.5F - (pEntity.power), 0.5F + (pEntity.power));
+        System.out.println(pEntity.power);
         this.model.setupAnim(pEntity, 0.0F, 0.0F, 0.0F, f, f1);
         VertexConsumer vertexconsumer = pBuffer.getBuffer(this.model.renderType(TEXTURE_LOCATION));
         this.model.renderToBuffer(pMatrixStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);

@@ -1,5 +1,7 @@
 package net.skyeshade.wol.client;
 
+import net.skyeshade.wol.util.SpellBaseStatVariables;
+
 public class ClientStatsData {
     private static long playerMana;
     private static long playerMaxMana;
@@ -14,6 +16,14 @@ public class ClientStatsData {
     private static long playerManaCoreXp;
 
     private static long[] playerSpellSlots = {0,0,0,0,0,0,0,0,0};
+
+    private static long[] playerSpellPowerLevel = SpellBaseStatVariables.spellPowerLevel;
+
+    private static long[] playerSpellRange = SpellBaseStatVariables.spellRange;
+
+    private static byte[] playerSpellPassiveToggle = SpellBaseStatVariables.spellPassiveToggle;
+
+
     private static boolean playerDestructionActive;
 
     private static boolean playerManaBarrierAlive;
@@ -47,6 +57,9 @@ public class ClientStatsData {
         return playerMaxHp;
     }
     public static long[] getPlayerSpellSlots() {return playerSpellSlots;}
+    public static long[] getPlayerSpellPowerLevel() {return playerSpellPowerLevel;}
+    public static long[] getPlayerSpellRange() {return playerSpellRange;}
+    public static byte[] getPlayerSpellPassiveToggle() {return playerSpellPassiveToggle;}
 
     public static void setManaBarrier(long manabarrier) {
         ClientStatsData.playerManaBarrier = manabarrier;
@@ -54,7 +67,11 @@ public class ClientStatsData {
     public static void setMaxManaBarrier(long max_manabarrier) {ClientStatsData.playerMaxManaBarrier = max_manabarrier;}
     public static void setManaBarrierRevive(long manabarrierrevive) {ClientStatsData.playerManaBarrierRevive = manabarrierrevive;}
 
-    public static void setPlayerSpellSlots(long[] playerSpellSlots) {ClientStatsData.playerSpellSlots = playerSpellSlots;}
+    public static void setPlayerSpellSlots(long[] spellSlots) {ClientStatsData.playerSpellSlots = spellSlots;}
+
+    public static void setPlayerSpellPowerLevel(long[] spellPowerLevel) {ClientStatsData.playerSpellPowerLevel = spellPowerLevel;}
+    public static void setPlayerSpellRange(long[] spellRange) {ClientStatsData.playerSpellRange = spellRange;}
+    public static void setPlayerSpellPassiveToggle(byte[] spellPassiveToggle) {ClientStatsData.playerSpellPassiveToggle = spellPassiveToggle;}
 
     public static void setDestructionActive(boolean destructionActive) {ClientStatsData.playerDestructionActive = destructionActive;}
 

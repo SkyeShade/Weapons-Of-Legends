@@ -1,6 +1,15 @@
 package net.skyeshade.wol.util;
 
 public class SpellBaseStatVariables {
+    //these values are used to innitiate arrays in PlayerStats and ClientStatsData
+    // row length is number of spells, add one per spell id, this is literally only so it doesnt get confusing af
+    //the first value is always -1 since spellid 0 doesnt exist, no matter what happens index 0 should not be reached
+    public static long[] spellPowerLevel = {-1,0,0};
+    //also add another number per spell id (+1)
+    public static long[] spellRange = {-1,0,0};
+    //also add one for each spell id
+    //byte instead of boolean, 0 = false 1 = true
+    public static byte[] spellPassiveToggle = {-1,0,0};
 
     public static long getSpellBaseStats (long spellID, int index) {
         if (spellID == 1) {

@@ -16,6 +16,7 @@ import net.skyeshade.wol.client.ClientStatsData;
 import net.skyeshade.wol.client.gui.screens.stats.StatsIcons;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.networking.packet.spellslots.UpdateSpellSlotsC2SPacket;
+import net.skyeshade.wol.networking.packet.spellstatupdate.UpdateSpellPowerLevelC2SPacket;
 
 @OnlyIn(Dist.CLIENT)
 public class DisplaySpellInformation extends Screen {
@@ -37,6 +38,9 @@ public class DisplaySpellInformation extends Screen {
     private static final ResourceLocation BUTTON_RIGHT = new ResourceLocation("wol:textures/gui/button_right.png");
     private static final ResourceLocation BUTTON_RIGHT_HIGH= new ResourceLocation("wol:textures/gui/button_right_high.png");
 
+    private static final ResourceLocation SMALL_BUTTON = new ResourceLocation("wol:textures/gui/small_button.png");
+    private static final ResourceLocation SMALL_BUTTON_HIGH= new ResourceLocation("wol:textures/gui/small_button_high.png");
+
     private static final ResourceLocation SPELLSLOT_HIGH = new ResourceLocation("wol:textures/gui/spellslot_high.png");
     private static final ResourceLocation EXIT = new ResourceLocation("wol:textures/gui/exit.png");
     private static final ResourceLocation EXIT_HIGH = new ResourceLocation("wol:textures/gui/exit_high.png");
@@ -48,6 +52,9 @@ public class DisplaySpellInformation extends Screen {
     int page = 0;
     public boolean hoverNextPage = false;
     public boolean hoverPrevPage = false;
+
+    public boolean hoverPowerUp = false;
+    public boolean hoverPowerDown = false;
     public boolean spellWindow = false;
     public boolean hoverSpell = false;
 
@@ -110,6 +117,38 @@ public class DisplaySpellInformation extends Screen {
 
                     blit(pPoseStack, pOffsetX + 41, pOffsetY +185, 0, 0, 10, 15, -10, 15);
                     spellDesc.displayDesc(spellID,false, true,pPoseStack,pOffsetX,pOffsetY,0,0,font);
+
+                    RenderSystem.setShaderTexture(0, SMALL_BUTTON);
+                    int buttonDisplacement = (Long.toString(ClientStatsData.getPlayerSpellPowerLevel()[(int)spellID])).length()*3;
+                    blit(pPoseStack, pOffsetX + 145 +buttonDisplacement, pOffsetY + 60 + 18*5, 0, 0, 5, 7, 5, 7);
+                    if (StatsIcons.isMouseOver(pOffsetX + 145-4 +buttonDisplacement, pOffsetY + 60 + 18*5, pMouseX - 6, pMouseY - 3, 6, 8)) {
+                        RenderSystem.setShaderTexture(0, SMALL_BUTTON_HIGH);
+
+                        blit(pPoseStack, pOffsetX + 145+ buttonDisplacement, pOffsetY + 60 + 18*5, 0, 0, 5, 7, 5, 7);
+
+                        hoverPowerUp = true;
+                    } else {
+
+                        hoverPowerUp = false;
+                    }
+
+                    RenderSystem.setShaderTexture(0, SMALL_BUTTON);
+                    blit(pPoseStack, pOffsetX + 145-44 -buttonDisplacement, pOffsetY + 60 + 18*5, 0, 0, 5, 7, -5, 7);
+                    if (StatsIcons.isMouseOver(pOffsetX + 145-4-44 -buttonDisplacement, pOffsetY + 60 + 18*5, pMouseX - 6, pMouseY - 3, 6, 8)) {
+                        RenderSystem.setShaderTexture(0, SMALL_BUTTON_HIGH);
+
+                        blit(pPoseStack, pOffsetX + 145 -44-buttonDisplacement, pOffsetY + 60 + 18*5, 0, 0, 5, 7, -5, 7);
+
+                        hoverPowerDown = true;
+                    } else {
+                        hoverPowerDown = false;
+
+                    }
+
+
+
+
+
                     if (StatsIcons.isMouseOver(pOffsetX + 41-4, pOffsetY +185, pMouseX - 8, pMouseY - 7, 12, 17)) {
                         RenderSystem.setShaderTexture(0, BUTTON_RIGHT_HIGH);
                         blit(pPoseStack, pOffsetX + 41, pOffsetY +185, 0, 0, 10, 15, -10, 15);
@@ -164,6 +203,14 @@ public class DisplaySpellInformation extends Screen {
             if (hoverPrevPage) {
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 page = 0;
+            }
+            if (hoverPowerUp) {
+                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                ModMessages.sendToServer(new UpdateSpellPowerLevelC2SPacket(1,(int)spellID));
+            }
+            if (hoverPowerDown) {
+                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                ModMessages.sendToServer(new UpdateSpellPowerLevelC2SPacket(-1,(int)spellID));
             }
 
         }
