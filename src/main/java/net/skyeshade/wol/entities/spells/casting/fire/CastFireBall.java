@@ -13,7 +13,7 @@ public class CastFireBall {
     //
 
     public static void castFireBall (ServerPlayer player) {
-        FireBallEntity fireball = new FireBallEntity(EntityInit.FIREBALL.get(), player,player.level);
+        FireBallEntity fireball = new FireBallEntity(EntityInit.FIREBALL.get(), player,player.level,1);
 
         double spawnX = player.getX()+2*player.getLookAngle().x;
         double spawnY = player.getY()+2*player.getLookAngle().y;

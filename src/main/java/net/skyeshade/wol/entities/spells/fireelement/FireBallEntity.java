@@ -3,12 +3,11 @@ package net.skyeshade.wol.entities.spells.fireelement;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -16,13 +15,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
-import net.skyeshade.wol.BaseBladeSlashProjectile;
 import net.skyeshade.wol.entities.spells.BaseSpellProjectile;
 import net.skyeshade.wol.networking.ModMessages;
-import net.skyeshade.wol.networking.packet.spellstatupdate.SpellPowerLevelDataSyncS2CPacket;
 import net.skyeshade.wol.sound.ModSounds;
-import net.skyeshade.wol.stats.PlayerStatsProvider;
-import org.jetbrains.annotations.NotNull;
+import net.skyeshade.wol.util.ExplosionUtil;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -45,12 +41,20 @@ public class FireBallEntity extends BaseSpellProjectile {
         super(entityType, x, y, z, world);
     }
 
-    public FireBallEntity(EntityType<FireBallEntity> entityType, LivingEntity shooter, Level world) {
+    public FireBallEntity(EntityType<FireBallEntity> entityType, LivingEntity shooter, Level world, int SpellId) {
 
-        super(entityType, shooter, world);
+        super(entityType, shooter, world, SpellId);
         attacker = shooter;
 
         this.playSound(SoundEvents.FIRECHARGE_USE,1.0F, 0.1F);
+/*
+        ServerPlayer player = (ServerPlayer) attacker;
+        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+            power = stats.getSpellPowerLevel()[1];
+        });
+*/
+
+
         //this.shouldRenderAtSqrDistance(100000);
 
        // this.shouldRenderAtSqrDistance(10000);
@@ -62,6 +66,14 @@ public class FireBallEntity extends BaseSpellProjectile {
 
         //currentDeltamovement = this.getDeltaMovement();
     }
+    /*
+    @Override
+    protected void defineSynchedData() {
+        if (this.level.isClientSide){
+            this.power = ClientStatsData.getPlayerSpellPowerLevel()[1];
+        }
+
+    }*/
 
     @Override
     public boolean shouldRenderAtSqrDistance(double pDistance) {
@@ -87,10 +99,11 @@ public class FireBallEntity extends BaseSpellProjectile {
 
         //this.setSoundEvent(SoundEvents.TRIDENT_HIT);
         playSoundOnHit();
-        pResult.getEntity().hurt(DamageSource.MAGIC, 20);
+        if (!this.level.isClientSide) {
+            pResult.getEntity().hurt(DamageSource.MAGIC, 20);
 
-        this.getLevel().explode(this, this.getX(),this.getY(),this.getZ(), 1+power/10, true, Explosion.BlockInteraction.BREAK);
-
+            ExplosionUtil.getExplosionBlockOffsets(1+(int)this.getPowerLevel()/10, 10, 10, true, level, pResult.getEntity().blockPosition(), (Player) this.getOwner(), false);
+        }
         this.discard();
 
 
@@ -105,7 +118,11 @@ public class FireBallEntity extends BaseSpellProjectile {
         if (!this.level.getBlockState(pResult.getBlockPos()).is(Blocks.BEDROCK) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_PORTAL_FRAME) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_GATEWAY) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_PORTAL))
             this.level.destroyBlock(pResult.getBlockPos(), true);
 
-        this.getLevel().explode(this, this.getX(),this.getY(),this.getZ(), 1+power/10, true, Explosion.BlockInteraction.BREAK);
+        //this.getLevel().explode(this, this.getX(),this.getY(),this.getZ(), 1+this.getPowerLevel()/10, true, Explosion.BlockInteraction.BREAK);
+        if (!this.level.isClientSide) {
+            ExplosionUtil.getExplosionBlockOffsets(1+(int)this.getPowerLevel()/10, 10, 10, true, level, pResult.getBlockPos(), (Player) this.getOwner(), false);
+        }
+
         this.discard();
 
     }
@@ -160,6 +177,7 @@ public class FireBallEntity extends BaseSpellProjectile {
 
     @Override
     public Packet<?> getAddEntityPacket() {
+
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

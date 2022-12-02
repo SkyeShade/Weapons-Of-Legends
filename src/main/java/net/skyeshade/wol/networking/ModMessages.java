@@ -267,6 +267,9 @@ public class ModMessages {
                 .encoder(SpellRangeDataSyncS2CPacket::toBytes)
                 .consumerMainThread(SpellRangeDataSyncS2CPacket::handle)
                 .add();
+
+
+
     }
 
     public static <MSG> void sendToServer(MSG message) {

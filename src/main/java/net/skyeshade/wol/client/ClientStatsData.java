@@ -117,4 +117,8 @@ public class ClientStatsData {
     public static long getPlayerManaCoreXp() {
         return playerManaCoreXp;
     }
+
+
+
+    ///////
 }

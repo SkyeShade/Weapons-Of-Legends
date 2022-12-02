@@ -70,7 +70,7 @@ public class ModEvents {
         event.register(PlayerStats.class);
 
     }
-    static int tickcount;
+    public static int tickcount;
 
     @SubscribeEvent
     public static void onServerTick(TickEvent.ServerTickEvent event) {

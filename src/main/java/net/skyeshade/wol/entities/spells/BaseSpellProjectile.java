@@ -42,6 +42,8 @@ import java.util.List;
 public abstract class BaseSpellProjectile extends Projectile {
     private static final EntityDataAccessor<Byte> ID_FLAGS = SynchedEntityData.defineId(BaseSpellProjectile.class, EntityDataSerializers.BYTE);
 
+    private static final EntityDataAccessor<Integer> POWER = SynchedEntityData.defineId(BaseSpellProjectile.class, EntityDataSerializers.INT);
+
     private static final int FLAG_CRIT = 1;
     private static final int FLAG_NOPHYSICS = 2;
 
@@ -51,6 +53,8 @@ public abstract class BaseSpellProjectile extends Projectile {
 
     public int shakeTime;
     private int life;
+
+    private int spellId;
     private double baseDamage = 2.0D;
     private int knockback;
     private SoundEvent soundEvent = this.getDefaultHitGroundSoundEvent();
@@ -69,23 +73,24 @@ public abstract class BaseSpellProjectile extends Projectile {
         this.setPos(pX, pY, pZ);
     }
 
-    protected BaseSpellProjectile(EntityType<? extends BaseSpellProjectile> pEntityType, LivingEntity pShooter, Level pLevel) {
+    protected BaseSpellProjectile(EntityType<? extends BaseSpellProjectile> pEntityType, LivingEntity pShooter, Level pLevel, long pSpellid) {
         this(pEntityType, pShooter.getX(), pShooter.getEyeY() - (double)0.1F, pShooter.getZ(), pLevel);
         this.setOwner(pShooter);
+
+
+        this.spellId = (int)pSpellid;
+
+
         ServerPlayer player = (ServerPlayer) pShooter;
         player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
-            power = stats.getSpellPowerLevel()[1];
+
+
+            this.entityData.set(POWER, (int)stats.getSpellPowerLevel()[(int)spellId]);
         });
-        if (pShooter.level.isClientSide) {
-            System.out.println("client side: "+power);
-        }else {
-            System.out.println("server side: "+power);
-        }
-
-
 
 
     }
+
 
 
 
@@ -104,6 +109,15 @@ public abstract class BaseSpellProjectile extends Projectile {
     protected void defineSynchedData() {
         this.entityData.define(ID_FLAGS, (byte)0);
 
+
+        this.entityData.define(POWER, (int)0);
+
+
+    }
+
+
+    public long getPowerLevel() {
+        return this.entityData.get(POWER);
     }
 
     /**
@@ -415,6 +429,8 @@ public abstract class BaseSpellProjectile extends Projectile {
         pCompound.putDouble("damage", this.baseDamage);
         pCompound.putBoolean("crit", this.isCritArrow());
 
+        pCompound.putLong("power", this.power);
+
         //pCompound.putString("SoundEvent", Registry.SOUND_EVENT.getKey(this.soundEvent).toString());
 
     }
@@ -441,6 +457,8 @@ public abstract class BaseSpellProjectile extends Projectile {
         if (pCompound.contains("SoundEvent", 8)) {
             this.soundEvent = Registry.SOUND_EVENT.getOptional(new ResourceLocation(pCompound.getString("SoundEvent"))).orElse(this.getDefaultHitGroundSoundEvent());
         }
+
+        this.power = pCompound.getLong("power");
 
 
     }
