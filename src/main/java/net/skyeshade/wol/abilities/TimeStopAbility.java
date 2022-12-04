@@ -25,6 +25,7 @@ import java.util.UUID;
 
 
 public class TimeStopAbility {
+    //TODO: redo fucking everything
     public static List<Integer> timer = new ArrayList<>();
 
     static List<Integer> stopTimer = new ArrayList<>();

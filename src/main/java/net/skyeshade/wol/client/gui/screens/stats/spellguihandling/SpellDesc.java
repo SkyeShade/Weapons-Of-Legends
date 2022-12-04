@@ -23,6 +23,8 @@ public class SpellDesc extends Screen {
     //
     //
     //
+
+    //TODO: add proper descriptions
     public SpellDesc() {
         super(GameNarrator.NO_TITLE);
     }
@@ -52,8 +54,8 @@ public class SpellDesc extends Screen {
 
         }
         if (page2) {
-            drawCenteredString(pPoseStack,font,"Damage: "+ SpellBaseStatVariables.getSpellBaseStats(spellID,1),pOffsetX + 56-30+100,pOffsetY + 60 + 18,16753920);
-            drawCenteredString(pPoseStack,font,"Mana Cost: "+ SpellBaseStatVariables.getSpellBaseStats(spellID,2),pOffsetX + 56-30+100,pOffsetY + 60 + 18*2,16753920);
+            drawCenteredString(pPoseStack,font,"Damage: "+ SpellBaseStatVariables.getSpellBaseStats(spellID,1) + " + " + SpellBaseStatVariables.getSpellDamageIncrease(spellID,ClientStatsData.getPlayerSpellPowerLevel()[(int)spellID]),pOffsetX + 56-30+100,pOffsetY + 60 + 18,16753920);
+            drawCenteredString(pPoseStack,font,"Mana Cost: "+ SpellBaseStatVariables.getSpellBaseStats(spellID,2)  + " + " + SpellBaseStatVariables.getSpellManaCostIncrease(spellID,ClientStatsData.getPlayerSpellPowerLevel()[(int)spellID]),pOffsetX + 56-30+100,pOffsetY + 60 + 18*2,16753920);
             drawCenteredString(pPoseStack,font,"Casting Time: "+ (SpellBaseStatVariables.getSpellBaseStats(spellID,3)*1000)/20 + "ms",pOffsetX + 56-30+100,pOffsetY + 60 + 18*3,16753920);
             drawCenteredString(pPoseStack,font,"Cooldown: "+ (SpellBaseStatVariables.getSpellBaseStats(spellID,4)*1000)/20 + "ms",pOffsetX + 56-30+100,pOffsetY + 60 + 18*4,16753920);
             drawCenteredString(pPoseStack,font,"Power: "+ ClientStatsData.getPlayerSpellPowerLevel()[(int)spellID],pOffsetX + 56-30+100,pOffsetY + 60 + 18*5,16753920);

@@ -16,9 +16,11 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.skyeshade.wol.entities.spells.BaseSpellProjectile;
+import net.skyeshade.wol.entities.spells.casting.fire.CastFireBall;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.sound.ModSounds;
 import net.skyeshade.wol.util.ExplosionUtil;
+import net.skyeshade.wol.util.SpellBaseStatVariables;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -30,8 +32,14 @@ public class FireBallEntity extends BaseSpellProjectile {
     Vec3 currentDeltamovement;
 
 
+    long totalDamage = SpellBaseStatVariables.getSpellDamageIncrease(1,this.getPowerLevel()) + SpellBaseStatVariables.getSpellBaseStats(1,1);
 
-    int ticks;
+    int ticksAlive;
+
+    private long castingTime;
+
+    boolean isCast = false;
+
     public FireBallEntity(EntityType<FireBallEntity> entityType, Level world) {
         super(entityType, world);
 
@@ -45,35 +53,13 @@ public class FireBallEntity extends BaseSpellProjectile {
 
         super(entityType, shooter, world, SpellId);
         attacker = shooter;
-
+        this.setOwner(shooter);
         this.playSound(SoundEvents.FIRECHARGE_USE,1.0F, 0.1F);
-/*
-        ServerPlayer player = (ServerPlayer) attacker;
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
-            power = stats.getSpellPowerLevel()[1];
-        });
-*/
 
+        castingTime = SpellBaseStatVariables.getSpellBaseStats(SpellId,3);
 
-        //this.shouldRenderAtSqrDistance(100000);
-
-       // this.shouldRenderAtSqrDistance(10000);
-
-        //if (this.distanceTo(shooter) > 10) {
-        //    this.discard();
-        //}
-
-
-        //currentDeltamovement = this.getDeltaMovement();
     }
-    /*
-    @Override
-    protected void defineSynchedData() {
-        if (this.level.isClientSide){
-            this.power = ClientStatsData.getPlayerSpellPowerLevel()[1];
-        }
 
-    }*/
 
     @Override
     public boolean shouldRenderAtSqrDistance(double pDistance) {
@@ -96,15 +82,24 @@ public class FireBallEntity extends BaseSpellProjectile {
     protected void onHitEntity(EntityHitResult pResult) {
 
         super.onHitEntity(pResult);
+        if (ticksAlive > SpellBaseStatVariables.getSpellBaseStats(1,3)) {
+            if (pResult.getEntity() != this.getOwner()) {
+                //this.setSoundEvent(SoundEvents.TRIDENT_HIT);
+                playSoundOnHit();
+                if (!this.level.isClientSide) {
+                    //pResult.getEntity().hurt(DamageSource.MAGIC, 20);
 
-        //this.setSoundEvent(SoundEvents.TRIDENT_HIT);
-        playSoundOnHit();
-        if (!this.level.isClientSide) {
-            pResult.getEntity().hurt(DamageSource.MAGIC, 20);
+                    ExplosionUtil.getExplosionBlockOffsets(1 + (int) this.getPowerLevel() / 10, totalDamage, true, level, pResult.getEntity().blockPosition(), (Player) this.getOwner(), false);
+                }
+                this.discard();
+                this.kill();
+            }
 
-            ExplosionUtil.getExplosionBlockOffsets(1+(int)this.getPowerLevel()/10, 10, 10, true, level, pResult.getEntity().blockPosition(), (Player) this.getOwner(), false);
+
+
+
         }
-        this.discard();
+
 
 
     }
@@ -115,15 +110,16 @@ public class FireBallEntity extends BaseSpellProjectile {
         //this.playSound(SoundEvents.FIRECHARGE_USE,1.0F, 0.1F);
         playSoundOnHit();
 
-        if (!this.level.getBlockState(pResult.getBlockPos()).is(Blocks.BEDROCK) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_PORTAL_FRAME) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_GATEWAY) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_PORTAL))
-            this.level.destroyBlock(pResult.getBlockPos(), true);
+        /*if (!this.level.getBlockState(pResult.getBlockPos()).is(Blocks.BEDROCK) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_PORTAL_FRAME) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_GATEWAY) && !this.level.getBlockState(pResult.getBlockPos()).is(Blocks.END_PORTAL))
+            this.level.destroyBlock(pResult.getBlockPos(), true);*/
 
         //this.getLevel().explode(this, this.getX(),this.getY(),this.getZ(), 1+this.getPowerLevel()/10, true, Explosion.BlockInteraction.BREAK);
         if (!this.level.isClientSide) {
-            ExplosionUtil.getExplosionBlockOffsets(1+(int)this.getPowerLevel()/10, 10, 10, true, level, pResult.getBlockPos(), (Player) this.getOwner(), false);
+            ExplosionUtil.getExplosionBlockOffsets(1+(int)this.getPowerLevel()/10, totalDamage, true,  level, pResult.getBlockPos(), (Player) this.getOwner(), false);
         }
 
         this.discard();
+        this.kill();
 
     }
 
@@ -141,21 +137,29 @@ public class FireBallEntity extends BaseSpellProjectile {
 
 
 
-
+    boolean applyMovementOnce = false;
     int randomNum = ThreadLocalRandom.current().nextInt(0, 360);
     @Override
     public void tick() {
 
         //power = powerFromPlayer;
 
-        ticks++;
+
+
+        ticksAlive++;
+        if (this.getOwner() != null)
+            CastFireBall.castingTiming(this, (Player) this.getOwner(), ticksAlive);
+
+
+
         if (this.isInWater()) {
             if (currentDeltamovement == null) {
                 currentDeltamovement = this.getDeltaMovement();
-            }else {
+            } else {
                 this.setDeltaMovement(currentDeltamovement.x * 300.0F, currentDeltamovement.y * 300.0F, currentDeltamovement.z * 300.0F);
             }
         }
+
         this.playSound(SoundEvents.FIRE_AMBIENT, 1.0F, 2F);
 
 
@@ -164,8 +168,6 @@ public class FireBallEntity extends BaseSpellProjectile {
             int rY = ThreadLocalRandom.current().nextInt(-1, 2);
             int rZ = ThreadLocalRandom.current().nextInt(-1, 2);
             this.level.addAlwaysVisibleParticle(ParticleTypes.FLAME, this.getX()+rX *0.25D, this.getY()+rY*0.25D , this.getZ()+rZ*0.25D, (this.getDeltaMovement().x+rX)/20, (this.getDeltaMovement().y+rY)/20, (this.getDeltaMovement().z+rZ)/20);
-
-
         }
 
         super.tick();

@@ -21,7 +21,7 @@ import net.skyeshade.wol.stats.PlayerStatsProvider;
 
 
 public class FireBallRenderer extends EntityRenderer<FireBallEntity> {
-
+    //TODO: fix the random crash that happens sometimes when the fireball takes up the entire screen (mostly happened when in fullscreen)
 
     private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("wol:textures/entity/spark.png");
     private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(TEXTURE_LOCATION);
@@ -53,7 +53,7 @@ public class FireBallRenderer extends EntityRenderer<FireBallEntity> {
         pMatrixStack.mulPose(Vector3f.YP.rotationDegrees((int) (Math.random() * 180 + 1)));
         pMatrixStack.mulPose(Vector3f.XP.rotationDegrees((int) (Math.random() * 180 + 1)));
         pMatrixStack.mulPose(Vector3f.ZP.rotationDegrees((int) (Math.random() * 180 + 1)));
-        pMatrixStack.scale(-0.5F - ((float)pEntity.getPowerLevel()/10), -0.5F - ((float)pEntity.getPowerLevel()/10), 0.5F + ((float)pEntity.getPowerLevel()/10));
+        pMatrixStack.scale(-0.5F - ((float)pEntity.getPowerLevel()/100), -0.5F - ((float)pEntity.getPowerLevel()/100), 0.5F + ((float)pEntity.getPowerLevel()/100));
         //System.out.println(pEntity.getPowerLevel());
         this.model.setupAnim(pEntity, 0.0F, 0.0F, 0.0F, f, f1);
         VertexConsumer vertexconsumer = pBuffer.getBuffer(this.model.renderType(TEXTURE_LOCATION));

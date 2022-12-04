@@ -6,6 +6,7 @@ import net.minecraftforge.client.settings.KeyConflictContext;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyBinding {
+    //TODO: proper key names
     public static final String KEY_CATEGORY_WOL = "key.category.wol.tutorial";
     public static final String KEY_SPELLSLOTS_TOGGLE = "key.wol.spellslottoggle";
 

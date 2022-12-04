@@ -146,9 +146,6 @@ public class DisplaySpellInformation extends Screen {
                     }
 
 
-
-
-
                     if (StatsIcons.isMouseOver(pOffsetX + 41-4, pOffsetY +185, pMouseX - 8, pMouseY - 7, 12, 17)) {
                         RenderSystem.setShaderTexture(0, BUTTON_RIGHT_HIGH);
                         blit(pPoseStack, pOffsetX + 41, pOffsetY +185, 0, 0, 10, 15, -10, 15);

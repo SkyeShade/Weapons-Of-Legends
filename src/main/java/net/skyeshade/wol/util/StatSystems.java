@@ -11,7 +11,9 @@ import net.skyeshade.wol.networking.packet.manacore.MaxManaBarrierDataSyncS2CPac
 import net.skyeshade.wol.stats.PlayerStatsProvider;
 
 public class StatSystems {
-    static int requiredManaUsageForXp = 1;
+
+    //TODO: balance every stat
+    static int requiredManaUsageForXp = 10;
     public static long[] requiredCoreLevelXp = {
             100L,
             1000L,

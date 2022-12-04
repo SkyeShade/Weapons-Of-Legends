@@ -137,7 +137,7 @@ public class ModEvents {
                         //System.out.println("percentage: " + hpPercentage);
                         player.setHealth((float) Math.ceil(((20.0f / 100) * hpPercentage)));
                         //System.out.println("test custo  hp: " + stats.getHp());
-                        ModMessages.sendToPlayer(new HpDataSyncS2CPacket(stats.getHp()), ((ServerPlayer) player));
+                        //ModMessages.sendToPlayer(new HpDataSyncS2CPacket(stats.getHp()), ((ServerPlayer) player));
                     });
 
 
@@ -209,6 +209,7 @@ public class ModEvents {
     }
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
+        //TODO: damage amount is a float, somehow make it compatible with the mod's long damage for players and custom bosses/mobs
 
         if (event.getEntity() instanceof ServerPlayer player) {
 
@@ -264,7 +265,7 @@ public class ModEvents {
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
-                stats.setHp((stats.getMaxHp()/100)*20);
+                stats.setHp((stats.getMaxHp()*20)/100);
                 ModMessages.sendToPlayer(new HpDataSyncS2CPacket(stats.getHp()), player);
             });
 

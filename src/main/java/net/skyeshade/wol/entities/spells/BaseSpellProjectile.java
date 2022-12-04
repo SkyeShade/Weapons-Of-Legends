@@ -33,6 +33,7 @@ import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.skyeshade.wol.client.ClientStatsData;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
+import net.skyeshade.wol.util.SpellBaseStatVariables;
 
 
 import javax.annotation.Nullable;
@@ -40,9 +41,16 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class BaseSpellProjectile extends Projectile {
+
+    //TODO: add the ticksalive so it saves and the spell casting doesnt break when a player relogs
     private static final EntityDataAccessor<Byte> ID_FLAGS = SynchedEntityData.defineId(BaseSpellProjectile.class, EntityDataSerializers.BYTE);
 
     private static final EntityDataAccessor<Integer> POWER = SynchedEntityData.defineId(BaseSpellProjectile.class, EntityDataSerializers.INT);
+
+    private static final EntityDataAccessor<Integer> RANGE = SynchedEntityData.defineId(BaseSpellProjectile.class, EntityDataSerializers.INT);
+
+
+    private static final EntityDataAccessor<Integer> TICKSALIVE = SynchedEntityData.defineId(BaseSpellProjectile.class, EntityDataSerializers.INT);
 
     private static final int FLAG_CRIT = 1;
     private static final int FLAG_NOPHYSICS = 2;
@@ -64,6 +72,9 @@ public abstract class BaseSpellProjectile extends Projectile {
 
 
 
+
+
+
     protected BaseSpellProjectile(EntityType<? extends BaseSpellProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
@@ -79,7 +90,7 @@ public abstract class BaseSpellProjectile extends Projectile {
 
 
         this.spellId = (int)pSpellid;
-
+        //castingTime = SpellBaseStatVariables.getSpellBaseStats(spellId,3);
 
         ServerPlayer player = (ServerPlayer) pShooter;
         player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
@@ -87,6 +98,7 @@ public abstract class BaseSpellProjectile extends Projectile {
 
             this.entityData.set(POWER, (int)stats.getSpellPowerLevel()[(int)spellId]);
         });
+
 
 
     }
@@ -149,6 +161,8 @@ public abstract class BaseSpellProjectile extends Projectile {
      */
     public void tick() {
         super.tick();
+
+
         boolean flag = this.isNoPhysics();
         Vec3 vec3 = this.getDeltaMovement();
         if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
@@ -429,7 +443,7 @@ public abstract class BaseSpellProjectile extends Projectile {
         pCompound.putDouble("damage", this.baseDamage);
         pCompound.putBoolean("crit", this.isCritArrow());
 
-        pCompound.putLong("power", this.power);
+        pCompound.putLong("power", this.entityData.get(POWER));
 
         //pCompound.putString("SoundEvent", Registry.SOUND_EVENT.getKey(this.soundEvent).toString());
 
@@ -458,7 +472,7 @@ public abstract class BaseSpellProjectile extends Projectile {
             this.soundEvent = Registry.SOUND_EVENT.getOptional(new ResourceLocation(pCompound.getString("SoundEvent"))).orElse(this.getDefaultHitGroundSoundEvent());
         }
 
-        this.power = pCompound.getLong("power");
+        this.entityData.set(POWER, (int)pCompound.getLong("power"));
 
 
     }
