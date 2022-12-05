@@ -44,25 +44,29 @@ public class FireBallRenderer extends EntityRenderer<FireBallEntity> {
 
 
 
+        try {
+            pMatrixStack.pushPose();
+            float f = Mth.rotlerp(pEntity.yRotO, pEntity.getYRot(), pPartialTicks);
+            float f1 = Mth.lerp(pPartialTicks, pEntity.xRotO, pEntity.getXRot());
+            float f2 = (float) pEntity.tickCount + pPartialTicks;
+            pMatrixStack.translate(0.0D, (double) 0.15F, 0.0D);
+            pMatrixStack.mulPose(Vector3f.YP.rotationDegrees((int) (Math.random() * 180 + 1)));
+            pMatrixStack.mulPose(Vector3f.XP.rotationDegrees((int) (Math.random() * 180 + 1)));
+            pMatrixStack.mulPose(Vector3f.ZP.rotationDegrees((int) (Math.random() * 180 + 1)));
+            pMatrixStack.scale(-0.5F - ((float) pEntity.getPowerLevel() / 100), -0.5F - ((float) pEntity.getPowerLevel() / 100), 0.5F + ((float) pEntity.getPowerLevel() / 100));
+            //System.out.println(pEntity.getPowerLevel());
+            this.model.setupAnim(pEntity, 0.0F, 0.0F, 0.0F, f, f1);
+            VertexConsumer vertexconsumer = pBuffer.getBuffer(this.model.renderType(TEXTURE_LOCATION));
+            this.model.renderToBuffer(pMatrixStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+            pMatrixStack.scale(1.5F, 1.5F, 1.5F);
+            VertexConsumer vertexconsumer1 = pBuffer.getBuffer(RENDER_TYPE);
+            this.model.renderToBuffer(pMatrixStack, vertexconsumer1, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 0.15F);
+            pMatrixStack.popPose();
 
-        pMatrixStack.pushPose();
-        float f = Mth.rotlerp(pEntity.yRotO, pEntity.getYRot(), pPartialTicks);
-        float f1 = Mth.lerp(pPartialTicks, pEntity.xRotO, pEntity.getXRot());
-        float f2 = (float) pEntity.tickCount + pPartialTicks;
-        pMatrixStack.translate(0.0D, (double) 0.15F, 0.0D);
-        pMatrixStack.mulPose(Vector3f.YP.rotationDegrees((int) (Math.random() * 180 + 1)));
-        pMatrixStack.mulPose(Vector3f.XP.rotationDegrees((int) (Math.random() * 180 + 1)));
-        pMatrixStack.mulPose(Vector3f.ZP.rotationDegrees((int) (Math.random() * 180 + 1)));
-        pMatrixStack.scale(-0.5F - ((float)pEntity.getPowerLevel()/100), -0.5F - ((float)pEntity.getPowerLevel()/100), 0.5F + ((float)pEntity.getPowerLevel()/100));
-        //System.out.println(pEntity.getPowerLevel());
-        this.model.setupAnim(pEntity, 0.0F, 0.0F, 0.0F, f, f1);
-        VertexConsumer vertexconsumer = pBuffer.getBuffer(this.model.renderType(TEXTURE_LOCATION));
-        this.model.renderToBuffer(pMatrixStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-        pMatrixStack.scale(1.5F, 1.5F, 1.5F);
-        VertexConsumer vertexconsumer1 = pBuffer.getBuffer(RENDER_TYPE);
-        this.model.renderToBuffer(pMatrixStack, vertexconsumer1, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 0.15F);
-        pMatrixStack.popPose();
-        super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
+            super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
+        }catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     /**

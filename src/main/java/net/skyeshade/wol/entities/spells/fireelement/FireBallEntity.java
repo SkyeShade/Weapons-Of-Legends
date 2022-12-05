@@ -92,7 +92,7 @@ public class FireBallEntity extends BaseSpellProjectile {
                     ExplosionUtil.getExplosionBlockOffsets(1 + (int) this.getPowerLevel() / 10, totalDamage, true, level, pResult.getEntity().blockPosition(), (Player) this.getOwner(), false);
                 }
                 this.discard();
-                this.kill();
+
             }
 
 
@@ -119,7 +119,7 @@ public class FireBallEntity extends BaseSpellProjectile {
         }
 
         this.discard();
-        this.kill();
+
 
     }
 
