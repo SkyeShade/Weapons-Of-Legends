@@ -19,6 +19,8 @@ public class PlayerStats {
     private final long MAX_MANATOXP = 0;
     private final long MIN_MANACORE_XP = 0;
 
+
+    private int castingAmount;
     private long mana;
 
     private long hp;
@@ -44,6 +46,7 @@ public class PlayerStats {
     private boolean manabarrieralive;
 
     private boolean spellSlotsToggle;
+    //manacore level starts at 1, not 0
     private long manacore_level;
     private long manacore_xp;
     private long manatoxp;
@@ -55,6 +58,8 @@ public class PlayerStats {
     private boolean menuStatTabToggle;
 
     //get functions
+
+    public int getCastingAmount() {return castingAmount;}
     public long getMana() {
         return mana;
     }
@@ -126,6 +131,8 @@ public class PlayerStats {
     public boolean getManaBarrierAlive() {return manabarrieralive;}
 
     //set functions
+
+    public void setCastingAmount(int set) {this.castingAmount = set;}
     public void setMaxMana(long set) {
         this.max_mana = Math.max(set, MIN_MAXMANA);
     }
@@ -181,7 +188,7 @@ public class PlayerStats {
 
 
     //add functions
-
+    public void addCastingAmount(int add) {this.castingAmount = castingAmount + add;}
 
     public void addMana(long add) {this.mana = Math.min(mana + add, max_mana);}
 
@@ -235,6 +242,7 @@ public class PlayerStats {
         this.spellPowerLevel = source.spellPowerLevel;
         this.spellRange = source.spellRange;
         this.spellPassiveToggle = source.spellPassiveToggle;
+        this.castingAmount = source.castingAmount;
     }
     public void saveNBTData(CompoundTag nbt) {
         //System.out.prlongln("Saving NBT"+"\n"+mana+"\n"+max_mana);
@@ -259,6 +267,7 @@ public class PlayerStats {
         nbt.putLongArray("spellpowerlevel", spellPowerLevel);
         nbt.putLongArray("spellrange", spellRange);
         nbt.putByteArray("spellpassivetoggle", spellPassiveToggle);
+        nbt.putInt("castingamount", castingAmount);
 
 
     }
@@ -286,5 +295,6 @@ public class PlayerStats {
         spellPowerLevel = nbt.getLongArray("spellpowerlevel");
         spellRange = nbt.getLongArray("spellrange");
         spellPassiveToggle = nbt.getByteArray("spellpassivetoggle");
+        castingAmount = nbt.getInt("castingamount");
     }
 }

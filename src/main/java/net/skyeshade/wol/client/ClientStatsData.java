@@ -3,6 +3,7 @@ package net.skyeshade.wol.client;
 import net.skyeshade.wol.util.SpellBaseStatVariables;
 
 public class ClientStatsData {
+    private static int playerCastingAmount;
     private static long playerMana;
     private static long playerMaxMana;
 
@@ -32,6 +33,7 @@ public class ClientStatsData {
 
     private static boolean playerSpellSlotsToggle;
 
+    public static void setPlayerCastingAmount(int castingAmount) {ClientStatsData.playerCastingAmount = castingAmount;}
     public static void setMana(long mana) {
         ClientStatsData.playerMana = mana;
     }
@@ -88,6 +90,8 @@ public class ClientStatsData {
     public static void setManaCoreXp(long manacore_xp) {
         ClientStatsData.playerManaCoreXp = manacore_xp;
     }
+
+    public static int getPlayerCastingAmount() {return playerCastingAmount;}
     public static long getPlayerManaBarrier() {
         return playerManaBarrier;
     }

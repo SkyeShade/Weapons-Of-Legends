@@ -21,17 +21,22 @@ public class SpellCaster {
 
             long manaCost = SpellBaseStatVariables.getSpellBaseStats(spellID, 2) + SpellBaseStatVariables.getSpellManaCostIncrease(spellID, stats.getSpellPowerLevel()[(int) spellID]);
 
-            if (spellID == 1) {
+            if (StatSystems.parrallelCastingAllowedPerCoreLevel[(int)stats.getManaCoreLevel()-1] > stats.getCastingAmount()) {
+                if (spellID == 1) {
 
-                if (stats.getMana() >= manaCost) {
+                    if (stats.getMana() >= manaCost) {
 
-                    stats.addMana(-manaCost);
-                    StatSystems.xpSystem(-manaCost, player);
-                    ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(stats.getMana()), player);
+                        stats.addMana(-manaCost);
+                        StatSystems.xpSystem(-manaCost, player);
+                        ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(stats.getMana()), player);
 
-                    CastFireBall.castFireBall(player);
+                        CastFireBall.castFireBall(player);
 
+                    }
                 }
+
+
+
             }
         });
     }

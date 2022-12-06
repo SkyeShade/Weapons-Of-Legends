@@ -38,7 +38,7 @@ public class FireBallEntity extends BaseSpellProjectile {
 
     private long castingTime;
 
-    boolean isCast = false;
+
 
     public FireBallEntity(EntityType<FireBallEntity> entityType, Level world) {
         super(entityType, world);
@@ -147,7 +147,7 @@ public class FireBallEntity extends BaseSpellProjectile {
 
 
         ticksAlive++;
-        if (this.getOwner() != null)
+        if (!this.isCast)
             CastFireBall.castingTiming(this, (Player) this.getOwner(), ticksAlive);
 
 

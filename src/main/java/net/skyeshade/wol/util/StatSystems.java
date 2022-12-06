@@ -13,7 +13,10 @@ import net.skyeshade.wol.stats.PlayerStatsProvider;
 public class StatSystems {
 
     //TODO: balance every stat
-    static int requiredManaUsageForXp = 10;
+    static int requiredManaUsageForXp = 1;
+
+    public static int[] parrallelCastingAllowedPerCoreLevel = {
+            1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4};
     public static long[] requiredCoreLevelXp = {
             100L,
             1000L,

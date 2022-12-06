@@ -69,6 +69,8 @@ public abstract class BaseSpellProjectile extends Projectile {
 
     public long power;
 
+    public boolean isCast = false;
+
 
 
 

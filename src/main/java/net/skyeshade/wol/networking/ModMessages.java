@@ -22,6 +22,8 @@ import net.skyeshade.wol.networking.packet.mana.UpdateManaC2SPacket;
 import net.skyeshade.wol.networking.packet.mana.UpdateMaxManaC2SPacket;
 import net.skyeshade.wol.networking.packet.manacore.*;
 import net.skyeshade.wol.networking.packet.menutoggle.MenuStatTabToggleDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.spellfire.extras.CastingAmountDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.spellfire.extras.UpdateCastingAmountC2SPacket;
 import net.skyeshade.wol.networking.packet.spellslots.SpellSlotsDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.spellslots.SpellSlotsToggleDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.menutoggle.UpdateMenuStatTabToggleC2SPacket;
@@ -266,6 +268,20 @@ public class ModMessages {
                 .decoder(SpellRangeDataSyncS2CPacket::new)
                 .encoder(SpellRangeDataSyncS2CPacket::toBytes)
                 .consumerMainThread(SpellRangeDataSyncS2CPacket::handle)
+                .add();
+
+
+
+        net.messageBuilder(UpdateCastingAmountC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateCastingAmountC2SPacket::new)
+                .encoder(UpdateCastingAmountC2SPacket::toBytes)
+                .consumerMainThread(UpdateCastingAmountC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(CastingAmountDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(CastingAmountDataSyncS2CPacket::new)
+                .encoder(CastingAmountDataSyncS2CPacket::toBytes)
+                .consumerMainThread(CastingAmountDataSyncS2CPacket::handle)
                 .add();
 
 

@@ -26,6 +26,7 @@ import net.skyeshade.wol.networking.packet.mana.ManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.mana.MaxManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.manacore.*;
 import net.skyeshade.wol.networking.packet.menutoggle.MenuStatTabToggleDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.spellfire.extras.CastingAmountDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.spellslots.SpellSlotsDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.spellslots.SpellSlotsToggleDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.spellstatupdate.SpellPowerLevelDataSyncS2CPacket;
@@ -180,6 +181,7 @@ public class ModEvents {
 
                     ModMessages.sendToPlayer(new SpellPowerLevelDataSyncS2CPacket(stats.getSpellPowerLevel()), player);
                     ModMessages.sendToPlayer(new SpellRangeDataSyncS2CPacket(stats.getSpellRange()), player);
+                    ModMessages.sendToPlayer(new CastingAmountDataSyncS2CPacket(stats.getCastingAmount()), player);
                     //ModMessages.sendToPlayer(new SpellPDataSyncS2CPacket(stats.getSpellSlots()), player);
                     System.out.println();
 
