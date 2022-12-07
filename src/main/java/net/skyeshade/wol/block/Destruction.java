@@ -333,7 +333,7 @@ public class Destruction extends BaseDestruction {
     }
 
     private void setFlammable(Block pBlock, int pEncouragement, int pFlammability) {
-        if (pBlock == Blocks.AIR) throw new IllegalArgumentException("Tried to set air on fire... This is bad.");
+        if (pBlock == Blocks.AIR) throw new IllegalArgumentException("Tried to set wind on fire... This is bad.");
         this.igniteOdds.put(pBlock, pEncouragement);
         this.burnOdds.put(pBlock, pFlammability);
     }

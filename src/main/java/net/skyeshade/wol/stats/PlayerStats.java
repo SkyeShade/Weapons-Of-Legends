@@ -3,8 +3,6 @@ package net.skyeshade.wol.stats;
 import net.minecraft.nbt.CompoundTag;
 import net.skyeshade.wol.util.SpellBaseStatVariables;
 
-import java.lang.reflect.Array;
-
 
 public class PlayerStats {
 
@@ -22,7 +20,7 @@ public class PlayerStats {
 
     private long fireAffinity;
     private long waterAffinity;
-    private long airAffinity;
+    private long windAffinity;
     private long earthAffinity;
     private long aetherAffinity;
 
@@ -69,7 +67,7 @@ public class PlayerStats {
 
     public long getFireAffinity() {return fireAffinity;}
     public long getWaterAffinity() {return waterAffinity;}
-    public long getAirAffinity() {return airAffinity;}
+    public long getWindAffinity() {return windAffinity;}
     public long getEarthAffinity() {return earthAffinity;}
     public long getAetherAffinity() {return aetherAffinity;}
     public long getAugmentingEfficiency() {return augmentingEfficiency;}
@@ -149,7 +147,7 @@ public class PlayerStats {
     //set functions
     public void setFireAffinity(long set) {this.fireAffinity = set;}
     public void setWaterAffinity(long set) {this.waterAffinity = set;}
-    public void setAirAffinity(long set) {this.airAffinity = set;}
+    public void setWindAffinity(long set) {this.windAffinity = set;}
     public void setEarthAffinity(long set) {this.earthAffinity = set;}
     public void setAetherAffinity(long set) {this.aetherAffinity = set;}
     public void setAugmentingEfficiency(long set) {this.augmentingEfficiency = set;}
@@ -214,7 +212,7 @@ public class PlayerStats {
 
     public void addFireAffinity(long add) {this.fireAffinity = fireAffinity + add;}
     public void addWaterAffinity(long add) {this.waterAffinity = waterAffinity + add;}
-    public void addAirAffinity(long add) {this.airAffinity = airAffinity + add;}
+    public void addWindAffinity(long add) {this.windAffinity = windAffinity + add;}
     public void addEarthAffinity(long add) {this.earthAffinity = earthAffinity + add;}
     public void addAetherAffinity(long add) {this.aetherAffinity = aetherAffinity + add;}
     public void addAugmentingEfficiency(long add) {this.augmentingEfficiency = augmentingEfficiency + add;}
@@ -226,7 +224,7 @@ public class PlayerStats {
 
 
     public void addSpellPowerLevel(long add, int index) {
-        this.spellPowerLevel[index] = spellPowerLevel[index] + add;
+        this.spellPowerLevel[index] = Math.max(spellPowerLevel[index] + add, 0);
     }
 
     public void addSpellRange(long add, int index) {
@@ -276,7 +274,7 @@ public class PlayerStats {
         this.castingAmount = source.castingAmount;
         this.fireAffinity = source.fireAffinity;
         this.waterAffinity = source.waterAffinity;
-        this.airAffinity = source.airAffinity;
+        this.windAffinity = source.windAffinity;
         this.earthAffinity = source.earthAffinity;
         this.aetherAffinity = source.aetherAffinity;
         this.augmentingEfficiency = source.augmentingEfficiency;
@@ -308,7 +306,7 @@ public class PlayerStats {
         nbt.putInt("castingamount", castingAmount);
         nbt.putLong("fireaffinity", fireAffinity);
         nbt.putLong("wateraffinity", waterAffinity);
-        nbt.putLong("airaffinity", airAffinity);
+        nbt.putLong("airaffinity", windAffinity);
         nbt.putLong("earthaffinity", earthAffinity);
         nbt.putLong("aetheraffinity",aetherAffinity);
         nbt.putLong("augefficiency", augmentingEfficiency);
@@ -343,7 +341,7 @@ public class PlayerStats {
         castingAmount = nbt.getInt("castingamount");
         fireAffinity = nbt.getLong("fireaffinity");
         waterAffinity = nbt.getLong("wateraffinity");
-        airAffinity = nbt.getLong("airaffinity");
+        windAffinity = nbt.getLong("airaffinity");
         earthAffinity = nbt.getLong("earthaffinity");
         aetherAffinity = nbt.getLong("aetheraffinity");
         augmentingEfficiency = nbt.getLong("augefficiency");

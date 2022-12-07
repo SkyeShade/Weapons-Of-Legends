@@ -1,4 +1,4 @@
-package net.skyeshade.wol.networking.packet.affinities;
+package net.skyeshade.wol.networking.packet.affinities.earth;
 
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -7,26 +7,26 @@ import net.skyeshade.wol.client.ClientStatsData;
 
 import java.util.function.Supplier;
 
-public class FireAffinityDataSyncS2CPacket {
-    private final long fireAffinity;
+public class EarthAffinityDataSyncS2CPacket {
+    private final long earthAffinity;
 
-    public FireAffinityDataSyncS2CPacket(long fireAffinity) {
-        this.fireAffinity = fireAffinity;
+    public EarthAffinityDataSyncS2CPacket(long earthAffinity) {
+        this.earthAffinity = earthAffinity;
     }
 
-    public FireAffinityDataSyncS2CPacket(FriendlyByteBuf buf) {
-        this.fireAffinity = buf.readLong();
+    public EarthAffinityDataSyncS2CPacket(FriendlyByteBuf buf) {
+        this.earthAffinity = buf.readLong();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeLong(fireAffinity);
+        buf.writeLong(earthAffinity);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
             // HERE WE ARE ON THE CLIENT!
-            ClientStatsData.setPlayerFireAffinity(fireAffinity);
+            ClientStatsData.setPlayerEarthAffinity(earthAffinity);
 
 
 

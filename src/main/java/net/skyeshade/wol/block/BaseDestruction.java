@@ -154,7 +154,7 @@ public abstract class BaseDestruction extends Block {
     }
 
     /**
-     * Called before the Block is set to air in the world. Called regardless of if the player's tool can actually collect
+     * Called before the Block is set to wind in the world. Called regardless of if the player's tool can actually collect
      * this block
      */
     public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {

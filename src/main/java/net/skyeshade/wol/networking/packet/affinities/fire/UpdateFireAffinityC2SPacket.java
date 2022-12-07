@@ -1,14 +1,11 @@
-package net.skyeshade.wol.networking.packet.affinities;
+package net.skyeshade.wol.networking.packet.affinities.fire;
 
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import net.skyeshade.wol.networking.ModMessages;
-import net.skyeshade.wol.networking.packet.mana.ManaDataSyncS2CPacket;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
-import net.skyeshade.wol.util.StatSystems;
 
 import java.util.function.Supplier;
 

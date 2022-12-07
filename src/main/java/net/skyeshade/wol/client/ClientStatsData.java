@@ -6,7 +6,7 @@ public class ClientStatsData {
 
     private static long playerFireAffinity;
     private static long playerWaterAffinity;
-    private static long playerAirAffinity;
+    private static long playerWindAffinity;
     private static long playerEarthAffinity;
     private static long playerAetherAffinity;
     private static long playerAugmentingEfficiency;
@@ -45,7 +45,7 @@ public class ClientStatsData {
 
     public static void setPlayerFireAffinity(long fireAffinity) {ClientStatsData.playerFireAffinity = fireAffinity;}
     public static void setPlayerWaterAffinity(long waterAffinity) {ClientStatsData.playerWaterAffinity = waterAffinity;}
-    public static void setPlayerAirAffinity(long airAffinity) {ClientStatsData.playerAirAffinity = airAffinity;}
+    public static void setPlayerWindAffinity(long windAffinity) {ClientStatsData.playerWindAffinity = windAffinity;}
     public static void setPlayerEarthAffinity(long earthAffinity) {ClientStatsData.playerEarthAffinity = earthAffinity;}
     public static void setPlayerAetherAffinity(long aetherAffinity) {ClientStatsData.playerAetherAffinity = aetherAffinity;}
     public static void setPlayerAugmentingEfficiency(long augmentingEfficiency) {ClientStatsData.playerAugmentingEfficiency = augmentingEfficiency;}
@@ -113,7 +113,7 @@ public class ClientStatsData {
 
     public static long getPlayerFireAffinity() {return playerFireAffinity;}
     public static long getPlayerWaterAffinity() {return playerWaterAffinity;}
-    public static long getPlayerAirAffinity() {return playerAirAffinity;}
+    public static long getPlayerWindAffinity() {return playerWindAffinity;}
     public static long getPlayerEarthAffinity() {return playerEarthAffinity;}
     public static long getPlayerAetherAffinity() {return playerAetherAffinity;}
     public static long getPlayerAugmentingEfficiency() {return playerAugmentingEfficiency;}

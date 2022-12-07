@@ -10,6 +10,8 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import net.skyeshade.wol.WOL;
 
 import net.skyeshade.wol.networking.packet.AnimateHurtDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.fire.FireAffinityDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.fire.UpdateFireAffinityC2SPacket;
 import net.skyeshade.wol.networking.packet.destruction.DestructionActiveDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.destruction.UpdateDestructionActiveC2SPacket;
 import net.skyeshade.wol.networking.packet.hp.HpDataSyncS2CPacket;
@@ -35,6 +37,8 @@ import net.skyeshade.wol.networking.packet.spellstatupdate.SpellRangeDataSyncS2C
 import net.skyeshade.wol.networking.packet.spellstatupdate.UpdateSpellPowerLevelC2SPacket;
 import net.skyeshade.wol.networking.packet.spellstatupdate.UpdateSpellRangeC2SPacket;
 
+import java.util.ArrayList;
+
 public class ModMessages {
     private static SimpleChannel INSTANCE;
 
@@ -52,6 +56,9 @@ public class ModMessages {
                 .simpleChannel();
 
         INSTANCE = net;
+
+
+
 
 
         net.messageBuilder(UpdateManaC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
@@ -282,6 +289,19 @@ public class ModMessages {
                 .decoder(CastingAmountDataSyncS2CPacket::new)
                 .encoder(CastingAmountDataSyncS2CPacket::toBytes)
                 .consumerMainThread(CastingAmountDataSyncS2CPacket::handle)
+                .add();
+
+
+        net.messageBuilder(UpdateFireAffinityC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateFireAffinityC2SPacket::new)
+                .encoder(UpdateFireAffinityC2SPacket::toBytes)
+                .consumerMainThread(UpdateFireAffinityC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(FireAffinityDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(FireAffinityDataSyncS2CPacket::new)
+                .encoder(FireAffinityDataSyncS2CPacket::toBytes)
+                .consumerMainThread(FireAffinityDataSyncS2CPacket::handle)
                 .add();
 
 
