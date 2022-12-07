@@ -20,6 +20,14 @@ public class PlayerStats {
     private final long MIN_MANACORE_XP = 0;
 
 
+    private long fireAffinity;
+    private long waterAffinity;
+    private long airAffinity;
+    private long earthAffinity;
+    private long aetherAffinity;
+
+    private long augmentingEfficiency;
+    private long conjuringEfficiency;
     private int castingAmount;
     private long mana;
 
@@ -58,6 +66,14 @@ public class PlayerStats {
     private boolean menuStatTabToggle;
 
     //get functions
+
+    public long getFireAffinity() {return fireAffinity;}
+    public long getWaterAffinity() {return waterAffinity;}
+    public long getAirAffinity() {return airAffinity;}
+    public long getEarthAffinity() {return earthAffinity;}
+    public long getAetherAffinity() {return aetherAffinity;}
+    public long getAugmentingEfficiency() {return augmentingEfficiency;}
+    public long getConjuringEfficiency() {return conjuringEfficiency;}
 
     public int getCastingAmount() {return castingAmount;}
     public long getMana() {
@@ -131,6 +147,13 @@ public class PlayerStats {
     public boolean getManaBarrierAlive() {return manabarrieralive;}
 
     //set functions
+    public void setFireAffinity(long set) {this.fireAffinity = set;}
+    public void setWaterAffinity(long set) {this.waterAffinity = set;}
+    public void setAirAffinity(long set) {this.airAffinity = set;}
+    public void setEarthAffinity(long set) {this.earthAffinity = set;}
+    public void setAetherAffinity(long set) {this.aetherAffinity = set;}
+    public void setAugmentingEfficiency(long set) {this.augmentingEfficiency = set;}
+    public void setConjuringEfficiency(long set) {this.conjuringEfficiency = set;}
 
     public void setCastingAmount(int set) {this.castingAmount = set;}
     public void setMaxMana(long set) {
@@ -188,6 +211,14 @@ public class PlayerStats {
 
 
     //add functions
+
+    public void addFireAffinity(long add) {this.fireAffinity = fireAffinity + add;}
+    public void addWaterAffinity(long add) {this.waterAffinity = waterAffinity + add;}
+    public void addAirAffinity(long add) {this.airAffinity = airAffinity + add;}
+    public void addEarthAffinity(long add) {this.earthAffinity = earthAffinity + add;}
+    public void addAetherAffinity(long add) {this.aetherAffinity = aetherAffinity + add;}
+    public void addAugmentingEfficiency(long add) {this.augmentingEfficiency = augmentingEfficiency + add;}
+    public void addConjuringEfficiency(long add) {this.conjuringEfficiency = conjuringEfficiency + add;}
     public void addCastingAmount(int add) {this.castingAmount = castingAmount + add;}
 
     public void addMana(long add) {this.mana = Math.min(mana + add, max_mana);}
@@ -243,6 +274,13 @@ public class PlayerStats {
         this.spellRange = source.spellRange;
         this.spellPassiveToggle = source.spellPassiveToggle;
         this.castingAmount = source.castingAmount;
+        this.fireAffinity = source.fireAffinity;
+        this.waterAffinity = source.waterAffinity;
+        this.airAffinity = source.airAffinity;
+        this.earthAffinity = source.earthAffinity;
+        this.aetherAffinity = source.aetherAffinity;
+        this.augmentingEfficiency = source.augmentingEfficiency;
+        this.conjuringEfficiency = source.conjuringEfficiency;
     }
     public void saveNBTData(CompoundTag nbt) {
         //System.out.prlongln("Saving NBT"+"\n"+mana+"\n"+max_mana);
@@ -268,6 +306,13 @@ public class PlayerStats {
         nbt.putLongArray("spellrange", spellRange);
         nbt.putByteArray("spellpassivetoggle", spellPassiveToggle);
         nbt.putInt("castingamount", castingAmount);
+        nbt.putLong("fireaffinity", fireAffinity);
+        nbt.putLong("wateraffinity", waterAffinity);
+        nbt.putLong("airaffinity", airAffinity);
+        nbt.putLong("earthaffinity", earthAffinity);
+        nbt.putLong("aetheraffinity",aetherAffinity);
+        nbt.putLong("augefficiency", augmentingEfficiency);
+        nbt.putLong("conefficiency", conjuringEfficiency);
 
 
     }
@@ -296,5 +341,12 @@ public class PlayerStats {
         spellRange = nbt.getLongArray("spellrange");
         spellPassiveToggle = nbt.getByteArray("spellpassivetoggle");
         castingAmount = nbt.getInt("castingamount");
+        fireAffinity = nbt.getLong("fireaffinity");
+        waterAffinity = nbt.getLong("wateraffinity");
+        airAffinity = nbt.getLong("airaffinity");
+        earthAffinity = nbt.getLong("earthaffinity");
+        aetherAffinity = nbt.getLong("aetheraffinity");
+        augmentingEfficiency = nbt.getLong("augefficiency");
+        conjuringEfficiency = nbt.getLong("conefficiency");
     }
 }

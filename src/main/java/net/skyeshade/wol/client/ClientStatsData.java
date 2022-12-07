@@ -3,6 +3,15 @@ package net.skyeshade.wol.client;
 import net.skyeshade.wol.util.SpellBaseStatVariables;
 
 public class ClientStatsData {
+
+    private static long playerFireAffinity;
+    private static long playerWaterAffinity;
+    private static long playerAirAffinity;
+    private static long playerEarthAffinity;
+    private static long playerAetherAffinity;
+    private static long playerAugmentingEfficiency;
+    private static long playerConjuringEfficiency;
+
     private static int playerCastingAmount;
     private static long playerMana;
     private static long playerMaxMana;
@@ -33,6 +42,14 @@ public class ClientStatsData {
 
     private static boolean playerSpellSlotsToggle;
 
+
+    public static void setPlayerFireAffinity(long fireAffinity) {ClientStatsData.playerFireAffinity = fireAffinity;}
+    public static void setPlayerWaterAffinity(long waterAffinity) {ClientStatsData.playerWaterAffinity = waterAffinity;}
+    public static void setPlayerAirAffinity(long airAffinity) {ClientStatsData.playerAirAffinity = airAffinity;}
+    public static void setPlayerEarthAffinity(long earthAffinity) {ClientStatsData.playerEarthAffinity = earthAffinity;}
+    public static void setPlayerAetherAffinity(long aetherAffinity) {ClientStatsData.playerAetherAffinity = aetherAffinity;}
+    public static void setPlayerAugmentingEfficiency(long augmentingEfficiency) {ClientStatsData.playerAugmentingEfficiency = augmentingEfficiency;}
+    public static void setPlayerConjuringEfficiency(long conjuringEfficiency) {ClientStatsData.playerConjuringEfficiency = conjuringEfficiency;}
     public static void setPlayerCastingAmount(int castingAmount) {ClientStatsData.playerCastingAmount = castingAmount;}
     public static void setMana(long mana) {
         ClientStatsData.playerMana = mana;
@@ -90,6 +107,18 @@ public class ClientStatsData {
     public static void setManaCoreXp(long manacore_xp) {
         ClientStatsData.playerManaCoreXp = manacore_xp;
     }
+
+
+
+
+    public static long getPlayerFireAffinity() {return playerFireAffinity;}
+    public static long getPlayerWaterAffinity() {return playerWaterAffinity;}
+    public static long getPlayerAirAffinity() {return playerAirAffinity;}
+    public static long getPlayerEarthAffinity() {return playerEarthAffinity;}
+    public static long getPlayerAetherAffinity() {return playerAetherAffinity;}
+    public static long getPlayerAugmentingEfficiency() {return playerAugmentingEfficiency;}
+    public static long getPlayerConjuringEfficiency() {return playerConjuringEfficiency;}
+
 
     public static int getPlayerCastingAmount() {return playerCastingAmount;}
     public static long getPlayerManaBarrier() {

@@ -54,12 +54,9 @@ public class CastFireBall {
 
 
             fireball.setPos(x,y+1.5f,z);
-
-
-
-
             player.level.addFreshEntity(fireball);
-            fireball.setNoGravity(true);fireball.setDeltaMovement(0,0,0);
+            fireball.setNoGravity(true);
+            fireball.setDeltaMovement(0,0,0);
 
         });
 

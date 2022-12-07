@@ -340,6 +340,19 @@ public class StatsScreen extends Screen {
             this.font.draw(pPoseStack, "Hp Regen: " + ClientStatsData.getPlayerMaxHp()/StatSystems.secondsForBaseHpRegen  + "/s", (float)(pOffsetX -134), (float)(pOffsetY + 60), 16753920);
          }
 
+         this.font.draw(pPoseStack, "Augmenting: " +ClientStatsData.getPlayerAugmentingEfficiency(), (float)(pOffsetX -134), (float)(pOffsetY + 70), 16753920);
+         this.font.draw(pPoseStack, "Conjuring: " +ClientStatsData.getPlayerConjuringEfficiency(), (float)(pOffsetX -134), (float)(pOffsetY + 80), 16753920);
+
+         this.font.draw(pPoseStack, "Fire Affinity: " +ClientStatsData.getPlayerFireAffinity(), (float)(pOffsetX -134), (float)(pOffsetY + 90), 16726072);
+         this.font.draw(pPoseStack, "Water Affinity: " +ClientStatsData.getPlayerWaterAffinity(), (float)(pOffsetX -134), (float)(pOffsetY + 100), 3692031);
+         this.font.draw(pPoseStack, "Air Affinity: " +ClientStatsData.getPlayerAirAffinity(), (float)(pOffsetX -134), (float)(pOffsetY + 110), 2334767);
+         this.font.draw(pPoseStack, "Earth Affinity: " +ClientStatsData.getPlayerEarthAffinity(), (float)(pOffsetX -134), (float)(pOffsetY + 120), 8142098);
+         this.font.draw(pPoseStack, "Aether Affinity: " +ClientStatsData.getPlayerAetherAffinity(), (float)(pOffsetX -134), (float)(pOffsetY + 130), 11665663);
+
+
+
+
+
       }
       this.font.draw(pPoseStack, "Main Mod Menu UWU", (float)(pOffsetX + 8), (float)(pOffsetY + 6), 16753920);
    }

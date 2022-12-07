@@ -12,6 +12,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.skyeshade.wol.client.ClientStatsData;
 import net.skyeshade.wol.client.gui.screens.stats.spellguihandling.DisplaySpellInformation;
 
 import javax.annotation.Nullable;
@@ -212,8 +213,8 @@ public class FireElementScreen extends Screen {
 
 
 
-      this.font.draw(pPoseStack, "Fire", (float)(pOffsetX -1-19/2+ WINDOW_WIDTH/2), (float)(pOffsetY + 6), 16753920);
-
+      //this.font.draw(pPoseStack, "Fire Affinity: " + ClientStatsData.getPlayerFireAffinity(), (float)(pOffsetX -1-19/2+ WINDOW_WIDTH/2), (float)(pOffsetY + 6), 16753920);
+      drawCenteredString(pPoseStack, font,"Fire Affinity: " + ClientStatsData.getPlayerFireAffinity(), (int)(pOffsetX + WINDOW_WIDTH/2), (int)(pOffsetY + 6), 16753920);
    }
    public void renderOnTopSpellInfo(PoseStack pPoseStack, int pMouseX, int pMouseY, int pOffsetX, int pOffsetY) {
 
