@@ -82,23 +82,17 @@ public class FireBallEntity extends BaseSpellProjectile {
     protected void onHitEntity(EntityHitResult pResult) {
 
         super.onHitEntity(pResult);
-        if (ticksAlive > SpellBaseStatVariables.getSpellBaseStats(1,3)) {
-            if (pResult.getEntity() != this.getOwner()) {
-                //this.setSoundEvent(SoundEvents.TRIDENT_HIT);
-                playSoundOnHit();
-                if (!this.level.isClientSide) {
-                    //pResult.getEntity().hurt(DamageSource.MAGIC, 20);
+        {
+            playSoundOnHit();
+            if (!this.level.isClientSide) {
+                //pResult.getEntity().hurt(DamageSource.MAGIC, 20);
 
-                    ExplosionUtil.getExplosionBlockOffsets(1 + (int) this.getPowerLevel() / 10, totalDamage, true, level, pResult.getEntity().blockPosition(), (Player) this.getOwner(), false);
-                }
-                this.discard();
-
+                ExplosionUtil.getExplosionBlockOffsets(1 + (int) this.getPowerLevel() / 10, totalDamage, true, level, pResult.getEntity().blockPosition(), (Player) this.getOwner(), false);
             }
-
-
-
-
+            this.discard();
         }
+
+
 
 
 
