@@ -10,8 +10,20 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import net.skyeshade.wol.WOL;
 
 import net.skyeshade.wol.networking.packet.AnimateHurtDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.aether.AetherAffinityDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.aether.UpdateAetherAffinityC2SPacket;
+import net.skyeshade.wol.networking.packet.affinities.augmenting.AugEfficiencyDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.augmenting.UpdateAugEfficiencyC2SPacket;
+import net.skyeshade.wol.networking.packet.affinities.conjuring.ConEfficiencyDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.conjuring.UpdateConEfficiencyC2SPacket;
+import net.skyeshade.wol.networking.packet.affinities.earth.EarthAffinityDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.earth.UpdateEarthAffinityC2SPacket;
 import net.skyeshade.wol.networking.packet.affinities.fire.FireAffinityDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.affinities.fire.UpdateFireAffinityC2SPacket;
+import net.skyeshade.wol.networking.packet.affinities.water.UpdateWaterAffinityC2SPacket;
+import net.skyeshade.wol.networking.packet.affinities.water.WaterAffinityDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.wind.UpdateWindAffinityC2SPacket;
+import net.skyeshade.wol.networking.packet.affinities.wind.WindAffinityDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.destruction.DestructionActiveDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.destruction.UpdateDestructionActiveC2SPacket;
 import net.skyeshade.wol.networking.packet.hp.HpDataSyncS2CPacket;
@@ -305,7 +317,84 @@ public class ModMessages {
                 .add();
 
 
+        net.messageBuilder(UpdateWaterAffinityC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateWaterAffinityC2SPacket::new)
+                .encoder(UpdateWaterAffinityC2SPacket::toBytes)
+                .consumerMainThread(UpdateWaterAffinityC2SPacket::handle)
+                .add();
 
+        net.messageBuilder(WaterAffinityDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(WaterAffinityDataSyncS2CPacket::new)
+                .encoder(WaterAffinityDataSyncS2CPacket::toBytes)
+                .consumerMainThread(WaterAffinityDataSyncS2CPacket::handle)
+                .add();
+
+        net.messageBuilder(UpdateWindAffinityC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateWindAffinityC2SPacket::new)
+                .encoder(UpdateWindAffinityC2SPacket::toBytes)
+                .consumerMainThread(UpdateWindAffinityC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(WindAffinityDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(WindAffinityDataSyncS2CPacket::new)
+                .encoder(WindAffinityDataSyncS2CPacket::toBytes)
+                .consumerMainThread(WindAffinityDataSyncS2CPacket::handle)
+                .add();
+
+
+        net.messageBuilder(UpdateEarthAffinityC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateEarthAffinityC2SPacket::new)
+                .encoder(UpdateEarthAffinityC2SPacket::toBytes)
+                .consumerMainThread(UpdateEarthAffinityC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(EarthAffinityDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(EarthAffinityDataSyncS2CPacket::new)
+                .encoder(EarthAffinityDataSyncS2CPacket::toBytes)
+                .consumerMainThread(EarthAffinityDataSyncS2CPacket::handle)
+                .add();
+
+
+        net.messageBuilder(UpdateAetherAffinityC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateAetherAffinityC2SPacket::new)
+                .encoder(UpdateAetherAffinityC2SPacket::toBytes)
+                .consumerMainThread(UpdateAetherAffinityC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(AetherAffinityDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(AetherAffinityDataSyncS2CPacket::new)
+                .encoder(AetherAffinityDataSyncS2CPacket::toBytes)
+                .consumerMainThread(AetherAffinityDataSyncS2CPacket::handle)
+                .add();
+
+
+
+
+        net.messageBuilder(UpdateAugEfficiencyC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateAugEfficiencyC2SPacket::new)
+                .encoder(UpdateAugEfficiencyC2SPacket::toBytes)
+                .consumerMainThread(UpdateAugEfficiencyC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(AugEfficiencyDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(AugEfficiencyDataSyncS2CPacket::new)
+                .encoder(AugEfficiencyDataSyncS2CPacket::toBytes)
+                .consumerMainThread(AugEfficiencyDataSyncS2CPacket::handle)
+                .add();
+
+
+
+        net.messageBuilder(UpdateConEfficiencyC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateConEfficiencyC2SPacket::new)
+                .encoder(UpdateConEfficiencyC2SPacket::toBytes)
+                .consumerMainThread(UpdateConEfficiencyC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(ConEfficiencyDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ConEfficiencyDataSyncS2CPacket::new)
+                .encoder(ConEfficiencyDataSyncS2CPacket::toBytes)
+                .consumerMainThread(ConEfficiencyDataSyncS2CPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {

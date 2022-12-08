@@ -1,7 +1,15 @@
 package net.skyeshade.wol.util;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.fml.common.Mod;
 import net.skyeshade.wol.networking.ModMessages;
+import net.skyeshade.wol.networking.packet.affinities.aether.AetherAffinityDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.augmenting.AugEfficiencyDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.conjuring.ConEfficiencyDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.earth.EarthAffinityDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.fire.FireAffinityDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.water.WaterAffinityDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.wind.WindAffinityDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.hp.HpDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.hp.MaxHpDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.mana.MaxManaDataSyncS2CPacket;
@@ -95,6 +103,13 @@ public class StatSystems {
     public static long secondsForBaseManaBarrierRevive = 60;
 
 
+    /**
+     * Deals with adding xp
+     *
+     * @param manaChange the amount of mana the spell uses (only accepts negative value)
+     * @param player ServerPlayer since this is run on the server
+     */
+
     public static void xpSystem (long manaChange, ServerPlayer player){
         //long startTime = System.currentTimeMillis();
         if (manaChange < 0) {
@@ -132,10 +147,56 @@ public class StatSystems {
                     stats.addManaToXp(absoluteManaChange);
                 }
                 ModMessages.sendToPlayer(new ManaCoreXpDataSyncS2CPacket(stats.getManaCoreXp()), player);
+
             });
         }
         //long stopTime = System.currentTimeMillis();
         //System.out.println("xp calculation took: "+ (stopTime-startTime) + " ms");
+    }
+
+    /**
+     * Deals with adding affinity after spell usage
+     *
+     * @param manaChange the amount of mana the spell uses (only accepts negative)
+     * @param player ServerPlayer since this is run on the server
+     * @param affinityID 0 = non elemental, 1 = fire, 2 = water, 3 = wind, 4 = earth, 5 = aether
+     * @param augmenting false = conjuring, true = augmenting
+     */
+    public static void addAffinity (long manaChange, ServerPlayer player, int affinityID, boolean augmenting) {
+
+        if (manaChange < 0) {
+            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+                long absManaChange = Math.abs(manaChange);
+
+                int procentManaChange = (int)((absManaChange/stats.getMaxMana())*100);
+
+                if (affinityID == 1) {
+                    stats.addFireAffinity(procentManaChange);
+                    ModMessages.sendToPlayer(new FireAffinityDataSyncS2CPacket(stats.getFireAffinity()), player);
+                }else if (affinityID == 2) {
+                    stats.addWaterAffinity(procentManaChange);
+                    ModMessages.sendToPlayer(new WaterAffinityDataSyncS2CPacket(stats.getWaterAffinity()), player);
+                }else if (affinityID == 3) {
+                    stats.addWindAffinity(procentManaChange);
+                    ModMessages.sendToPlayer(new WindAffinityDataSyncS2CPacket(stats.getWindAffinity()), player);
+                }else if (affinityID == 4) {
+                    stats.addEarthAffinity(procentManaChange);
+                    ModMessages.sendToPlayer(new EarthAffinityDataSyncS2CPacket(stats.getEarthAffinity()), player);
+                }else if (affinityID == 5) {
+                    stats.addAetherAffinity(procentManaChange);
+                    ModMessages.sendToPlayer(new AetherAffinityDataSyncS2CPacket(stats.getAetherAffinity()), player);
+                }
+
+                if (augmenting) {
+                    stats.addAugmentingEfficiency(procentManaChange);
+                    ModMessages.sendToPlayer(new AugEfficiencyDataSyncS2CPacket(stats.getAugmentingEfficiency()), player);
+                }else {
+                    stats.addConjuringEfficiency(procentManaChange);
+                    ModMessages.sendToPlayer(new ConEfficiencyDataSyncS2CPacket(stats.getConjuringEfficiency()), player);
+                }
+            });
+        }
+
     }
 
 

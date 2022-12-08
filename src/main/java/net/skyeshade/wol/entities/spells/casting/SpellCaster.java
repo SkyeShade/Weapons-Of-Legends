@@ -28,6 +28,7 @@ public class SpellCaster {
 
                         stats.addMana(-manaCost);
                         StatSystems.xpSystem(-manaCost, player);
+                        StatSystems.addAffinity(-manaCost, player, 1,false);
                         ModMessages.sendToPlayer(new ManaDataSyncS2CPacket(stats.getMana()), player);
 
                         CastFireBall.castFireBall(player);

@@ -354,7 +354,7 @@ public class StatsScreen extends Screen {
 
 
       }
-      this.font.draw(pPoseStack, "Main Mod Menu UWU", (float)(pOffsetX + 8), (float)(pOffsetY + 6), 16753920);
+      //this.font.draw(pPoseStack, "Main Mod Menu UWU", (float)(pOffsetX + 8), (float)(pOffsetY + 6), 16753920);
    }
 
    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {

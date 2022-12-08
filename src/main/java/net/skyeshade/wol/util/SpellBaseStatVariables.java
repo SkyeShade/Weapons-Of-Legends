@@ -20,7 +20,6 @@ public class SpellBaseStatVariables {
                     5, //base Damage
                     20, //base Mana Cost
                     50, //base Casting time in ticks
-                    25, //base Cooldown in ticks
 
             };
             return statArray[index];
@@ -32,7 +31,6 @@ public class SpellBaseStatVariables {
                     9000000000000000000L, //base Damage
                     200000000, //base Mana Cost
                     500, //base Casting time in ticks
-                    250, //base Cooldown in ticks
 
             };
             return statArray[index];
@@ -66,6 +64,12 @@ public class SpellBaseStatVariables {
 
             return baseManaCost+baseManaCost*(long)(powerLevel*0.5f);
         }
+        return 0;
+    }
+
+    public static long getSpellCastingTime (long spellID, long powerLevel, long affinity, long coreLevel) {
+
+
         return 0;
     }
 

@@ -19,6 +19,13 @@ import net.minecraftforge.fml.common.Mod;
 import net.skyeshade.wol.WOL;
 import net.skyeshade.wol.abilities.TimeStopAbility;
 import net.skyeshade.wol.networking.ModMessages;
+import net.skyeshade.wol.networking.packet.affinities.aether.AetherAffinityDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.augmenting.AugEfficiencyDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.conjuring.ConEfficiencyDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.earth.EarthAffinityDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.fire.FireAffinityDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.water.WaterAffinityDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.affinities.wind.WindAffinityDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.destruction.DestructionActiveDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.hp.HpDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.hp.MaxHpDataSyncS2CPacket;
@@ -182,7 +189,16 @@ public class ModEvents {
                     ModMessages.sendToPlayer(new SpellPowerLevelDataSyncS2CPacket(stats.getSpellPowerLevel()), player);
                     ModMessages.sendToPlayer(new SpellRangeDataSyncS2CPacket(stats.getSpellRange()), player);
                     ModMessages.sendToPlayer(new CastingAmountDataSyncS2CPacket(stats.getCastingAmount()), player);
-                    //ModMessages.sendToPlayer(new SpellPDataSyncS2CPacket(stats.getSpellSlots()), player);
+                    ModMessages.sendToPlayer(new FireAffinityDataSyncS2CPacket(stats.getFireAffinity()), player);
+                    ModMessages.sendToPlayer(new WaterAffinityDataSyncS2CPacket(stats.getWaterAffinity()), player);
+                    ModMessages.sendToPlayer(new WindAffinityDataSyncS2CPacket(stats.getWindAffinity()), player);
+                    ModMessages.sendToPlayer(new EarthAffinityDataSyncS2CPacket(stats.getEarthAffinity()), player);
+                    ModMessages.sendToPlayer(new AetherAffinityDataSyncS2CPacket(stats.getAetherAffinity()), player);
+                    ModMessages.sendToPlayer(new AugEfficiencyDataSyncS2CPacket(stats.getAugmentingEfficiency()), player);
+                    ModMessages.sendToPlayer(new ConEfficiencyDataSyncS2CPacket(stats.getConjuringEfficiency()), player);
+
+
+                    //ModMessages.sendToPlayer(new SpellPassiveToggleDataSyncS2CPacket(stats.getSpellPassiveToggle()), player);
                     System.out.println();
 
                     if (stats.getMaxMana() < StatSystems.maxManaRewardPerLevel[0]) {
