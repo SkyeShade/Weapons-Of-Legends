@@ -118,26 +118,28 @@ public class DisplaySpellInformation extends Screen {
                     blit(pPoseStack, pOffsetX + 41, pOffsetY +185, 0, 0, 10, 15, -10, 15);
                     spellDesc.displayDesc(spellID,false, true,pPoseStack,pOffsetX,pOffsetY,0,0,font);
 
+
+                    //display power arrow buttons right
                     RenderSystem.setShaderTexture(0, SMALL_BUTTON);
                     int buttonDisplacement = (Long.toString(ClientStatsData.getPlayerSpellPowerLevel()[(int)spellID])).length()*3;
-                    blit(pPoseStack, pOffsetX + 145 +buttonDisplacement, pOffsetY + 60 + 18*5, 0, 0, 5, 7, 5, 7);
-                    if (StatsIcons.isMouseOver(pOffsetX + 145-4 +buttonDisplacement, pOffsetY + 60 + 18*5, pMouseX - 6, pMouseY - 3, 6, 8)) {
+                    blit(pPoseStack, pOffsetX + 145 +buttonDisplacement, pOffsetY + 60 + 18*4, 0, 0, 5, 7, 5, 7);
+                    if (StatsIcons.isMouseOver(pOffsetX + 145-4 +buttonDisplacement, pOffsetY + 60 + 18*4, pMouseX - 6, pMouseY - 3, 6, 8)) {
                         RenderSystem.setShaderTexture(0, SMALL_BUTTON_HIGH);
 
-                        blit(pPoseStack, pOffsetX + 145+ buttonDisplacement, pOffsetY + 60 + 18*5, 0, 0, 5, 7, 5, 7);
+                        blit(pPoseStack, pOffsetX + 145+ buttonDisplacement, pOffsetY + 60 + 18*4, 0, 0, 5, 7, 5, 7);
 
                         hoverPowerUp = true;
                     } else {
 
                         hoverPowerUp = false;
                     }
-
+                    //display power arrow buttons left
                     RenderSystem.setShaderTexture(0, SMALL_BUTTON);
-                    blit(pPoseStack, pOffsetX + 145-44 -buttonDisplacement, pOffsetY + 60 + 18*5, 0, 0, 5, 7, -5, 7);
-                    if (StatsIcons.isMouseOver(pOffsetX + 145-4-44 -buttonDisplacement, pOffsetY + 60 + 18*5, pMouseX - 6, pMouseY - 3, 6, 8)) {
+                    blit(pPoseStack, pOffsetX + 145-44 -buttonDisplacement, pOffsetY + 60 + 18*4, 0, 0, 5, 7, -5, 7);
+                    if (StatsIcons.isMouseOver(pOffsetX + 145-4-44 -buttonDisplacement, pOffsetY + 60 + 18*4, pMouseX - 6, pMouseY - 3, 6, 8)) {
                         RenderSystem.setShaderTexture(0, SMALL_BUTTON_HIGH);
 
-                        blit(pPoseStack, pOffsetX + 145 -44-buttonDisplacement, pOffsetY + 60 + 18*5, 0, 0, 5, 7, -5, 7);
+                        blit(pPoseStack, pOffsetX + 145 -44-buttonDisplacement, pOffsetY + 60 + 18*4, 0, 0, 5, 7, -5, 7);
 
                         hoverPowerDown = true;
                     } else {

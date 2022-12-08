@@ -19,7 +19,7 @@ public class SpellCaster {
     public static void CastSpell (ServerPlayer player, long spellID) {
         player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
 
-            long manaCost = SpellBaseStatVariables.getSpellBaseStats(spellID, 2) + SpellBaseStatVariables.getSpellManaCostIncrease(spellID, stats.getSpellPowerLevel()[(int) spellID]);
+            long manaCost = SpellBaseStatVariables.getSpellManaCost(spellID, stats.getSpellPowerLevel()[(int) spellID], stats.getFireAffinity(),stats.getAugmentingEfficiency(),stats.getConjuringEfficiency());
 
             if (StatSystems.parrallelCastingAllowedPerCoreLevel[(int)stats.getManaCoreLevel()-1] > stats.getCastingAmount()) {
                 if (spellID == 1) {

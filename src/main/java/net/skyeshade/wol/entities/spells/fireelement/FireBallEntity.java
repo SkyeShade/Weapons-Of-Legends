@@ -32,7 +32,7 @@ public class FireBallEntity extends BaseSpellProjectile {
     Vec3 currentDeltamovement;
 
 
-    long totalDamage = SpellBaseStatVariables.getSpellDamageIncrease(1,this.getPowerLevel()) + SpellBaseStatVariables.getSpellBaseStats(1,1);
+    long totalDamage = SpellBaseStatVariables.getSpellDamageIncrease(1,this.getPowerLevel());
 
     int ticksAlive;
 

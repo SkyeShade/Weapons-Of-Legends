@@ -12,6 +12,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.skyeshade.wol.client.ClientStatsData;
 import net.skyeshade.wol.util.SpellBaseStatVariables;
+import net.skyeshade.wol.util.StatSystems;
 
 import java.util.Arrays;
 
@@ -54,11 +55,19 @@ public class SpellDesc extends Screen {
 
         }
         if (page2) {
-            drawCenteredString(pPoseStack,font,"Damage: "+ SpellBaseStatVariables.getSpellBaseStats(spellID,1) + " + " + SpellBaseStatVariables.getSpellDamageIncrease(spellID,ClientStatsData.getPlayerSpellPowerLevel()[(int)spellID]),pOffsetX + 56-30+100,pOffsetY + 60 + 18,16753920);
-            drawCenteredString(pPoseStack,font,"Mana Cost: "+ SpellBaseStatVariables.getSpellBaseStats(spellID,2)  + " + " + SpellBaseStatVariables.getSpellManaCostIncrease(spellID,ClientStatsData.getPlayerSpellPowerLevel()[(int)spellID]),pOffsetX + 56-30+100,pOffsetY + 60 + 18*2,16753920);
+            long baseDamage = SpellBaseStatVariables.getSpellBaseStats(spellID,1);
+            long absoluteDamage = SpellBaseStatVariables.getSpellDamageIncrease(spellID,ClientStatsData.getPlayerSpellPowerLevel()[(int)spellID]);
+
+            long manaCost = SpellBaseStatVariables.getSpellBaseStats(spellID,2);
+            long absoluteManaCost = SpellBaseStatVariables.getSpellManaCost(spellID,ClientStatsData.getPlayerSpellPowerLevel()[(int)spellID], StatSystems.getAffinityFromID(SpellBaseStatVariables.getAffinityIDFromSpellID(spellID), null), ClientStatsData.getPlayerAugmentingEfficiency(), ClientStatsData.getPlayerConjuringEfficiency());
+
+
+
+
+            drawCenteredString(pPoseStack,font,"Damage: "+ baseDamage + " + " + (absoluteDamage-baseDamage),pOffsetX + 56-30+100,pOffsetY + 60 + 18,16753920);
+            drawCenteredString(pPoseStack,font,"Mana Cost: "+ manaCost  + " + " + (absoluteManaCost-manaCost),pOffsetX + 56-30+100,pOffsetY + 60 + 18*2,16753920);
             drawCenteredString(pPoseStack,font,"Casting Time: "+ (SpellBaseStatVariables.getSpellBaseStats(spellID,3)*1000)/20 + "ms",pOffsetX + 56-30+100,pOffsetY + 60 + 18*3,16753920);
-            drawCenteredString(pPoseStack,font,"Cooldown: "+ (SpellBaseStatVariables.getSpellBaseStats(spellID,4)*1000)/20 + "ms",pOffsetX + 56-30+100,pOffsetY + 60 + 18*4,16753920);
-            drawCenteredString(pPoseStack,font,"Power: "+ ClientStatsData.getPlayerSpellPowerLevel()[(int)spellID],pOffsetX + 56-30+100,pOffsetY + 60 + 18*5,16753920);
+            drawCenteredString(pPoseStack,font,"Power: "+ ClientStatsData.getPlayerSpellPowerLevel()[(int)spellID],pOffsetX + 56-30+100,pOffsetY + 60 + 18*4,16753920);
 
         }
         String[] stringArray = text.split(" ");

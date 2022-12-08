@@ -1,7 +1,9 @@
 package net.skyeshade.wol.util;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.common.Mod;
+import net.skyeshade.wol.client.ClientStatsData;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.networking.packet.affinities.aether.AetherAffinityDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.affinities.augmenting.AugEfficiencyDataSyncS2CPacket;
@@ -21,7 +23,7 @@ import net.skyeshade.wol.stats.PlayerStatsProvider;
 public class StatSystems {
 
     //TODO: balance every stat
-    static int requiredManaUsageForXp = 1;
+    static int requiredManaUsageForXp = 1000;
 
     public static int[] parrallelCastingAllowedPerCoreLevel = {
             1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4};
@@ -93,8 +95,8 @@ public class StatSystems {
             327680L
     };
 
-    public static long secondsForBaseHpRegen = 600;
-    public static long secondsForBaseManaRegen = 600;
+    public static long secondsForBaseHpRegen = 600; //default 600
+    public static long secondsForBaseManaRegen = 6; //default 600
 
     public static long secondsForBaseManaBarrierRegen = 60;
 
@@ -168,8 +170,10 @@ public class StatSystems {
             player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
                 long absManaChange = Math.abs(manaChange);
 
-                int procentManaChange = (int)((absManaChange/stats.getMaxMana())*100);
+                int procentManaChange = (int)Math.floor(((double)absManaChange/(double)stats.getMaxMana())*100D);
+                //System.out.println(absManaChange);
 
+                //System.out.println();
                 if (affinityID == 1) {
                     stats.addFireAffinity(procentManaChange);
                     ModMessages.sendToPlayer(new FireAffinityDataSyncS2CPacket(stats.getFireAffinity()), player);
@@ -196,8 +200,50 @@ public class StatSystems {
                 }
             });
         }
-
     }
+
+
+    /**
+     *
+     * @param player ServerPlayer, set null if its on client
+     * @param affinityID 0 = non elemental, 1 = fire, 2 = water, 3 = wind, 4 = earth, 5 = aether
+     */
+    public static long getAffinityFromID (int affinityID, ServerPlayer player) {
+        if (player != null) {
+            final long[] l = {0};
+            player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+
+                if (affinityID == 1) {
+                    l[0] = stats.getFireAffinity();
+                }else if (affinityID == 2){
+                    l[0] = stats.getWaterAffinity();
+                }else if (affinityID == 3){
+                    l[0] = stats.getWindAffinity();
+                } else if (affinityID == 4){
+                    l[0] = stats.getEarthAffinity();
+                } else if (affinityID == 5){
+                    l[0] = stats.getAetherAffinity();
+                }
+            });
+            return l[0];
+
+        }else {
+            if (affinityID == 1) {
+                return ClientStatsData.getPlayerFireAffinity();
+            }else if (affinityID == 2){
+                return ClientStatsData.getPlayerWaterAffinity();
+            }else if (affinityID == 3){
+                return ClientStatsData.getPlayerWindAffinity();
+            } else if (affinityID == 4){
+                return ClientStatsData.getPlayerEarthAffinity();
+            } else if (affinityID == 5){
+                return ClientStatsData.getPlayerAetherAffinity();
+            }
+        }
+
+        return 0;
+    }
+
 
 
 }
