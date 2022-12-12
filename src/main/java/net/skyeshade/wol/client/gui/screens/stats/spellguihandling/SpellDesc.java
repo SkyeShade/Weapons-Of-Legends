@@ -1,20 +1,13 @@
 package net.skyeshade.wol.client.gui.screens.stats.spellguihandling;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.skyeshade.wol.client.ClientStatsData;
-import net.skyeshade.wol.util.SpellBaseStatVariables;
-import net.skyeshade.wol.util.StatSystems;
-
-import java.util.Arrays;
+import net.skyeshade.wol.util.SpellStatRegistering;
 
 @OnlyIn(Dist.CLIENT)
 public class SpellDesc extends Screen {
@@ -55,19 +48,34 @@ public class SpellDesc extends Screen {
 
         }
         if (page2) {
-            long baseDamage = SpellBaseStatVariables.getSpellBaseStats(spellID,1);
-            long absoluteDamage = SpellBaseStatVariables.getSpellDamageIncrease(spellID,ClientStatsData.getPlayerSpellPowerLevel()[(int)spellID]);
+            long baseDamage = SpellStatRegistering.getSpellController(spellID).getBaseDamage();
+            long absoluteDamage = SpellStatRegistering.getSpellController(spellID).getAbsoluteDamage();
 
-            long manaCost = SpellBaseStatVariables.getSpellBaseStats(spellID,2);
-            long absoluteManaCost = SpellBaseStatVariables.getSpellManaCost(spellID,ClientStatsData.getPlayerSpellPowerLevel()[(int)spellID], StatSystems.getAffinityFromID(SpellBaseStatVariables.getAffinityIDFromSpellID(spellID), null), ClientStatsData.getPlayerAugmentingEfficiency(), ClientStatsData.getPlayerConjuringEfficiency());
+            long manaCost = SpellStatRegistering.getSpellController(spellID).getBaseManaCost();
+            long absoluteManaCost = SpellStatRegistering.getSpellController(spellID).getAbsoluteManaCost();
 
-
+            long baseCastingTime = SpellStatRegistering.getSpellController(spellID).getBaseCastingTime();
+            long absoluteCastingTime = SpellStatRegistering.getSpellController(spellID).getAbsoluteCastingTime();
 
 
             drawCenteredString(pPoseStack,font,"Damage: "+ baseDamage + " + " + (absoluteDamage-baseDamage),pOffsetX + 56-30+100,pOffsetY + 60 + 18,16753920);
-            drawCenteredString(pPoseStack,font,"Mana Cost: "+ manaCost  + " + " + (absoluteManaCost-manaCost),pOffsetX + 56-30+100,pOffsetY + 60 + 18*2,16753920);
-            drawCenteredString(pPoseStack,font,"Casting Time: "+ (SpellBaseStatVariables.getSpellBaseStats(spellID,3)*1000)/20 + "ms",pOffsetX + 56-30+100,pOffsetY + 60 + 18*3,16753920);
+
+            if (absoluteManaCost-manaCost < 0){
+                drawCenteredString(pPoseStack,font,"Mana Cost: "+ manaCost  + " " + (absoluteManaCost-manaCost),pOffsetX + 56-30+100,pOffsetY + 60 + 18*2,16753920);
+            }else {
+                drawCenteredString(pPoseStack,font,"Mana Cost: "+ manaCost  + " + " + (absoluteManaCost-manaCost),pOffsetX + 56-30+100,pOffsetY + 60 + 18*2,16753920);
+            }
+
             drawCenteredString(pPoseStack,font,"Power: "+ ClientStatsData.getPlayerSpellPowerLevel()[(int)spellID],pOffsetX + 56-30+100,pOffsetY + 60 + 18*4,16753920);
+
+
+            if (absoluteCastingTime-baseCastingTime < 0) {
+                drawCenteredString(pPoseStack,font,"Casting Time: "+ (baseCastingTime*1000)/20 + " " + (absoluteCastingTime-baseCastingTime)*1000/20 + "ms",pOffsetX + 56-30+100,pOffsetY + 60 + 18*3,16753920);
+            }else {
+                drawCenteredString(pPoseStack,font,"Casting Time: "+ (baseCastingTime*1000)/20 + " + " + (absoluteCastingTime-baseCastingTime)*1000/20 + "ms",pOffsetX + 56-30+100,pOffsetY + 60 + 18*3,16753920);
+            }
+
+
 
         }
         String[] stringArray = text.split(" ");

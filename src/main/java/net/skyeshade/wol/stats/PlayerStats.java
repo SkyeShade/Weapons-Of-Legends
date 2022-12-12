@@ -1,7 +1,7 @@
 package net.skyeshade.wol.stats;
 
 import net.minecraft.nbt.CompoundTag;
-import net.skyeshade.wol.util.SpellBaseStatVariables;
+import net.skyeshade.wol.util.SpellStatRegistering;
 
 
 public class PlayerStats {
@@ -34,12 +34,12 @@ public class PlayerStats {
     private long[] spellSlots = {0,0,0,0,0,0,0,0,0};
 
     // row length is number of spells, add one per spell id, this is literally only so it doesnt get confusing af
-    private long[] spellPowerLevel = SpellBaseStatVariables.spellPowerLevel;
+    private long[] spellPowerLevel = SpellStatRegistering.spellPowerLevel;
     //also add another number per spell id
-    private long[] spellRange = SpellBaseStatVariables.spellRange;
+    private long[] spellRange = SpellStatRegistering.spellRange;
     //also add one for each spell id
     //byte instead of boolean, 0 = false 1 = true
-    private byte[] spellPassiveToggle = SpellBaseStatVariables.spellPassiveToggle;
+    private byte[] spellPassiveToggle = SpellStatRegistering.spellPassiveToggle;
 
 
 

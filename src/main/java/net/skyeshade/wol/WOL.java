@@ -17,6 +17,7 @@ import net.skyeshade.wol.entities.EntityInit;
 import net.skyeshade.wol.item.ModItems;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.sound.ModSounds;
+import net.skyeshade.wol.util.SpellStatRegistering;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -29,7 +30,7 @@ public class WOL {
     public WOL() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-
+        SpellStatRegistering.registerSpells();
 
         ModItems.register(modEventBus);
 
@@ -47,6 +48,9 @@ public class WOL {
         modEventBus.addListener(this::commonSetup);
 
         MinecraftForge.EVENT_BUS.register(this);
+
+
+
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {

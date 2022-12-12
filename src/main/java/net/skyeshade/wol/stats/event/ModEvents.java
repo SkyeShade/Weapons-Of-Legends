@@ -34,6 +34,7 @@ import net.skyeshade.wol.networking.packet.mana.MaxManaDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.manacore.*;
 import net.skyeshade.wol.networking.packet.menutoggle.MenuStatTabToggleDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.spellfire.extras.CastingAmountDataSyncS2CPacket;
+import net.skyeshade.wol.networking.packet.spellfire.extras.UpdateCastingAmountC2SPacket;
 import net.skyeshade.wol.networking.packet.spellslots.SpellSlotsDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.spellslots.SpellSlotsToggleDataSyncS2CPacket;
 import net.skyeshade.wol.networking.packet.spellstatupdate.SpellPowerLevelDataSyncS2CPacket;
@@ -153,6 +154,8 @@ public class ModEvents {
 
                 //long stopTime = System.currentTimeMillis();
                 //System.out.println("xp calculation took: "+ (stopTime-startTime) + " ms");
+
+
             }
         }
     }
@@ -285,6 +288,8 @@ public class ModEvents {
             player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
                 stats.setHp((stats.getMaxHp()*20)/100);
                 ModMessages.sendToPlayer(new HpDataSyncS2CPacket(stats.getHp()), player);
+                stats.setCastingAmount(0);
+                ModMessages.sendToPlayer(new UpdateCastingAmountC2SPacket(stats.getCastingAmount()), player);
             });
 
         }

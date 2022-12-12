@@ -1,14 +1,10 @@
 package net.skyeshade.wol.entities.spells;
 
-import com.google.common.collect.Lists;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -16,13 +12,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ClipContext;
@@ -31,14 +24,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.skyeshade.wol.client.ClientStatsData;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
-import net.skyeshade.wol.util.SpellBaseStatVariables;
+import net.skyeshade.wol.util.SpellStatRegistering;
 
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
 
 public abstract class BaseSpellProjectile extends Projectile {
 
@@ -63,7 +53,10 @@ public abstract class BaseSpellProjectile extends Projectile {
     private int life;
 
     private int spellId;
-    private double baseDamage = 2.0D;
+
+    protected long totalDamage;
+
+    protected long totalCastingTime;
     private int knockback;
     private SoundEvent soundEvent = this.getDefaultHitGroundSoundEvent();
 
@@ -94,6 +87,9 @@ public abstract class BaseSpellProjectile extends Projectile {
 
 
         this.spellId = (int)pSpellid;
+        totalDamage = SpellStatRegistering.getSpellController(this.spellId).getAbsoluteDamage((ServerPlayer)this.getOwner());
+
+        totalCastingTime = SpellStatRegistering.getSpellController(this.spellId).getAbsoluteCastingTime((ServerPlayer)this.getOwner() );
         //castingTime = SpellBaseStatVariables.getSpellBaseStats(spellId,3);
 
         ServerPlayer player = (ServerPlayer) pShooter;
@@ -318,7 +314,7 @@ public abstract class BaseSpellProjectile extends Projectile {
         super.onHitEntity(pResult);
 
 
-        if (this.ticks < SpellBaseStatVariables.getSpellBaseStats(1,3)) {
+        if (this.ticks < totalCastingTime) {
             if (pResult.getEntity() == this.getOwner() || pResult.getEntity() == this) {
                 return;
             }
@@ -379,7 +375,7 @@ public abstract class BaseSpellProjectile extends Projectile {
         pCompound.putByte("shake", (byte)this.shakeTime);
 
 
-        pCompound.putDouble("damage", this.baseDamage);
+        pCompound.putLong("damage", this.totalDamage);
         pCompound.putBoolean("crit", this.isCritArrow());
 
         pCompound.putLong("power", this.entityData.get(POWER));
@@ -401,7 +397,7 @@ public abstract class BaseSpellProjectile extends Projectile {
         this.shakeTime = pCompound.getByte("shake") & 255;
 
         if (pCompound.contains("damage", 99)) {
-            this.baseDamage = pCompound.getDouble("damage");
+            this.totalDamage = pCompound.getLong("damage");
         }
 
 
@@ -445,12 +441,12 @@ public abstract class BaseSpellProjectile extends Projectile {
         return Entity.MovementEmission.NONE;
     }
 
-    public void setBaseDamage(double pBaseDamage) {
-        this.baseDamage = pBaseDamage;
+    public void setBaseDamage(long pBaseDamage) {
+        this.totalDamage = pBaseDamage;
     }
 
     public double getBaseDamage() {
-        return this.baseDamage;
+        return this.totalDamage;
     }
 
     /**
@@ -512,10 +508,7 @@ public abstract class BaseSpellProjectile extends Projectile {
     public void setEnchantmentEffectsFromEntity(LivingEntity pShooter, float pVelocity) {
         int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER_ARROWS, pShooter);
         int j = EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH_ARROWS, pShooter);
-        this.setBaseDamage((double)(pVelocity * 2.0F) + this.random.triangle((double)this.level.getDifficulty().getId() * 0.11D, 0.57425D));
-        if (i > 0) {
-            this.setBaseDamage(this.getBaseDamage() + (double)i * 0.5D + 0.5D);
-        }
+
 
         if (j > 0) {
             this.setKnockback(j);

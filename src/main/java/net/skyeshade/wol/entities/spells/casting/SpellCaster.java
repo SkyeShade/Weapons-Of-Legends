@@ -5,10 +5,8 @@ import net.skyeshade.wol.entities.spells.casting.fire.CastFireBall;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.networking.packet.mana.ManaDataSyncS2CPacket;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
-import net.skyeshade.wol.util.SpellBaseStatVariables;
+import net.skyeshade.wol.util.SpellStatRegistering;
 import net.skyeshade.wol.util.StatSystems;
-
-import java.util.concurrent.atomic.AtomicLong;
 
 public class SpellCaster {
 
@@ -19,7 +17,7 @@ public class SpellCaster {
     public static void CastSpell (ServerPlayer player, long spellID) {
         player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
 
-            long manaCost = SpellBaseStatVariables.getSpellManaCost(spellID, stats.getSpellPowerLevel()[(int) spellID], stats.getFireAffinity(),stats.getAugmentingEfficiency(),stats.getConjuringEfficiency());
+            long manaCost = SpellStatRegistering.getSpellController(spellID).getAbsoluteManaCost(player);
 
             if (StatSystems.parrallelCastingAllowedPerCoreLevel[(int)stats.getManaCoreLevel()-1] > stats.getCastingAmount()) {
                 if (spellID == 1) {

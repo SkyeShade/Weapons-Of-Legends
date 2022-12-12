@@ -1,6 +1,6 @@
 package net.skyeshade.wol.client;
 
-import net.skyeshade.wol.util.SpellBaseStatVariables;
+import net.skyeshade.wol.util.SpellStatRegistering;
 
 public class ClientStatsData {
 
@@ -27,11 +27,11 @@ public class ClientStatsData {
 
     private static long[] playerSpellSlots = {0,0,0,0,0,0,0,0,0};
 
-    private static long[] playerSpellPowerLevel = SpellBaseStatVariables.spellPowerLevel;
+    private static long[] playerSpellPowerLevel = SpellStatRegistering.spellPowerLevel;
 
-    private static long[] playerSpellRange = SpellBaseStatVariables.spellRange;
+    private static long[] playerSpellRange = SpellStatRegistering.spellRange;
 
-    private static byte[] playerSpellPassiveToggle = SpellBaseStatVariables.spellPassiveToggle;
+    private static byte[] playerSpellPassiveToggle = SpellStatRegistering.spellPassiveToggle;
 
 
     private static boolean playerDestructionActive;

@@ -321,33 +321,33 @@ public class StatsScreen extends Screen {
       if (ClientStatsData.getPlayerMenuStatTabToggle()) {
 
          if (StatsIcons.isMouseOver(pOffsetX+WINDOW_WIDTH/2+196/2+8,pOffsetY+214,pMouseX,pMouseY,26,26)  && ClientStatsData.getPlayerManaCoreLevel() < 14) {
-            this.font.draw(pPoseStack, "Max Mana: " + ClientStatsData.getPlayerMaxMana() + " + " + StatSystems.maxManaRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()], (float)(pOffsetX -134), (float)(pOffsetY + 10), 6319871);
-            this.font.draw(pPoseStack, "Mana Regen: " + ClientStatsData.getPlayerMaxMana()/StatSystems.secondsForBaseManaRegen  + "/s" + " + " + StatSystems.maxManaRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()]/StatSystems.secondsForBaseManaRegen, (float)(pOffsetX -134), (float)(pOffsetY + 20), 6319871);
-            this.font.draw(pPoseStack, "Barrier: " + ClientStatsData.getPlayerMaxManaBarrier() + " + " + StatSystems.maxManaBarrierRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()], (float)(pOffsetX -134), (float)(pOffsetY + 30), 16773559);
-            this.font.draw(pPoseStack, "Barrier Regen: " + ClientStatsData.getPlayerMaxManaBarrier()/StatSystems.secondsForBaseManaBarrierRegen  + "/s" + " + " + StatSystems.maxManaBarrierRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()]/StatSystems.secondsForBaseManaBarrierRegen, (float)(pOffsetX -134), (float)(pOffsetY + 40), 16773559);
+            this.font.draw(pPoseStack, "Max Mana: " + ClientStatsData.getPlayerMaxMana() + " + " + StatSystems.maxManaRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()], (float)(pOffsetX -134), (float)(pOffsetY + 20), 6319871);
+            this.font.draw(pPoseStack, "Mana Regen: " + ClientStatsData.getPlayerMaxMana()/StatSystems.secondsForBaseManaRegen  + "/s" + " + " + StatSystems.maxManaRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()]/StatSystems.secondsForBaseManaRegen, (float)(pOffsetX -134), (float)(pOffsetY + 30), 6319871);
+            this.font.draw(pPoseStack, "Barrier: " + ClientStatsData.getPlayerMaxManaBarrier() + " + " + StatSystems.maxManaBarrierRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()], (float)(pOffsetX -134), (float)(pOffsetY + 40), 16773559);
+            this.font.draw(pPoseStack, "Barrier Regen: " + ClientStatsData.getPlayerMaxManaBarrier()/StatSystems.secondsForBaseManaBarrierRegen  + "/s" + " + " + StatSystems.maxManaBarrierRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()]/StatSystems.secondsForBaseManaBarrierRegen, (float)(pOffsetX -134), (float)(pOffsetY + 50), 16773559);
 
-            this.font.draw(pPoseStack, "Hp: " +ClientStatsData.getPlayerHp()+ "/" + ClientStatsData.getPlayerMaxHp() + " + " + StatSystems.maxHpRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()], (float)(pOffsetX -134), (float)(pOffsetY + 50), 16732497);
-            this.font.draw(pPoseStack, "Hp Regen: " + ClientStatsData.getPlayerMaxHp()/StatSystems.secondsForBaseHpRegen  + "/s" + " + " + StatSystems.maxHpRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()]/StatSystems.secondsForBaseHpRegen, (float)(pOffsetX -134), (float)(pOffsetY + 60), 16732497);
+            this.font.draw(pPoseStack, "Hp: " +ClientStatsData.getPlayerHp()+ "/" + ClientStatsData.getPlayerMaxHp() + " + " + StatSystems.maxHpRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()], (float)(pOffsetX -134), (float)(pOffsetY + 60), 16732497);
+            this.font.draw(pPoseStack, "Hp Regen: " + ClientStatsData.getPlayerMaxHp()/StatSystems.secondsForBaseHpRegen  + "/s" + " + " + StatSystems.maxHpRewardPerLevel[(int)ClientStatsData.getPlayerManaCoreLevel()]/StatSystems.secondsForBaseHpRegen, (float)(pOffsetX -134), (float)(pOffsetY + 70), 16732497);
          }else {
 
-            this.font.draw(pPoseStack, "Max Mana: " + ClientStatsData.getPlayerMaxMana(), (float)(pOffsetX -134), (float)(pOffsetY + 10), 6319871);
-            this.font.draw(pPoseStack, "Mana Regen: " + ClientStatsData.getPlayerMaxMana()/StatSystems.secondsForBaseManaRegen + "/s", (float)(pOffsetX -134), (float)(pOffsetY + 20), 6319871);
+            this.font.draw(pPoseStack, "Max Mana: " + ClientStatsData.getPlayerMaxMana(), (float)(pOffsetX -134), (float)(pOffsetY + 20), 6319871);
+            this.font.draw(pPoseStack, "Mana Regen: " + ClientStatsData.getPlayerMaxMana()/StatSystems.secondsForBaseManaRegen + "/s", (float)(pOffsetX -134), (float)(pOffsetY + 30), 6319871);
 
-            this.font.draw(pPoseStack, "Barrier: " + ClientStatsData.getPlayerMaxManaBarrier(), (float)(pOffsetX -134), (float)(pOffsetY + 30), 16773559);
-            this.font.draw(pPoseStack, "Barrier Regen: " + ClientStatsData.getPlayerMaxManaBarrier()/StatSystems.secondsForBaseManaBarrierRegen + "/s", (float)(pOffsetX -134), (float)(pOffsetY + 40), 16773559);
+            this.font.draw(pPoseStack, "Barrier: " + ClientStatsData.getPlayerMaxManaBarrier(), (float)(pOffsetX -134), (float)(pOffsetY + 40), 16773559);
+            this.font.draw(pPoseStack, "Barrier Regen: " + ClientStatsData.getPlayerMaxManaBarrier()/StatSystems.secondsForBaseManaBarrierRegen + "/s", (float)(pOffsetX -134), (float)(pOffsetY + 50), 16773559);
 
-            this.font.draw(pPoseStack, "Hp: " +ClientStatsData.getPlayerHp()+ "/" + ClientStatsData.getPlayerMaxHp(), (float)(pOffsetX -134), (float)(pOffsetY + 50), 16732497);
-            this.font.draw(pPoseStack, "Hp Regen: " + ClientStatsData.getPlayerMaxHp()/StatSystems.secondsForBaseHpRegen  + "/s", (float)(pOffsetX -134), (float)(pOffsetY + 60), 16732497);
+            this.font.draw(pPoseStack, "Hp: " +ClientStatsData.getPlayerHp()+ "/" + ClientStatsData.getPlayerMaxHp(), (float)(pOffsetX -134), (float)(pOffsetY + 60), 16732497);
+            this.font.draw(pPoseStack, "Hp Regen: " + ClientStatsData.getPlayerMaxHp()/StatSystems.secondsForBaseHpRegen  + "/s", (float)(pOffsetX -134), (float)(pOffsetY + 70), 16732497);
          }
 
-         this.font.draw(pPoseStack, "Augmenting: " +ClientStatsData.getPlayerAugmentingEfficiency(), (float)(pOffsetX -134), (float)(pOffsetY + 70), 16772238);
-         this.font.draw(pPoseStack, "Conjuring: " +ClientStatsData.getPlayerConjuringEfficiency(), (float)(pOffsetX -134), (float)(pOffsetY + 80), 16772238);
+         this.font.draw(pPoseStack, "Augmenting: " +ClientStatsData.getPlayerAugmentingEfficiency(), (float)(pOffsetX -134), (float)(pOffsetY + 90), 16772238);
+         this.font.draw(pPoseStack, "Conjuring: " +ClientStatsData.getPlayerConjuringEfficiency(), (float)(pOffsetX -134), (float)(pOffsetY + 100), 16772238);
 
-         this.font.draw(pPoseStack, "Fire Affinity: " +ClientStatsData.getPlayerFireAffinity(), (float)(pOffsetX -134), (float)(pOffsetY + 90), 16726072);
-         this.font.draw(pPoseStack, "Water Affinity: " +ClientStatsData.getPlayerWaterAffinity(), (float)(pOffsetX -134), (float)(pOffsetY + 100), 3692031);
-         this.font.draw(pPoseStack, "Wind Affinity: " +ClientStatsData.getPlayerWindAffinity(), (float)(pOffsetX -134), (float)(pOffsetY + 110), 2334767);
-         this.font.draw(pPoseStack, "Earth Affinity: " +ClientStatsData.getPlayerEarthAffinity(), (float)(pOffsetX -134), (float)(pOffsetY + 120), 8142098);
-         this.font.draw(pPoseStack, "Aether Affinity: " +ClientStatsData.getPlayerAetherAffinity(), (float)(pOffsetX -134), (float)(pOffsetY + 130), 11665663);
+         this.font.draw(pPoseStack, "Fire Affinity: " +ClientStatsData.getPlayerFireAffinity(), (float)(pOffsetX -134), (float)(pOffsetY + 110), 16726072);
+         this.font.draw(pPoseStack, "Water Affinity: " +ClientStatsData.getPlayerWaterAffinity(), (float)(pOffsetX -134), (float)(pOffsetY + 120), 3692031);
+         this.font.draw(pPoseStack, "Wind Affinity: " +ClientStatsData.getPlayerWindAffinity(), (float)(pOffsetX -134), (float)(pOffsetY + 130), 2334767);
+         this.font.draw(pPoseStack, "Earth Affinity: " +ClientStatsData.getPlayerEarthAffinity(), (float)(pOffsetX -134), (float)(pOffsetY + 140), 8142098);
+         this.font.draw(pPoseStack, "Aether Affinity: " +ClientStatsData.getPlayerAetherAffinity(), (float)(pOffsetX -134), (float)(pOffsetY + 150), 11665663);
 
 
 

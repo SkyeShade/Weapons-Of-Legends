@@ -205,11 +205,17 @@ public class DisplaySpellInformation extends Screen {
             }
             if (hoverPowerUp) {
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                ModMessages.sendToServer(new UpdateSpellPowerLevelC2SPacket(1,(int)spellID));
+                if (button == 1) {
+                    ModMessages.sendToServer(new UpdateSpellPowerLevelC2SPacket(100,(int)spellID));
+                }else
+                    ModMessages.sendToServer(new UpdateSpellPowerLevelC2SPacket(1,(int)spellID));
             }
             if (hoverPowerDown) {
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                ModMessages.sendToServer(new UpdateSpellPowerLevelC2SPacket(-1,(int)spellID));
+                if (button == 1) {
+                    ModMessages.sendToServer(new UpdateSpellPowerLevelC2SPacket(-100,(int)spellID));
+                }else
+                    ModMessages.sendToServer(new UpdateSpellPowerLevelC2SPacket(-1,(int)spellID));
             }
 
         }

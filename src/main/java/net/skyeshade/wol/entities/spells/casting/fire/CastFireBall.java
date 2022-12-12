@@ -2,20 +2,13 @@ package net.skyeshade.wol.entities.spells.casting.fire;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
 import net.skyeshade.wol.entities.EntityInit;
 import net.skyeshade.wol.entities.spells.fireelement.FireBallEntity;
 import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.networking.packet.spellfire.extras.CastingAmountDataSyncS2CPacket;
-import net.skyeshade.wol.networking.packet.spellfire.extras.UpdateCastingAmountC2SPacket;
-import net.skyeshade.wol.networking.packet.spellslots.UpdateSpellSlotsToggleC2SPacket;
 import net.skyeshade.wol.stats.PlayerStatsProvider;
-import net.skyeshade.wol.util.SpellBaseStatVariables;
-import net.skyeshade.wol.util.StatSystems;
+import net.skyeshade.wol.util.SpellStatRegistering;
 
 public class CastFireBall {
 
@@ -23,8 +16,9 @@ public class CastFireBall {
     //
     //
     //
+    private static int spellID = 1;
 
-
+    //TODO: fix casting glitch where if the entity goes poof, you will never get your casting slot back, so perhaps tie it to player ticks somehow
 
     public static void castFireBall (ServerPlayer player) {
         //check for how much parrelel casting you can do at your level, and only allow that amount of spells to be casted at once
@@ -32,11 +26,11 @@ public class CastFireBall {
         player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
 
             stats.addCastingAmount(1);
-            ModMessages.sendToPlayer(new CastingAmountDataSyncS2CPacket(stats.getCastingAmount()), (ServerPlayer) player);
+            ModMessages.sendToPlayer(new CastingAmountDataSyncS2CPacket(stats.getCastingAmount()), player);
 
 
 
-            FireBallEntity fireball = new FireBallEntity(EntityInit.FIREBALL.get(), player,player.level,1);
+            FireBallEntity fireball = new FireBallEntity(EntityInit.FIREBALL.get(), player,player.level,spellID);
 
             /*double spawnX = player.getX()+2*player.getLookAngle().x;
             double spawnY = player.getY()+2*player.getLookAngle().y;
@@ -66,7 +60,7 @@ public class CastFireBall {
     public static void castingTiming (FireBallEntity fireBallEntity, Player player, int timer) {
 
         //TODO: make the fireball move in a proper sphere around the caster
-
+        //basically this if statement is to determine if its client side or not
         if (player != null) {
 
 
@@ -84,13 +78,13 @@ public class CastFireBall {
             double z = player.getZ() - sin + cos;
 
 
-            if (timer < SpellBaseStatVariables.getSpellBaseStats(1, 3)) {
+            if (timer < SpellStatRegistering.getSpellController(spellID).getAbsoluteCastingTime((ServerPlayer)player)) {
 
 
                 fireBallEntity.setPos(x,y+1.5f,z);
 
 
-            } else if (timer >= SpellBaseStatVariables.getSpellBaseStats(1, 3)) {
+            } else if (timer >= SpellStatRegistering.getSpellController(spellID).getAbsoluteCastingTime((ServerPlayer)player)) {
 
                 double spawnX = player.getX() + 2 * player.getLookAngle().x;
                 double spawnY = player.getY() + 2 * player.getLookAngle().y;
@@ -116,7 +110,8 @@ public class CastFireBall {
             }
 
 
-        }else if (timer < SpellBaseStatVariables.getSpellBaseStats(1, 3)) {
+        }else if (timer < SpellStatRegistering.getSpellController(spellID).getAbsoluteCastingTime()) {
+            //all this is client side
             fireBallEntity.setDeltaMovement(0,0,0);
         }
 

@@ -23,7 +23,7 @@ import net.skyeshade.wol.stats.PlayerStatsProvider;
 public class StatSystems {
 
     //TODO: balance every stat
-    static int requiredManaUsageForXp = 1000;
+
 
     public static int[] parrallelCastingAllowedPerCoreLevel = {
             1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4};
@@ -94,6 +94,22 @@ public class StatSystems {
             163840L,
             327680L
     };
+    public static long[] conAndAugEfficiencyRewardPerLevel = {
+            2000L,
+            40L,
+            80L,
+            160L,
+            320L,
+            640L,
+            1280L,
+            5120L,
+            10240L,
+            20480L,
+            40960L,
+            81920L,
+            163840L,
+            327680L
+    };
 
     public static long secondsForBaseHpRegen = 600; //default 600
     public static long secondsForBaseManaRegen = 6; //default 600
@@ -104,6 +120,7 @@ public class StatSystems {
 
     public static long secondsForBaseManaBarrierRevive = 60;
 
+    static int requiredManaUsageForXp = 1;
 
     /**
      * Deals with adding xp
@@ -226,21 +243,21 @@ public class StatSystems {
                 }
             });
             return l[0];
-
-        }else {
-            if (affinityID == 1) {
-                return ClientStatsData.getPlayerFireAffinity();
-            }else if (affinityID == 2){
-                return ClientStatsData.getPlayerWaterAffinity();
-            }else if (affinityID == 3){
-                return ClientStatsData.getPlayerWindAffinity();
-            } else if (affinityID == 4){
-                return ClientStatsData.getPlayerEarthAffinity();
-            } else if (affinityID == 5){
-                return ClientStatsData.getPlayerAetherAffinity();
-            }
         }
-
+        return 0;
+    }
+    public static long getAffinityFromIDClient (int affinityID) {
+        if (affinityID == 1) {
+            return ClientStatsData.getPlayerFireAffinity();
+        }else if (affinityID == 2){
+            return ClientStatsData.getPlayerWaterAffinity();
+        }else if (affinityID == 3){
+            return ClientStatsData.getPlayerWindAffinity();
+        } else if (affinityID == 4){
+            return ClientStatsData.getPlayerEarthAffinity();
+        } else if (affinityID == 5){
+            return ClientStatsData.getPlayerAetherAffinity();
+        }
         return 0;
     }
 

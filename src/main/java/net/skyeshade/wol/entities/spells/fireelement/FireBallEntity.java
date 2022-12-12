@@ -1,26 +1,23 @@
 package net.skyeshade.wol.entities.spells.fireelement;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.skyeshade.wol.entities.spells.BaseSpellProjectile;
 import net.skyeshade.wol.entities.spells.casting.fire.CastFireBall;
-import net.skyeshade.wol.networking.ModMessages;
 import net.skyeshade.wol.sound.ModSounds;
 import net.skyeshade.wol.util.ExplosionUtil;
-import net.skyeshade.wol.util.SpellBaseStatVariables;
+import net.skyeshade.wol.util.SpellStatRegistering;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -30,14 +27,15 @@ public class FireBallEntity extends BaseSpellProjectile {
     LivingEntity attacker;
 
     Vec3 currentDeltamovement;
+    int spellID;
 
 
-    long totalDamage = SpellBaseStatVariables.getSpellDamageIncrease(1,this.getPowerLevel());
+
 
     int ticksAlive;
 
-    private long castingTime;
 
+    int explosionRadius = 1+ (int)(Math.log(this.getPowerLevel()+200)*50-264)/5;
 
 
     public FireBallEntity(EntityType<FireBallEntity> entityType, Level world) {
@@ -55,8 +53,9 @@ public class FireBallEntity extends BaseSpellProjectile {
         attacker = shooter;
         this.setOwner(shooter);
         this.playSound(SoundEvents.FIRECHARGE_USE,1.0F, 0.1F);
+        this.spellID = SpellId;
 
-        castingTime = SpellBaseStatVariables.getSpellBaseStats(SpellId,3);
+
 
     }
 
@@ -87,7 +86,7 @@ public class FireBallEntity extends BaseSpellProjectile {
             if (!this.level.isClientSide) {
                 //pResult.getEntity().hurt(DamageSource.MAGIC, 20);
 
-                ExplosionUtil.getExplosionBlockOffsets(1 + (int) this.getPowerLevel() / 10, totalDamage, true, level, pResult.getEntity().blockPosition(), (Player) this.getOwner(), false);
+                ExplosionUtil.getExplosionBlockOffsets(1 + explosionRadius, this.totalDamage, true, level, pResult.getEntity().blockPosition(), (Player) this.getOwner(), false);
             }
             this.discard();
         }
@@ -109,7 +108,7 @@ public class FireBallEntity extends BaseSpellProjectile {
 
         //this.getLevel().explode(this, this.getX(),this.getY(),this.getZ(), 1+this.getPowerLevel()/10, true, Explosion.BlockInteraction.BREAK);
         if (!this.level.isClientSide) {
-            ExplosionUtil.getExplosionBlockOffsets(1+(int)this.getPowerLevel()/10, totalDamage, true,  level, pResult.getBlockPos(), (Player) this.getOwner(), false);
+            ExplosionUtil.getExplosionBlockOffsets(1+explosionRadius, this.totalDamage, true,  level, pResult.getBlockPos(), (Player) this.getOwner(), false);
         }
 
         this.discard();
